@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underground Gaming</title>
+    
+    <!-- Adsterra Popunder -->
+    <script type='text/javascript' src='//pl26650384.highratecpm.com/2b/96/93/2b96931b265bb69bf57a530bc1da22e9.js'></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        
+        body { 
+            background-color: #0b0c10; 
+            color: #c5c6c7; 
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* LOGO AS BLURRED BACKGROUND EFFECT */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            background-image: url('images/logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: blur(40px);
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header { text-align: center; margin-bottom: 40px; position: relative; z-index: 10; }
+        .site-logo { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; }
+        
+        .games-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 25px; 
+            max-width: 1200px; 
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .game-card { 
+            background: rgba(31, 40, 51, 0.85);
+            padding: 15px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            text-align: center; 
+            border: 2px solid transparent; 
+            transition: transform 0.2s;
+        }
+        .game-card:hover { border-color: #45f3ff; transform: scale(1.03); }
+        .game-thumbnail { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
+        .game-title { margin-top: 10px; font-size: 1.2rem; color: #fff; }
+        
+        /* Modal Window with Blur Support */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 9999; 
+            left: 0; top: 0; width: 100%; height: 100%; 
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        .modal-content {
+            position: relative;
+            margin: 3% auto;
+            width: 90%;
+            max-width: 950px;
+            height: 85vh;
+            background: #000;
+            border-radius: 12px;
+            border: 2px solid #45f3ff;
+            box-shadow: 0 0 25px rgba(69, 243, 255, 0.3);
+        }
+        .close-btn { 
+            position: absolute; 
+            top: -45px; 
+            right: 0; 
+            background: #ff4757; 
+            color: white; 
+            border: none; 
+            padding: 8px 18px; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            font-weight: bold;
+        }
+        iframe { width: 100%; height: 100%; border: none; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="images/logo.png" alt="Portal Logo" class="site-logo" onerror="this.src='https://placeholder.co/100x100/1f1f1f/45f3ff?text=UG'">
+        <h1>UNDERGROUND GAMING 😈</h1>
+        <p>Click and play games very fast</p>
+    </header>
+
+    <div class="games-container">
+        <!-- Penalty Shooters 2 -->
+        <div class="game-card" onclick="openGame('https://html5.gamedistribution.com/39efbc61a0d34208a0db14902b370644/?pub=underground99')">
+            <img src="images/penalty.jpg" class="game-thumbnail" onerror="this.src='https://placeholder.co/300x180/1f1f1f/ff4757?text=Penalty+Shooters+2'">
+            <div class="game-title">Penalty Shooters 2</div>
+        </div>
+        <!-- Moto X3M Bike -->
+        <div class="game-card" onclick="openGame('https://html5.gamedistribution.com/c1064ff3f80c441baf472aa46d4e5f4c/?pub=underground99')">
+            <img src="images/bike.jpg" class="game-thumbnail" onerror="this.src='https://placeholder.co/300x180/1f1f1f/ff4757?text=Moto+X3M+Bike'">
+            <div class="game-title">Moto X3M Bike</div>
+        </div>
+        <!-- Master Ludo -->
+        <div class="game-card" onclick="openGame('https://html5.gamedistribution.com/4922ca52e92c4228ab221f73602d38e2/?pub=underground99')">
+            <img src="images/ludo.jpg" class="game-thumbnail" onerror="this.src='https://placeholder.co/300x180/1f1f1f/ff4757?text=Master+Ludo'">
+            <div class="game-title">Master Ludo</div>
+        </div>
+        <!-- Cyber Runner 3D -->
+        <div class="game-card" onclick="openGame('https://html5.gamedistribution.com/b5ba808728ed410cae785501fb75c24e/?pub=underground99')">
+            <img src="images/runner.jpg" class="game-thumbnail" onerror="this.src='https://placeholder.co/300x180/1f1f1f/ff4757?text=Cyber+Runner+3D'">
+            <div class="game-title">Cyber Runner 3D</div>
+        </div>
+    </div>
+
+    <!-- Modal Popup for Games -->
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeGame()">X CLOSE</button>
+            <iframe id="game-iframe" src="" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Black screen ka jhanjhat hi khatam! Game seedha naye tab mein makhhan chalegi
+        function openGame(url) {
+            window.open(url, '_blank'); 
+        }
+
+        // Isko khali chhod do taaki purane buttons se koi error na aaye
+        function closeGame() {
+            document.getElementById('game-modal').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
