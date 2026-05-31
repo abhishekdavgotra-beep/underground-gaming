@@ -3,153 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming</title>
-    
-    <!-- Adsterra Popunder -->
-    <script type='text/javascript' src='//pl26650384.highratecpm.com/2b/96/93/2b96931b265bb69bf57a530bc1da22e9.js'></script>
-
+    <title>Underground Gaming - 1000+ Games Portal</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        
-        body { 
-            background-color: #0b0c10; 
-            color: #c5c6c7; 
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        /* Pure Website Par Solid Premium Blur Background Effect */
+        body {
+            background: radial-gradient(circle at 50% 50%, #1f1f3a 0%, #111122 100%);
             position: relative;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* LOGO AS BLURRED BACKGROUND EFFECT */
+        /* Blur Effect Layer in Background */
         body::before {
             content: "";
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60vw;
-            height: 60vw;
-            background-image: url('images/logo.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            filter: blur(40px);
-            opacity: 0.15;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 242, 254, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(78, 84, 200, 0.2) 0%, transparent 45%);
+            filter: blur(60px);
             z-index: -1;
             pointer-events: none;
         }
 
-        header { text-align: center; margin-bottom: 40px; position: relative; z-index: 10; }
-        .site-logo { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; }
-        
-        .games-container { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-            gap: 25px; 
-            max-width: 1200px; 
-            margin: 0 auto;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .game-card { 
-            background: rgba(31, 40, 51, 0.85);
-            padding: 15px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            text-align: center; 
-            border: 2px solid transparent; 
-            transition: transform 0.2s;
-        }
-        .game-card:hover { border-color: #45f3ff; transform: scale(1.03); }
-        .game-thumbnail { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
-        .game-title { margin-top: 10px; font-size: 1.2rem; color: #fff; }
-        
-        /* Modal Window with Blur Support */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 9999; 
-            left: 0; top: 0; width: 100%; height: 100%; 
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-        }
-        .modal-content {
-            position: relative;
-            margin: 3% auto;
-            width: 90%;
-            max-width: 950px;
-            height: 85vh;
-            background: #000;
-            border-radius: 12px;
-            border: 2px solid #45f3ff;
-            box-shadow: 0 0 25px rgba(69, 243, 255, 0.3);
-        }
-        .close-btn { 
-            position: absolute; 
-            top: -45px; 
-            right: 0; 
-            background: #ff4757; 
-            color: white; 
-            border: none; 
-            padding: 8px 18px; 
-            cursor: pointer; 
-            border-radius: 5px; 
+        header {
+            background-color: rgba(22, 22, 35, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
             font-weight: bold;
+            color: #00f2fe;
+            border-bottom: 2px solid rgba(0, 242, 254, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.1);
+            cursor: pointer;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
         }
-        iframe { width: 100%; height: 100%; border: none; border-radius: 10px; }
+
+        /* Category Navbar */
+        .category-bar {
+            display: flex;
+            background: rgba(35, 35, 60, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            gap: 10px;
+            overflow-x: auto;
+            justify-content: center;
+            border-bottom: 1px solid rgba(63, 63, 90, 0.3);
+        }
+
+        .cat-btn {
+            background: rgba(78, 84, 200, 0.6);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: #00f2fe;
+            color: #1a1a2e;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+            border-color: #00f2fe;
+        }
+
+        /* Main Container */
+        .main-content {
+            flex: 1;
+            padding: 15px;
+        }
+
+        /* HOME SCREEN: Games Grid (Chote Responsive Icons) */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: rgba(22, 22, 35, 0.65);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(63, 63, 90, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: #00f2fe;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .game-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            background-color: #222;
+        }
+
+        .game-card p {
+            font-size: 11px;
+            margin-top: 6px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            color: #e0e0ff;
+        }
+
+        /* PLAYER SCREEN: Poki Style Layout */
+        .player-view {
+            display: none;
+            gap: 15px;
+            height: calc(100vh - 180px);
+            min-height: 550px;
+        }
+
+        .ad-sidebar {
+            width: 160px;
+            background-color: rgba(13, 13, 26, 0.9); /* Pure Dark Box */
+            border: 1px solid rgba(45, 45, 68, 0.7);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .ad-text {
+            font-size: 10px;
+            color: #555577;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .game-frame-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #161623;
+            border-radius: 12px;
+            border: 2px solid rgba(63, 63, 90, 0.7);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .player-header {
+            background: #23233c;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3f3f5a;
+        }
+
+        .back-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: #ff6b81;
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
+        }
+
+        .game-frame-container iframe {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+
+        /* Bottom Ad Bar */
+        .bottom-ad-bar {
+            height: 70px;
+            background-color: rgba(13, 13, 26, 0.9);
+            border: 1px solid rgba(45, 45, 68, 0.7);
+            border-radius: 8px;
+            margin: 10px 15px 15px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Responsive Settings for Phone */
+        @media (max-width: 768px) {
+            .ad-sidebar { display: none; }
+            .games-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
+            .game-card img { width: 65px; height: 65px; }
+            .category-bar { justify-content: flex-start; }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <img src="images/logo.png" alt="Portal Logo" class="site-logo" onerror="this.src='https://placeholder.co/100x100/1f1f1f/45f3ff?text=UG'">
-        <h1>UNDERGROUND GAMING 😈</h1>
-        <p>Click and play games very fast</p>
-    </header>
+    <header onclick="showHome()">UNDERGROUND GAMING</header>
 
-    <div class="games-container">
-        <!-- Penalty Shooters 2 -->
-        <div class="game-card" onclick="openGame('https://html5.gamedistribution.com/39efbc61a0d34208a0db14902b370644/?pub=underground99')">
-            <img src="images/penalty.jpg" class="game-thumbnail" onerror="this.src='https://placeholder.co/300x180/1f1f1f/ff4757?text=Penalty+Shooters+2'">
-            <div class="game-title">Penalty Shooters 2</div>
-        </div>
-        <!-- Moto X3M Bike -->
-        <div class="game-card" onclick="openGame('https://html5.gamedistribution.com/c1064ff3f80c441baf472aa46d4e5f4c/?pub=underground99')">
-            <img src="images/bike.jpg" class="game-thumbnail" onerror="this.src='https://placeholder.co/300x180/1f1f1f/ff4757?text=Moto+X3M+Bike'">
-            <div class="game-title">Moto X3M Bike</div>
-        </div>
-        <!-- Master Ludo -->
-        <div class="game-card" onclick="openGame('https://html5.gamedistribution.com/4922ca52e92c4228ab221f73602d38e2/?pub=underground99')">
-            <img src="images/ludo.jpg" class="game-thumbnail" onerror="this.src='https://placeholder.co/300x180/1f1f1f/ff4757?text=Master+Ludo'">
-            <div class="game-title">Master Ludo</div>
-        </div>
-        <!-- Cyber Runner 3D -->
-        <div class="game-card" onclick="openGame('https://html5.gamedistribution.com/b5ba808728ed410cae785501fb75c24e/?pub=underground99')">
-            <img src="images/runner.jpg" class="game-thumbnail" onerror="this.src='https://placeholder.co/300x180/1f1f1f/ff4757?text=Cyber+Runner+3D'">
-            <div class="game-title">Cyber Runner 3D</div>
+    <!-- Category Tabs -->
+    <div class="category-bar" id="category-bar">
+        <button class="cat-btn active" onclick="filterCategory('all')">All Games</button>
+        <button class="cat-btn" onclick="filterCategory('Action')">Action</button>
+        <button class="cat-btn" onclick="filterCategory('Racing')">Racing</button>
+        <button class="cat-btn" onclick="filterCategory('Puzzle')">Puzzle</button>
+        <button class="cat-btn" onclick="filterCategory('Sports')">Sports</button>
+    </div>
+
+    <div class="main-content">
+        <!-- HOME PAGE (GRID VIEW) -->
+        <div class="games-grid" id="games-grid"></div>
+
+        <!-- POKI STYLE PLAYER VIEW -->
+        <div class="player-view" id="player-view">
+            <div class="ad-sidebar"><div class="ad-text">Advertisement</div></div>
+            
+            <div class="game-frame-container">
+                <div class="player-header">
+                    <span id="current-game-title" style="font-weight: bold; color: #00f2fe;">Game Loading...</span>
+                    <button class="back-btn" onclick="showHome()">⬅️ Home</button>
+                </div>
+                <iframe id="game-iframe" src=""></iframe>
+            </div>
+
+            <div class="ad-sidebar"><div class="ad-text">Advertisement</div></div>
         </div>
     </div>
 
-    <!-- Modal Popup for Games -->
-    <div id="game-modal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeGame()">X CLOSE</button>
-            <iframe id="game-iframe" src="" allow="autoplay; fullscreen" allowfullscreen></iframe>
-        </div>
+    <!-- BOTTOM BLACK AD BAR -->
+    <div class="bottom-ad-bar">
+        <div class="ad-text">Advertisement</div>
     </div>
 
     <script>
-        // Black screen ka jhanjhat hi khatam! Game seedha naye tab mein makhhan chalegi
-        function openGame(url) {
-            window.open(url, '_blank'); 
+        // =========================================================================
+        // 🚨 DATA SECTIONS (BAAS YAHAN LINE ADD KARNI HAI) 🚨
+        // =========================================================================
+        const gamesDatabase = [
+            { title: "Moto X3M Pool", cat: "Racing", img: "images/moto.jpg", url: "https://play.famobi.com/moto-x3m-pool-party" },
+            { title: "Bubble Tower 3D", cat: "Puzzle", img: "images/bubble.jpg", url: "https://play.famobi.com/bubble-tower-3d" },
+            { title: "Cannon Balls 3D", cat: "Action", img: "images/cannon.jpg", url: "https://play.famobi.com/cannon-balls-3d" },
+            { title: "Element Blocks", cat: "Puzzle", img: "images/element.jpg", url: "https://play.famobi.com/element-blocks" }
+        ];
+        // =========================================================================
+
+        function displayGames(gamesList) {
+            const grid = document.getElementById('games-grid');
+            grid.innerHTML = '';
+            gamesList.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.onclick = () => launchGame(game.title, game.url);
+                card.innerHTML = `
+                    <img src="${game.img}" onerror="this.src='https://placehold.co/100x100/23233c/fff?text=Game'">
+                    <p>${game.title}</p>
+                `;
+                grid.appendChild(card);
+            });
         }
 
-        // Isko khali chhod do taaki purane buttons se koi error na aaye
-        function closeGame() {
-            document.getElementById('game-modal').style.display = 'none';
+        function filterCategory(categoryName) {
+            const buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if(event) event.target.classList.add('active');
+            showHome();
+            if(categoryName === 'all') { displayGames(gamesDatabase); } 
+            else { const filtered = gamesDatabase.filter(g => g.cat === categoryName); displayGames(filtered); }
         }
+
+        function launchGame(title, url) {
+            document.getElementById('games-grid').style.display = 'none';
+            document.getElementById('category-bar').style.display = 'none';
+            document.getElementById('player-view').style.display = 'flex';
+            document.getElementById('current-game-title').innerText = title;
+            document.getElementById('game-iframe').src = url;
+        }
+
+        function showHome() {
+            document.getElementById('player-view').style.display = 'none';
+            document.getElementById('game-iframe').src = '';
+            document.getElementById('games-grid').style.display = 'grid';
+            document.getElementById('category-bar').style.display = 'flex';
+        }
+
+        displayGames(gamesDatabase);
     </script>
-
 </body>
 </html>
