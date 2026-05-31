@@ -1,25 +1,24 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Image-smoothing disabled for perfect crisp pixel graphics
+// Sharp graphics filter
 ctx.imageSmoothingEnabled = false;
-ctx.mozImageSmoothingEnabled = false;
-ctx.webkitImageSmoothingEnabled = false;
-ctx.msImageSmoothingEnabled = false;
 
-// Real Physics variables to match standard gameplay
-const GRAVITY = 0.22;
-const FLAP = -4.8;
-const SPAWN_RATE = 100;
-const PIPE_SPEED = 2.2;
+// Physics Config (Instantly snappy)
+const GRAVITY = 1300;  
+const FLAP = -340;     
+const PIPE_SPEED = 150; 
 const PIPE_GAP = 115;
+const SPAWN_RATE = 1.5; 
 
 let bird = { x: 60, y: 200, velocity: 0, width: 34, height: 24, rotation: 0 };
 let pipes = [];
 let score = 0;
 let highScore = localStorage.getItem('flappyHighScore') || 0;
 let gameState = 'START'; 
-let frameCount = 0;
+
+let lastTime = 0;
+let pipeSpawnTimer = 0;
 
 const images = {};
 const imageSources = {
@@ -35,6 +34,7 @@ const totalImages = Object.keys(imageSources).length;
 function imageLoaded() {
     loadedImages++;
     if (loadedImages === totalImages) {
+        lastTime = performance.now();
         requestAnimationFrame(gameLoop);
     }
 }
@@ -46,16 +46,28 @@ for (let key in imageSources) {
     images[key].onerror = () => imageLoaded();
 }
 
-// Input Controllers
-window.addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); handleAction(); } });
-window.addEventListener('touchstart', (e) => { e.preventDefault(); handleAction(); }, { passive: false });
+// 🔥 ZERO-DELAY INPUT CONTROLLERS (Super Fast Response)
+window.addEventListener('keydown', function(e) {
+    if (e.code === 'Space' || e.code === 'ArrowUp') {
+        e.preventDefault(); // Browser ko scroll karne se rokna
+        handleAction();
+    }
+});
+
+// Mobile ke liye pointerdown/touchstart bina kisi delay ke
+window.addEventListener('pointerdown', function(e) {
+    if (e.target === canvas) {
+        e.preventDefault();
+        handleAction();
+    }
+}, { passive: false });
 
 function handleAction() {
     if (gameState === 'START') {
         gameState = 'PLAYING';
         resetGame();
     } else if (gameState === 'PLAYING') {
-        bird.velocity = FLAP;
+        bird.velocity = FLAP; // Instant jump!
     } else if (gameState === 'GAMEOVER') {
         gameState = 'PLAYING';
         resetGame();
@@ -68,39 +80,38 @@ function resetGame() {
     bird.rotation = 0;
     pipes = [];
     score = 0;
-    frameCount = 0;
+    pipeSpawnTimer = 0;
 }
 
-function update() {
+function update(dt) {
     if (gameState !== 'PLAYING') return;
 
-    frameCount++;
-    bird.velocity += GRAVITY;
-    bird.y += bird.velocity;
+    bird.velocity += GRAVITY * dt;
+    bird.y += bird.velocity * dt;
 
-    // Advanced Rotation Effect based on bird velocity
+    // Smooth rotation physics
     if (bird.velocity < 0) {
-        bird.rotation = Math.max(-0.4, bird.velocity * 0.08);
-    } else if (bird.velocity > 0) {
-        bird.rotation = Math.min(0.7, bird.velocity * 0.08);
+        bird.rotation = Math.max(-0.4, bird.velocity * 0.002);
+    } else {
+        bird.rotation = Math.min(0.7, bird.velocity * 0.0015);
     }
 
     if (bird.y + bird.height >= canvas.height - 40 || bird.y <= 0) {
         gameState = 'GAMEOVER';
     }
 
-    if (frameCount % SPAWN_RATE === 0) {
+    pipeSpawnTimer += dt;
+    if (pipeSpawnTimer >= SPAWN_RATE) {
+        pipeSpawnTimer = 0;
         let minHeight = 50;
         let maxHeight = canvas.height - PIPE_GAP - minHeight - 60;
         let topHeight = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
-        
         pipes.push({ x: canvas.width, topHeight: topHeight, passed: false });
     }
 
     for (let i = pipes.length - 1; i >= 0; i--) {
-        pipes[i].x -= PIPE_SPEED;
+        pipes[i].x -= PIPE_SPEED * dt;
 
-        // Collision box tweaks for perfect edge detection
         if (
             bird.x + 4 < pipes[i].x + 52 &&
             bird.x + bird.width - 4 > pipes[i].x &&
@@ -125,22 +136,13 @@ function update() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw Background
-    if (images.bg.complete) {
-        ctx.drawImage(images.bg, 0, 0, canvas.width, canvas.height);
-    }
+    if (images.bg.complete) ctx.drawImage(images.bg, 0, 0, canvas.width, canvas.height);
 
-    // Draw Pipes
     pipes.forEach(pipe => {
-        if (images.topPipe.complete) {
-            ctx.drawImage(images.topPipe, pipe.x, pipe.topHeight - 320, 52, 320);
-        }
-        if (images.bottomPipe.complete) {
-            ctx.drawImage(images.bottomPipe, pipe.x, pipe.topHeight + PIPE_GAP, 52, 320);
-        }
+        if (images.topPipe.complete) ctx.drawImage(images.topPipe, pipe.x, pipe.topHeight - 320, 52, 320);
+        if (images.bottomPipe.complete) ctx.drawImage(images.bottomPipe, pipe.x, pipe.topHeight + PIPE_GAP, 52, 320);
     });
 
-    // Draw Bird with Rotation Physics
     if (images.bird.complete) {
         ctx.save();
         ctx.translate(bird.x + bird.width / 2, bird.y + bird.height / 2);
@@ -149,7 +151,6 @@ function draw() {
         ctx.restore();
     }
 
-    // Modern Overlay rendering
     ctx.fillStyle = '#FFF';
     ctx.strokeStyle = '#000';
     ctx.lineWidth = 3;
@@ -183,8 +184,12 @@ function draw() {
     }
 }
 
-function gameLoop() {
-    update();
+function gameLoop(timestamp) {
+    let dt = (timestamp - lastTime) / 1000;
+    if (dt > 0.1) dt = 0.1;
+    lastTime = timestamp;
+
+    update(dt);
     draw();
     requestAnimationFrame(gameLoop);
 }
