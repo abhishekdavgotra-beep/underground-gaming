@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - 1000+ Games Portal</title>
+    <title>Underground Gaming - Poki Style</title>
     <style>
         * {
             margin: 0;
@@ -12,10 +12,8 @@
             font-family: 'Segoe UI', Arial, sans-serif;
         }
 
-        /* Pure Website Par Solid Premium Blur Background Effect */
         body {
             background: radial-gradient(circle at 50% 50%, #1f1f3a 0%, #111122 100%);
-            position: relative;
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -23,7 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* Blur Effect Layer in Background */
         body::before {
             content: "";
             position: fixed;
@@ -53,7 +50,6 @@
             text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
         }
 
-        /* Category Navbar */
         .category-bar {
             display: flex;
             background: rgba(35, 35, 60, 0.6);
@@ -83,13 +79,12 @@
             border-color: #00f2fe;
         }
 
-        /* Main Container */
         .main-content {
             flex: 1;
             padding: 15px;
         }
 
-        /* HOME SCREEN: Games Grid (Chote Responsive Icons) */
+        /* Home Grid */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -105,7 +100,7 @@
             border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, border-color 0.2s;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -116,7 +111,6 @@
         .game-card:hover {
             transform: translateY(-5px);
             border-color: #00f2fe;
-            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
         }
 
         .game-card img {
@@ -124,7 +118,6 @@
             height: 80px;
             border-radius: 8px;
             object-fit: cover;
-            background-color: #222;
         }
 
         .game-card p {
@@ -135,94 +128,92 @@
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
-            color: #e0e0ff;
         }
 
-        /* PLAYER SCREEN: Poki Style Layout */
+        /* Poki Player Screen Layout */
         .player-view {
             display: none;
-            gap: 15px;
-            height: calc(100vh - 180px);
-            min-height: 550px;
+            max-width: 1300px;
+            margin: 0 auto;
+            gap: 20px;
+            justify-content: center;
         }
 
+        /* Standard Poki Side Ads Box */
         .ad-sidebar {
             width: 160px;
-            background-color: rgba(13, 13, 26, 0.9); /* Pure Dark Box */
-            border: 1px solid rgba(45, 45, 68, 0.7);
+            height: 600px;
+            background-color: #090911;
+            border: 1px solid #23233c;
             border-radius: 8px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 10px;
         }
 
         .ad-text {
             font-size: 10px;
-            color: #555577;
+            color: #444466;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
+        /* Game Box Size Customization */
         .game-frame-container {
-            flex: 1;
+            width: 800px;
+            height: 600px;
             display: flex;
             flex-direction: column;
-            background: #161623;
+            background: #000;
             border-radius: 12px;
-            border: 2px solid rgba(63, 63, 90, 0.7);
+            border: 2px solid #3f3f5a;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
         }
 
         .player-header {
-            background: #23233c;
-            padding: 8px 15px;
+            background: #161623;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #3f3f5a;
+            border-bottom: 1px solid #23233c;
         }
 
         .back-btn {
             background: #ff4757;
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 6px 14px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
-        }
-        
-        .back-btn:hover {
-            background: #ff6b81;
-            box-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
         }
 
         .game-frame-container iframe {
-            flex: 1;
             width: 100%;
             height: 100%;
             border: none;
-            background: #000;
         }
 
-        /* Bottom Ad Bar */
         .bottom-ad-bar {
-            height: 70px;
-            background-color: rgba(13, 13, 26, 0.9);
-            border: 1px solid rgba(45, 45, 68, 0.7);
+            width: 728px;
+            height: 90px;
+            background-color: #090911;
+            border: 1px solid #23233c;
             border-radius: 8px;
-            margin: 10px 15px 15px 15px;
+            margin: 20px auto;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Responsive Settings for Phone */
-        @media (max-width: 768px) {
+        @media (max-width: 1100px) {
             .ad-sidebar { display: none; }
+            .game-frame-container { width: 100%; height: 75vh; }
+            .bottom-ad-bar { width: 100%; }
+        }
+        @media (max-width: 768px) {
             .games-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
             .game-card img { width: 65px; height: 65px; }
             .category-bar { justify-content: flex-start; }
@@ -233,51 +224,43 @@
 
     <header onclick="showHome()">UNDERGROUND GAMING</header>
 
-    <!-- Category Tabs -->
     <div class="category-bar" id="category-bar">
         <button class="cat-btn active" onclick="filterCategory('all')">All Games</button>
         <button class="cat-btn" onclick="filterCategory('Action')">Action</button>
         <button class="cat-btn" onclick="filterCategory('Racing')">Racing</button>
         <button class="cat-btn" onclick="filterCategory('Puzzle')">Puzzle</button>
-        <button class="cat-btn" onclick="filterCategory('Sports')">Sports</button>
     </div>
 
     <div class="main-content">
-        <!-- HOME PAGE (GRID VIEW) -->
         <div class="games-grid" id="games-grid"></div>
 
-        <!-- POKI STYLE PLAYER VIEW -->
         <div class="player-view" id="player-view">
             <div class="ad-sidebar"><div class="ad-text">Advertisement</div></div>
             
             <div class="game-frame-container">
                 <div class="player-header">
-                    <span id="current-game-title" style="font-weight: bold; color: #00f2fe;">Game Loading...</span>
+                    <span id="current-game-title" style="font-weight: bold; color: #00f2fe;">Loading...</span>
                     <button class="back-btn" onclick="showHome()">⬅️ Home</button>
                 </div>
-                <iframe id="game-iframe" src=""></iframe>
+                <iframe id="game-iframe" src="" allowfullscreen></iframe>
             </div>
 
             <div class="ad-sidebar"><div class="ad-text">Advertisement</div></div>
         </div>
     </div>
 
-    <!-- BOTTOM BLACK AD BAR -->
-    <div class="bottom-ad-bar">
+    <div class="bottom-ad-bar" id="bottom-ad">
         <div class="ad-text">Advertisement</div>
     </div>
 
     <script>
-        // =========================================================================
-        // 🚨 DATA SECTIONS (BAAS YAHAN LINE ADD KARNI HAI) 🚨
-        // =========================================================================
+        // MASTER GAME DATABASE - Poki Style Direct Links (No Extra Play Buttons)
         const gamesDatabase = [
-            { title: "Moto X3M Pool", cat: "Racing", img: "images/moto.jpg", url: "https://play.famobi.com/moto-x3m-pool-party" },
-            { title: "Bubble Tower 3D", cat: "Puzzle", img: "images/bubble.jpg", url: "https://play.famobi.com/bubble-tower-3d" },
-            { title: "Cannon Balls 3D", cat: "Action", img: "images/cannon.jpg", url: "https://play.famobi.com/cannon-balls-3d" },
-            { title: "Element Blocks", cat: "Puzzle", img: "images/element.jpg", url: "https://play.famobi.com/element-blocks" }
+            { title: "Tunnel Rush", cat: "Action", img: "https://img.gamedistribution.com/c1064ff3f80c441baf472aa46d4e4cb6-512x512.jpg", url: "https://html5.gamedistribution.com/c1064ff3f80c441baf472aa46d4e4cb6/" },
+            { title: "Moto X3M Pool", cat: "Racing", img: "https://img.gamedistribution.com/fa8a3fa38e93437fa867f70b134d1010-512x512.jpg", url: "https://html5.gamedistribution.com/fa8a3fa38e93437fa867f70b134d1010/" },
+            { title: "Bubble Tower 3D", cat: "Puzzle", img: "https://img.gamedistribution.com/fa035be4899a4c14b2d69956f4cf9119-512x512.jpg", url: "https://html5.gamedistribution.com/fa035be4899a4c14b2d69956f4cf9119/" },
+            { title: "Cannon Balls 3D", cat: "Action", img: "https://img.gamedistribution.com/56570fc28d324681944ec785f7639572-512x512.jpg", url: "https://html5.gamedistribution.com/56570fc28d324681944ec785f7639572/" }
         ];
-        // =========================================================================
 
         function displayGames(gamesList) {
             const grid = document.getElementById('games-grid');
@@ -287,7 +270,7 @@
                 card.className = 'game-card';
                 card.onclick = () => launchGame(game.title, game.url);
                 card.innerHTML = `
-                    <img src="${game.img}" onerror="this.src='https://placehold.co/100x100/23233c/fff?text=Game'">
+                    <img src="${game.img}">
                     <p>${game.title}</p>
                 `;
                 grid.appendChild(card);
