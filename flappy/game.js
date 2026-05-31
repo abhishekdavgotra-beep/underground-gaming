@@ -1,131 +1,125 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+// --- ORIGINAL CORE ENGINE (Nolanjp Style) ---
+var canvas = document.getElementById("canvas") || document.getElementById("gameCanvas");
+if (!canvas) {
+    canvas = document.createElement("canvas");
+    canvas.id = "canvas";
+    document.body.appendChild(canvas);
+}
+var ctx = canvas.getContext("2d");
 
-// Sharp graphics filter
-ctx.imageSmoothingEnabled = false;
+canvas.width = 320;
+canvas.height = 480;
 
-// Physics Config (Instantly snappy)
-const GRAVITY = 1300;  
-const FLAP = -340;     
-const PIPE_SPEED = 150; 
-const PIPE_GAP = 115;
-const SPAWN_RATE = 1.5; 
+var score = 0;
+var highscore = localStorage.getItem("flappyHighScore") || 0;
+var state = 0; // 0: Start, 1: Playing, 2: GameOver
+var frame = 0;
 
-let bird = { x: 60, y: 200, velocity: 0, width: 34, height: 24, rotation: 0 };
-let pipes = [];
-let score = 0;
-let highScore = localStorage.getItem('flappyHighScore') || 0;
-let gameState = 'START'; 
-
-let lastTime = 0;
-let pipeSpawnTimer = 0;
-
-const images = {};
-const imageSources = {
-    bg: './assets/images/bg.png',
-    bird: './assets/images/flappybird.png',
-    topPipe: './assets/images/toppipe.png',
-    bottomPipe: './assets/images/bottompipe.png'
+var bird = {
+    x: 60,
+    y: 150,
+    w: 34,
+    h: 24,
+    gravity: 0.25,
+    velocity: 0,
+    jump: -4.6,
+    rotation: 0
 };
 
-let loadedImages = 0;
-const totalImages = Object.keys(imageSources).length;
+var pipes = [];
+var pipeGap = 100;
+var pipeSpeed = 2;
 
-function imageLoaded() {
-    loadedImages++;
-    if (loadedImages === totalImages) {
-        lastTime = performance.now();
-        requestAnimationFrame(gameLoop);
+// --- IMAGES OBJECT SETUP ---
+var images = {};
+var src = {
+    bg: "./assets/images/bg.png",
+    bird: "./assets/images/flappybird.png",
+    top: "./assets/images/toppipe.png",
+    bottom: "./assets/images/bottompipe.png"
+};
+
+var loaded = 0;
+for (var key in src) {
+    images[key] = new Image();
+    images[key].src = src[key];
+    images[key].onload = function() { loaded++; };
+}
+
+// --- 🔥 INTERACTION CONTROLLER (NO 2-DAY DELAY LAG!) ---
+function doAction() {
+    if (state === 0) {
+        state = 1;
+        pipes = [];
+        score = 0;
+        bird.y = 150;
+        bird.velocity = 0;
+    } else if (state === 1) {
+        bird.velocity = bird.jump; // Snappy instant jump!
+    } else if (state === 2) {
+        state = 0;
     }
 }
 
-for (let key in imageSources) {
-    images[key] = new Image();
-    images[key].src = imageSources[key];
-    images[key].onload = imageLoaded;
-    images[key].onerror = () => imageLoaded();
-}
-
-// 🔥 ZERO-DELAY INPUT CONTROLLERS (Super Fast Response)
-window.addEventListener('keydown', function(e) {
-    if (e.code === 'Space' || e.code === 'ArrowUp') {
-        e.preventDefault(); // Browser ko scroll karne se rokna
-        handleAction();
+// Global window controls (Dono Keyboard aur click/touch ke liye instantly active)
+window.addEventListener("keydown", function(e) {
+    if (e.code === "Space" || e.code === "ArrowUp") {
+        e.preventDefault();
+        doAction();
     }
 });
 
-// Mobile ke liye pointerdown/touchstart bina kisi delay ke
-window.addEventListener('pointerdown', function(e) {
-    if (e.target === canvas) {
-        e.preventDefault();
-        handleAction();
-    }
-}, { passive: false });
+// Purana touchstart delay bypass karne ka asli tareeka
+window.addEventListener("pointerdown", function(e) {
+    // Sirf tab trigger hoga jab screen par click ho (overlay blocker ko bypass karega)
+    doAction();
+}, { passive: true });
 
-function handleAction() {
-    if (gameState === 'START') {
-        gameState = 'PLAYING';
-        resetGame();
-    } else if (gameState === 'PLAYING') {
-        bird.velocity = FLAP; // Instant jump!
-    } else if (gameState === 'GAMEOVER') {
-        gameState = 'PLAYING';
-        resetGame();
-    }
-}
+// --- GAME LOGIC LOOP ---
+function update() {
+    if (state !== 1) return;
 
-function resetGame() {
-    bird.y = 200;
-    bird.velocity = 0;
-    bird.rotation = 0;
-    pipes = [];
-    score = 0;
-    pipeSpawnTimer = 0;
-}
+    frame++;
+    bird.velocity += bird.gravity;
+    bird.y += bird.velocity;
 
-function update(dt) {
-    if (gameState !== 'PLAYING') return;
-
-    bird.velocity += GRAVITY * dt;
-    bird.y += bird.velocity * dt;
-
-    // Smooth rotation physics
+    // Smooth physics angle rotation
     if (bird.velocity < 0) {
-        bird.rotation = Math.max(-0.4, bird.velocity * 0.002);
+        bird.rotation = -0.3;
+    } else if (bird.velocity > 4) {
+        bird.rotation = 0.7;
     } else {
-        bird.rotation = Math.min(0.7, bird.velocity * 0.0015);
+        bird.rotation = 0;
     }
 
-    if (bird.y + bird.height >= canvas.height - 40 || bird.y <= 0) {
-        gameState = 'GAMEOVER';
+    if (bird.y + bird.h >= canvas.height - 40 || bird.y <= 0) {
+        endGame();
     }
 
-    pipeSpawnTimer += dt;
-    if (pipeSpawnTimer >= SPAWN_RATE) {
-        pipeSpawnTimer = 0;
-        let minHeight = 50;
-        let maxHeight = canvas.height - PIPE_GAP - minHeight - 60;
-        let topHeight = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
-        pipes.push({ x: canvas.width, topHeight: topHeight, passed: false });
+    // Spawn pipes smoothly
+    if (frame % 100 === 0) {
+        var topH = Math.floor(Math.random() * (canvas.height - pipeGap - 120)) + 40;
+        pipes.push({ x: canvas.width, top: topH, passed: false });
     }
 
-    for (let i = pipes.length - 1; i >= 0; i--) {
-        pipes[i].x -= PIPE_SPEED * dt;
+    for (var i = pipes.length - 1; i >= 0; i--) {
+        pipes[i].x -= pipeSpeed;
 
+        // Strict pixel-perfect hitbox mapping
         if (
             bird.x + 4 < pipes[i].x + 52 &&
-            bird.x + bird.width - 4 > pipes[i].x &&
-            (bird.y + 4 < pipes[i].topHeight || bird.y + bird.height - 4 > pipes[i].topHeight + PIPE_GAP)
+            bird.x + bird.w - 4 > pipes[i].x &&
+            (bird.y + 4 < pipes[i].top || bird.y + bird.h - 4 > pipes[i].top + pipeGap)
         ) {
-            gameState = 'GAMEOVER';
+            endGame();
         }
 
         if (!pipes[i].passed && pipes[i].x + 26 < bird.x) {
             score++;
             pipes[i].passed = true;
-            if (score > highScore) {
-                highScore = score;
-                localStorage.setItem('flappyHighScore', highScore);
+            if (score > highscore) {
+                highscore = score;
+                localStorage.setItem("flappyHighScore", highscore);
             }
         }
 
@@ -133,63 +127,72 @@ function update(dt) {
     }
 }
 
+function endGame() {
+    state = 2;
+}
+
+// --- CANVAS GRAPHICS RENDERER ---
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.imageSmoothingEnabled = false; // Crisp pixel layout filter
 
+    // 1. Draw Background
     if (images.bg.complete) ctx.drawImage(images.bg, 0, 0, canvas.width, canvas.height);
 
-    pipes.forEach(pipe => {
-        if (images.topPipe.complete) ctx.drawImage(images.topPipe, pipe.x, pipe.topHeight - 320, 52, 320);
-        if (images.bottomPipe.complete) ctx.drawImage(images.bottomPipe, pipe.x, pipe.topHeight + PIPE_GAP, 52, 320);
+    // 2. Draw Pipes
+    pipes.forEach(function(p) {
+        if (images.top.complete) ctx.drawImage(images.top, p.x, p.top - 320, 52, 320);
+        if (images.bottom.complete) ctx.drawImage(images.bottom, p.x, p.top + pipeGap, 52, 320);
     });
 
+    // 3. Draw Bird with Smooth Rotation
     if (images.bird.complete) {
         ctx.save();
-        ctx.translate(bird.x + bird.width / 2, bird.y + bird.height / 2);
+        ctx.translate(bird.x + bird.w / 2, bird.y + bird.h / 2);
         ctx.rotate(bird.rotation);
-        ctx.drawImage(images.bird, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
+        ctx.drawImage(images.bird, -bird.w / 2, -bird.h / 2, bird.w, bird.h);
         ctx.restore();
     }
 
-    ctx.fillStyle = '#FFF';
-    ctx.strokeStyle = '#000';
+    // 4. Score Display & UI Overlays
+    ctx.fillStyle = "#FFF";
+    ctx.strokeStyle = "#000";
     ctx.lineWidth = 3;
-    ctx.textAlign = 'center';
-    
-    if (gameState === 'PLAYING') {
-        ctx.font = 'bold 40px Arial';
+    ctx.textAlign = "center";
+
+    if (state === 1) {
+        ctx.font = 'bold 36px Arial';
         ctx.fillText(score, canvas.width / 2, 60);
         ctx.strokeText(score, canvas.width / 2, 60);
-    } else if (gameState === 'START') {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    } else if (state === 0) {
+        // Draw Retro title block manually if img fails
+        ctx.fillStyle = "rgba(0,0,0,0.3)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#FFF';
-        ctx.font = 'bold 22px Arial';
-        ctx.fillText('Tap / Space to Fly', canvas.width / 2, canvas.height / 2);
-    } else if (gameState === 'GAMEOVER') {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillStyle = "#FFF";
+        ctx.font = 'bold 24px Arial';
+        ctx.fillText("FLAPPY BIRD", canvas.width / 2, canvas.height / 2 - 50);
+        ctx.font = '16px Arial';
+        ctx.fillStyle = "#FFD700";
+        ctx.fillText("TAP ANYWHERE TO START", canvas.width / 2, canvas.height / 2 + 20);
+    } else if (state === 2) {
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#FFF';
-        
-        ctx.font = 'bold 32px Arial';
-        ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 40);
-        
-        ctx.font = '22px Arial';
-        ctx.fillText('Score: ' + score, canvas.width / 2, canvas.height / 2 + 10);
-        ctx.fillText('Best: ' + highScore, canvas.width / 2, canvas.height / 2 + 45);
-        
-        ctx.font = 'bold 16px Arial';
-        ctx.fillStyle = '#FFD700';
-        ctx.fillText('Tap to Restart', canvas.width / 2, canvas.height / 2 + 90);
+        ctx.fillStyle = "#FFF";
+        ctx.font = 'bold 28px Arial';
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 40);
+        ctx.font = '20px Arial';
+        ctx.fillText("Score: " + score, canvas.width / 2, canvas.height / 2 + 10);
+        ctx.fillText("Best: " + highscore, canvas.width / 2, canvas.height / 2 + 40);
+        ctx.font = 'bold 14px Arial';
+        ctx.fillStyle = "#FFD700";
+        ctx.fillText("TAP TO RESTART", canvas.width / 2, canvas.height / 2 + 80);
     }
 }
 
-function gameLoop(timestamp) {
-    let dt = (timestamp - lastTime) / 1000;
-    if (dt > 0.1) dt = 0.1;
-    lastTime = timestamp;
-
-    update(dt);
+function loop() {
+    update();
     draw();
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(loop);
 }
+
+loop();
