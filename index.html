@@ -84,7 +84,6 @@
             padding: 15px;
         }
 
-        /* Home Grid */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -130,7 +129,6 @@
             width: 100%;
         }
 
-        /* Poki Player Screen Layout */
         .player-view {
             display: none;
             max-width: 1300px;
@@ -139,7 +137,6 @@
             justify-content: center;
         }
 
-        /* Standard Poki Side Ads Box */
         .ad-sidebar {
             width: 160px;
             height: 600px;
@@ -158,7 +155,6 @@
             letter-spacing: 1px;
         }
 
-        /* Game Box Size Customization */
         .game-frame-container {
             width: 800px;
             height: 600px;
@@ -228,7 +224,7 @@
         <button class="cat-btn active" onclick="filterCategory('all')">All Games</button>
         <button class="cat-btn" onclick="filterCategory('Action')">Action</button>
         <button class="cat-btn" onclick="filterCategory('Racing')">Racing</button>
-        <button class="cat-btn" onclick="filterCategory('Puzzle')">Puzzle</button>
+        <button class="cat-btn" onclick="filterCategory('Retro')">Retro</button>
     </div>
 
     <div class="main-content">
@@ -254,12 +250,12 @@
     </div>
 
     <script>
-        // MASTER GAME DATABASE - Poki Style Direct Links (No Extra Play Buttons)
+        // NEW UNBLOCKED OPEN-SOURCE DIRECT LINKS (Zero Restrictions)
         const gamesDatabase = [
-            { title: "Tunnel Rush", cat: "Action", img: "https://img.gamedistribution.com/c1064ff3f80c441baf472aa46d4e4cb6-512x512.jpg", url: "https://html5.gamedistribution.com/c1064ff3f80c441baf472aa46d4e4cb6/" },
-            { title: "Moto X3M Pool", cat: "Racing", img: "https://img.gamedistribution.com/fa8a3fa38e93437fa867f70b134d1010-512x512.jpg", url: "https://html5.gamedistribution.com/fa8a3fa38e93437fa867f70b134d1010/" },
-            { title: "Bubble Tower 3D", cat: "Puzzle", img: "https://img.gamedistribution.com/fa035be4899a4c14b2d69956f4cf9119-512x512.jpg", url: "https://html5.gamedistribution.com/fa035be4899a4c14b2d69956f4cf9119/" },
-            { title: "Cannon Balls 3D", cat: "Action", img: "https://img.gamedistribution.com/56570fc28d324681944ec785f7639572-512x512.jpg", url: "https://html5.gamedistribution.com/56570fc28d324681944ec785f7639572/" }
+            { title: "2048 Blocks", cat: "Retro", img: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150", url: "https://play2048.co/" },
+            { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=150", url: "https://flappybird.io/" },
+            { title: "Hextris Challenge", cat: "Puzzle", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=150", url: "https://hextris.io/" },
+            { title: "Pac-Man Retro", cat: "Retro", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150", url: "https://pacman.live/play.html" }
         ];
 
         function displayGames(gamesList) {
