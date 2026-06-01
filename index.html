@@ -235,6 +235,7 @@ card.onclick = () => {
     document.getElementById('moreGamesTitle').style.display = 'block';
     
     window.scrollTo({ top: 100, behavior: 'smooth' });
+history.pushState({gameOpen: true},"");
 };
 
                 card.innerHTML = `
@@ -262,6 +263,22 @@ card.onclick = () => {
 
         // App Initializer
         renderGames(gamesDatabase);
+
+        window.onpopstate = function(event) {
+    const gameBox = document.getElementById('gameBox');
+    const moreGamesTitle = document.getElementById('moreGamesTitle');
+    const gameFrame = document.getElementById('gameFrame');
+    const topAd = document.querySelector('.top-banner-ad');
+    
+    if (gameBox && gameBox.style.display === 'block') {
+        gameBox.style.display = 'none';
+        if (moreGamesTitle) moreGamesTitle.style.display = 'none';
+        if (gameFrame) gameFrame.src = ""; // 3. Yahan src set karne ka system ekdum perfect hai
+        if (topAd) topAd.style.display = 'none'; // Top ad ko bhi chhupa do
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
     </script>
 </body>
 </html>
