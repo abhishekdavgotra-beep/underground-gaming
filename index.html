@@ -43,11 +43,11 @@
             max-width: 800px;
             overflow-x: auto;
             padding: 5px;
-            scrollbar-width: none; /* Hide scrollbar Firefox */
+            scrollbar-width: none;
         }
 
         .filters::-webkit-scrollbar {
-            display: none; /* Hide scrollbar Chrome/Safari */
+            display: none;
         }
 
         .filter-btn {
@@ -68,7 +68,7 @@
             box-shadow: 0 0 12px #00f3ff;
         }
 
-        /* Clean Central Arena (No More Side Ads) */
+        /* Clean Central Arena */
         .main-container {
             width: 92%;
             max-width: 1000px;
@@ -79,7 +79,7 @@
             margin-bottom: 40px;
         }
 
-        /* Top Banner Ad - Hidden by default, triggers on tap */
+        /* Top Banner Ad - Hidden by default */
         .top-banner-ad {
             width: 100%;
             height: 75px;
@@ -99,7 +99,7 @@
         /* Big Fluid Dynamic Game Window */
         .video-game-container {
             width: 100%;
-            height: 70vh; /* Scaled perfectly to mobile/laptop view height */
+            height: 70vh; 
             max-height: 600px;
             background: #000;
             border: 3px solid #00f3ff;
@@ -192,32 +192,31 @@
     </header>
 
     <div class="filters">
-        <button class="filter-btn active" onclick="filterCat('All')">All Games</button>
-        <button class="filter-btn" onclick="filterCat('Action')">Action</button>
-        <button class="filter-btn" onclick="filterCat('Racing')">Racing</button>
-        <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
+        <button id="btn-All" class="filter-btn active" onclick="filterCat('All')">All Games</button>
+        <button id="btn-Action" class="filter-btn" onclick="filterCat('Action')">Action</button>
+        <button id="btn-Racing" class="filter-btn" onclick="filterCat('Racing')">Racing</button>
+        <button id="btn-Retro" class="filter-btn" onclick="filterCat('Retro')">Retro</button>
     </div>
 
-    <!-- MAIN CORE CONTAINER -->
     <div class="main-container">
         
-        <!-- Top banner ad inside core view - only shows up on tap -->
+        <!-- Top banner ad -->
         <div class="top-banner-ad" id="topAd">
             <span>[ GOOGLE BANNER AD - 728x90 ]</span>
         </div>
 
-        <!-- Embedded Game Screen Box -->
+        <!-- Game Screen Box -->
         <div class="video-game-container" id="gameBox">
             <iframe id="gameFrame" src=""></iframe>
         </div>
 
-        <!-- Clean Grid layout (No headers, ads integrated natively) -->
+        <!-- Grid Container -->
         <div class="games-grid" id="gridBox"></div>
 
     </div>
 
     <script>
-        // Database with internal inline ad items
+        // Global Database - top priority
         const gamesDatabase = [
             { type: "game", title: "Drive Quest", cat: "Racing", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
             { type: "game", title: "Flappy Bird Classic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" },
@@ -232,22 +231,15 @@
 
         function renderGames(list) {
             gridBox.innerHTML = "";
-            if (list.length === 0) {
-                gridBox.innerHTML = "<p style='color: #00f3ff; grid-column: 1/-1; text-align: center;'>No games found.</p>";
-                return;
-            }
             
             list.forEach(item => {
                 if (item.type === "game") {
                     const card = document.createElement('div');
                     card.className = "game-card";
-                    card.onclick = () => {
-                        // Triggers layout changes seamlessly on tap/click
+                    card.onclick = function() {
                         topAd.style.display = 'flex';
                         gameBox.style.display = 'block';
                         gameFrame.src = item.url;
-                        
-                        // Smooth scrolls user focus onto active gameplay view
                         window.scrollTo({ top: 60, behavior: 'smooth' });
                     };
 
@@ -266,11 +258,14 @@
         }
 
         function filterCat(category) {
+            // Remove active class from all buttons safely without using event.target
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             
-            if(event && event.target) {
-                event.target.classList.add('active');
+            // Add active class to clicked button
+            const activeBtn = document.getElementById('btn-' + category);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
             }
 
             if(category === 'All') {
@@ -281,7 +276,7 @@
             }
         }
 
-        // Initialize core engine setup
+        // Run on page load
         renderGames(gamesDatabase);
     </script>
 </body>
