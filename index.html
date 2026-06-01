@@ -194,11 +194,12 @@
                 <span>[ GOOGLE BANNER AD SLOT - 728x90 ]</span>
             </div>
 
-            <div class="video-game-container">
-                <iframe id="gameFrame" src="./flappy/index.html"></iframe>
+            <div class="video-game-container"
+                id="gameBox" style="display:none;">
+                </iframe id="gameFrame" src=""></iframe>
             </div>
 
-            <h2 style="align-self: flex-start; color: #00f3ff; margin-top: 30px; font-size: 1.4rem;">More Awesome Games</h2>
+            <h2 id="moreGamesTitle" style="display: none; align-self: flex-start; color: #00f3ff; margin-top: 30px; font-size: 1.4rem;">More Awesome Games</h2>
             <div class="games-grid" id="gridBox"></div>
 
         </div>
@@ -224,11 +225,18 @@
             list.forEach(game => {
                 const card = document.createElement('div');
                 card.className = "game-card";
-                // Click karte hi upar iframe badal jayega bina page refresh kiye
-                card.onclick = () => {
-                    gameFrame.src = game.url;
-                    window.scrollTo({ top: 100, behavior: 'smooth' });
-                };
+                // 🛑 ISK0 COPY KARO AUR APNE CARD.ONCLICK KE ANDAR PASTE KARDO
+card.onclick = () => {
+    gameFrame.src = game.url;
+    
+    // 1. Click hote hi game box ko screen par dikhao
+    document.getElementById('gameBox').style.display = 'block';
+    
+    // 2. Click hote hi "More Awesome Games" heading ko bhi dikhao
+    document.getElementById('moreGamesTitle').style.display = 'block';
+    
+    window.scrollTo({ top: 100, behavior: 'smooth' });
+};
 
                 card.innerHTML = `
                     <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
