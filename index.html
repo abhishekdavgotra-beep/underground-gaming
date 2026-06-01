@@ -93,19 +93,19 @@
         }
 
         /* Game Screen ke Andar ka TOP AD BANNER */
-.top-banner-ad {
-    width: 100%;
-    height: 90px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px dashed #00f3ff;
-    border-radius: 8px;
-    display: none; /* <-- Isse ad pehle se chhupa rahega aur game click hone par hi khulega */
-    justify-content: center;
-    align-items: center;
-    color: #00f3ff;
-    font-weight: bold;
-    font-size: 0.9rem;
-}
+        .top-banner-ad {
+            width: 100%;
+            height: 90px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px dashed #00f3ff;
+            border-radius: 8px;
+            display: none; /* <-- Shuru mein ad hidden rahega */
+            justify-content: center;
+            align-items: center;
+            color: #00f3ff;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
 
         /* Big Theater Mode Game Container */
         .video-game-container {
@@ -117,7 +117,7 @@
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
             overflow: hidden;
             position: relative;
-            display: none; /* <-- Yeh ek nayi line yahan jod do */
+            display: none; /* <-- Shuru mein game screen hidden rahegi */
         }
 
         .video-game-container iframe {
@@ -181,31 +181,38 @@
         <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
     </div>
 
+    <!-- MAIN 3-COLUMN POKI AREA -->
     <div class="main-container">
         
+        <!-- Left Banner Ad -->
         <div class="side-ad">ADVERTISEMENT</div>
 
+        <!-- Central Game Controller Zone -->
         <div class="game-zone">
             
+            <!-- Full Screen ke andar sabse upar chalne wala ad space -->
             <div class="top-banner-ad">
                 <span>[ GOOGLE BANNER AD SLOT - 728x90 ]</span>
             </div>
 
+            <!-- Big Theater Game Window -->
             <div class="video-game-container">
-                <iframe id="gameFrame" src="./flappy/index.html"></iframe>
+                <iframe id="gameFrame" src=""></iframe>
             </div>
 
+            <!-- Niche Dusre Games ki responsive List -->
             <h2 style="align-self: flex-start; color: #00f3ff; margin-top: 30px; font-size: 1.4rem;">More Awesome Games</h2>
             <div class="games-grid" id="gridBox"></div>
 
         </div>
 
+        <!-- Right Banner Ad -->
         <div class="side-ad">ADVERTISEMENT</div>
 
     </div>
 
     <script>
-        // --- 100% CORRECT CLEANED DATABASE ---
+        // --- CLEANED DATABASE WITH YOUR PHOTO NAMES ---
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" },
@@ -221,17 +228,15 @@
             list.forEach(game => {
                 const card = document.createElement('div');
                 card.className = "game-card";
-                // Click karte hi upar iframe badal jayega bina page refresh kiye
+                
                 card.onclick = () => {
-                    card.onclick = () => {
-            // 🔥 Click karte hi ad aur game window dono samne aa jayenge
-            document.querySelector('.top-banner-ad').style.display = 'flex';
-            document.querySelector('.video-game-container').style.display = 'block';
-            
-            // Iframe ke andar game ka url load ho jayega
-            gameFrame.src = game.url;
-            window.scrollTo({ top: 100, behavior: 'smooth' });
-        };
+                    // Click karne par dono elements show honge
+                    document.querySelector('.top-banner-ad').style.display = 'flex';
+                    document.querySelector('.video-game-container').style.display = 'block';
+                    
+                    gameFrame.src = game.url;
+                    window.scrollTo({ top: 100, behavior: 'smooth' });
+                };
 
                 card.innerHTML = `
                     <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
@@ -243,7 +248,6 @@
 
         // Filter engine
         function filterCat(category) {
-            // Update active button state
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
