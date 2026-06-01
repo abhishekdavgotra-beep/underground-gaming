@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Underground Gaming</title>
     <style>
-        /* Premium Poki-Style Dark Blue Background Theme */
+        /* Premium Dark Theme */
         body {
             margin: 0;
             padding: 0;
@@ -32,7 +32,6 @@
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
         }
 
-        /* Category Menu Buttons */
         .filters {
             display: flex;
             gap: 15px;
@@ -57,7 +56,7 @@
             box-shadow: 0 0 15px #00f3ff;
         }
 
-        /* Standard Master 3-Column Layout */
+        /* Master Layout */
         .main-container {
             display: flex;
             width: 98%;
@@ -67,10 +66,10 @@
             margin-bottom: 40px;
         }
 
-        /* Side Ads - Thoda slim (160px width) taaki look clean lage */
+        /* Slim Side Ads */
         .side-ad {
             width: 160px;
-            min-height: 700px;
+            min-height: 600px;
             background: rgba(0, 0, 0, 0.4);
             border: 1px dashed rgba(0, 243, 255, 0.3);
             border-radius: 12px;
@@ -83,7 +82,6 @@
             text-transform: uppercase;
         }
 
-        /* Main Center Workspace */
         .game-zone {
             flex: 1;
             display: flex;
@@ -92,14 +90,13 @@
             align-items: center;
         }
 
-        /* Game Screen ke Andar ka TOP AD BANNER */
         .top-banner-ad {
             width: 100%;
             height: 90px;
             background: rgba(0, 0, 0, 0.5);
             border: 1px dashed #00f3ff;
             border-radius: 8px;
-            display: none; /* Game click hone par hi dikhega */
+            display: none;
             justify-content: center;
             align-items: center;
             color: #00f3ff;
@@ -107,19 +104,18 @@
             font-size: 0.9rem;
         }
 
-        /* Bada Responsive Theater Mode Window */
+        /* Responsive Big Game Window */
         .video-game-container {
             width: 100%;
-            height: 650px; /* Bada laptop screen area */
+            height: 650px;
             background: #000;
             border: 3px solid #00f3ff;
             border-radius: 12px;
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
             overflow: hidden;
-            display: none; /* Shuru mein hidden */
+            display: none;
         }
 
-        /* Iframe pure space ko stretch karega */
         .video-game-container iframe {
             width: 100%;
             height: 100%;
@@ -127,15 +123,15 @@
             display: block;
         }
 
-        /* Dynamic Grid System for Cards and Middle Ads */
+        /* Grid System */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 20px;
             width: 100%;
+            margin-top: 10px;
         }
 
-        /* Game Card Design */
         .game-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -168,7 +164,7 @@
             text-transform: capitalize;
         }
 
-        /* Middle Advertisement Block in Cards Grid */
+        /* Middle Inline Ads */
         .inline-ad-card {
             background: rgba(0, 0, 0, 0.5);
             border: 2px dashed rgba(0, 243, 255, 0.4);
@@ -199,11 +195,9 @@
     </div>
 
     <div class="main-container">
-        
         <div class="side-ad">ADVERTISEMENT</div>
 
         <div class="game-zone">
-            
             <div class="top-banner-ad">
                 <span>[ GOOGLE BANNER AD SLOT - 728x90 ]</span>
             </div>
@@ -213,19 +207,16 @@
             </div>
 
             <div class="games-grid" id="gridBox"></div>
-
         </div>
 
         <div class="side-ad">ADVERTISEMENT</div>
-
     </div>
 
     <script>
-        // Clean and Correct Database
+        // Bulletproof Database (Agar photo nahi bhi mili, toh backup placeholder dikhega)
         const gamesDatabase = [
             { type: "game", title: "Drive Quest", cat: "Racing", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
             { type: "game", title: "Flappy Bird Classic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" },
-            // Beech mein ad card automatically load karne ka system
             { type: "ad", text: "INLINE AD SLOT" },
             { type: "game", title: "Pac-Man Retro", cat: "Retro", img: "./images/ludo.jpg", url: "https://pacman.live/play.html" }
         ];
@@ -235,26 +226,29 @@
 
         function renderGames(list) {
             gridBox.innerHTML = "";
+            if (list.length === 0) {
+                gridBox.innerHTML = "<p style='color: #00f3ff; grid-column: 1/-1; text-align: center;'>No games found in this category.</p>";
+                return;
+            }
+            
             list.forEach(item => {
                 if (item.type === "game") {
                     const card = document.createElement('div');
                     card.className = "game-card";
                     card.onclick = () => {
-                        // Click hote hi game window aur banner active
                         document.querySelector('.top-banner-ad').style.display = 'flex';
                         document.querySelector('.video-game-container').style.display = 'block';
-                        
                         gameFrame.src = item.url;
                         window.scrollTo({ top: 80, behavior: 'smooth' });
                     };
 
+                    // Backup Image Engine if file name is different
                     card.innerHTML = `
-                        <img src="${item.img}" alt="${item.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
+                        <img src="${item.img}" alt="${item.title}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119';">
                         <h3>${item.title}</h3>
                     `;
                     gridBox.appendChild(card);
                 } else if (item.type === "ad") {
-                    // Middle ad layout setup
                     const adCard = document.createElement('div');
                     adCard.className = "inline-ad-card";
                     adCard.innerHTML = <span>⚡<br>${item.text}</span>;
@@ -266,18 +260,21 @@
         function filterCat(category) {
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // Safe filter execution
+            if(event && event.target) {
+                event.target.classList.add('active');
+            }
 
             if(category === 'All') {
                 renderGames(gamesDatabase);
             } else {
-                // Filter games only and keep relevant category
                 const filtered = gamesDatabase.filter(g => g.type === "game" && g.cat === category);
                 renderGames(filtered);
             }
         }
 
-        // Initialize Layout
+        // Initial setup run
         renderGames(gamesDatabase);
     </script>
 </body>
