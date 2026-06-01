@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming</title>
+    <title>Underground Gaming - Poki Style</title>
     <style>
-        /* Poki Style Modern Responsive Theme */
+        /* Asli Dark Blue Theme Layout Jo Tumhe Pasand Hai */
         body {
             margin: 0;
             padding: 0;
@@ -16,38 +16,35 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
         }
 
         header {
             width: 100%;
             text-align: center;
-            padding: 20px 0 10px 0;
+            padding: 20px 0;
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.2rem;
-            letter-spacing: 1px;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
             color: #00f3ff;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
         }
 
-        /* Centered Category Buttons */
+        /* Category Filter Buttons */
         .filters {
             display: flex;
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 15px;
+            margin-bottom: 30px;
             justify-content: center;
-            width: 95%;
-            max-width: 800px;
         }
 
         .filter-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid #00f3ff;
             color: #fff;
-            padding: 8px 18px;
+            padding: 8px 20px;
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
@@ -57,91 +54,207 @@
         .filter-btn.active, .filter-btn:hover {
             background: #00f3ff;
             color: #0b1d3a;
-            box-shadow: 0 0 12px #00f3ff;
+            box-shadow: 0 0 15px #00f3ff;
         }
 
-        /* Clean Central Workspace (No Side Ads) */
+        /* 3-Column Master Layout (Ads + Game Area + Ads) */
         .main-container {
-            width: 92%;
-            max-width: 1000px;
+            display: flex;
+            width: 95%;
+            max-width: 1400px;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        /* Side Ads Panels */
+        .side-ad {
+            width: 180px;
+            min-height: 600px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Central Game Zone */
+        .game-zone {
+            flex: 1;
             display: flex;
             flex-direction: column;
             gap: 15px;
             align-items: center;
-            margin-bottom: 40px;
         }
 
-        /* Top Banner Ad - Hidden by default, opens on game tap */
-        .top-banner-ad {
-            width: 100%;
-            height: 75px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px dashed #00f3ff;
-            border-radius: 12px;
-            display: none; 
+        /* Game Screen ke Andar ka TOP AD BANNER */
+.top-banner-ad {
+    width: 100%;
+    height: 90px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px dashed #00f3ff;
+    border-radius: 8px;
+    display: none; /* <-- Isse ad pehle se chhupa rahega aur game click hone par hi khulega */
+    justify-content: center;
+    align-items: center;
+    color: #00f3ff;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
             justify-content: center;
             align-items: center;
-            color: #00f3ff;
-            font-weight: bold;
-            font-size: 0.85rem;
-            text-align: center;
-            box-sizing: border-box;
-        }
+            color: #0
 
-        /* Fluid Dynamic Responsive Game Window */
+        /* Big Theater Mode Game Container */
         .video-game-container {
             width: 100%;
-            height: 65vh; 
-            max-height: 550px;
+            height: 600px; /* Laptop screen ke hisab se bada screen size */
             background: #000;
             border: 3px solid #00f3ff;
-            border-radius: 16px;
+            border-radius: 12px;
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
             overflow: hidden;
-            display: none;
+            position: relative;
+            display: none; /* <-- Yeh ek nayi line yahan jod do */
         }
 
         .video-game-container iframe {
-            width: 100% !important;
-            height: 100% !important;
+            width: 100%;
+            height: 100%;
             border: none;
-            display: block;
         }
 
-        /* Grid Layout for Games & Integrated Ads */
+        /* Grid System for Games Card List Below */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
-        /* Game Card Block Design */
         .game-card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 8px;
+            border-radius: 12px;
+            padding: 10px;
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s, border-color 0.2s;
         }
 
         .game-card:hover {
-            transform: scale(1.03);
+            transform: translateY(-5px);
             border-color: #00f3ff;
-            box-shadow: 0 4px 12px rgba(0, 243, 255, 0.25);
+            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.2);
         }
 
         .game-card img {
             width: 100%;
-            height: 110px;
+            height: 120px;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 8px;
             background-color: #16294a;
         }
 
         .game-card h3 {
-            font-size: 0.9rem;
-            margin: 8px 0 4px 0;
+            font-size: 0.95rem;
+            margin: 10px 0 5px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>UNDERGROUND GAMING</h1>
+    </header>
+
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterCat('All')">All Games</button>
+        <button class="filter-btn" onclick="filterCat('Action')">Action</button>
+        <button class="filter-btn" onclick="filterCat('Racing')">Racing</button>
+        <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="side-ad">ADVERTISEMENT</div>
+
+        <div class="game-zone">
+            
+            <div class="top-banner-ad">
+                <span>[ GOOGLE BANNER AD SLOT - 728x90 ]</span>
+            </div>
+
+            <div class="video-game-container">
+                <iframe id="gameFrame" src="./flappy/index.html"></iframe>
+            </div>
+
+            <h2 style="align-self: flex-start; color: #00f3ff; margin-top: 30px; font-size: 1.4rem;">More Awesome Games</h2>
+            <div class="games-grid" id="gridBox"></div>
+
+        </div>
+
+        <div class="side-ad">ADVERTISEMENT</div>
+
+    </div>
+
+    <script>
+        // --- 100% CORRECT CLEANED DATABASE ---
+        const gamesDatabase = [
+            { title: "Drive Quest", cat: "Racing", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
+            { title: "Flappy Bird Classic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" },
+            { title: "Pac-Man Retro", cat: "Retro", img: "./images/ludo.jpg", url: "https://pacman.live/play.html" }
+        ];
+
+        const gridBox = document.getElementById('gridBox');
+        const gameFrame = document.getElementById('gameFrame');
+
+        // Function to load and render cards dynamically
+        function renderGames(list) {
+            gridBox.innerHTML = "";
+            list.forEach(game => {
+                const card = document.createElement('div');
+                card.className = "game-card";
+                // Click karte hi upar iframe badal jayega bina page refresh kiye
+                card.onclick = () => {
+                    gameFrame.src = game.url;
+                    window.scrollTo({ top: 100, behavior: 'smooth' });
+                };
+
+                card.innerHTML = `
+                    <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
+                    <h3>${game.title}</h3>
+                `;
+                gridBox.appendChild(card);
+            });
+        }
+
+        // Filter engine
+        function filterCat(category) {
+            // Update active button state
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if(category === 'All') {
+                renderGames(gamesDatabase);
+            } else {
+                const filtered = gamesDatabase.filter(g => g.cat === category);
+                renderGames(filtered);
+            }
+        }
+
+        // App Initializer
+        renderGames(gamesDatabase);
+    </script>
+</body>
+</html>
