@@ -223,9 +223,15 @@
                 card.className = "game-card";
                 // Click karte hi upar iframe badal jayega bina page refresh kiye
                 card.onclick = () => {
-                    gameFrame.src = game.url;
-                    window.scrollTo({ top: 100, behavior: 'smooth' });
-                };
+                    card.onclick = () => {
+            // 🔥 Click karte hi ad aur game window dono samne aa jayenge
+            document.querySelector('.top-banner-ad').style.display = 'flex';
+            document.querySelector('.video-game-container').style.display = 'block';
+            
+            // Iframe ke andar game ka url load ho jayega
+            gameFrame.src = game.url;
+            window.scrollTo({ top: 100, behavior: 'smooth' });
+        };
 
                 card.innerHTML = `
                     <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
