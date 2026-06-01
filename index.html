@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Underground Gaming</title>
     <style>
-        /* Poki Style Modern Responsive Theme */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background: linear-gradient(135deg, #0b1d3a, #16294a);
             color: #fff;
             min-height: 100vh;
@@ -18,165 +17,28 @@
             align-items: center;
             overflow-x: hidden;
         }
-
-        header {
-            width: 100%;
-            text-align: center;
-            padding: 20px 0 10px 0;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2.2rem;
-            letter-spacing: 1px;
-            color: #00f3ff;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
-        }
-
-        /* Horizontal Scrollable Categories for Mobile */
-        .filters {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            justify-content: center;
-            width: 95%;
-            max-width: 800px;
-            overflow-x: auto;
-            padding: 5px;
-            scrollbar-width: none;
-        }
-
-        .filters::-webkit-scrollbar {
-            display: none;
-        }
-
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid #00f3ff;
-            color: #fff;
-            padding: 8px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn.active, .filter-btn:hover {
-            background: #00f3ff;
-            color: #0b1d3a;
-            box-shadow: 0 0 12px #00f3ff;
-        }
-
-        /* Clean Central Arena */
-        .main-container {
-            width: 92%;
-            max-width: 1000px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        /* Top Banner Ad - Hidden by default */
-        .top-banner-ad {
-            width: 100%;
-            height: 75px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px dashed #00f3ff;
-            border-radius: 12px;
-            display: none; 
-            justify-content: center;
-            align-items: center;
-            color: #00f3ff;
-            font-weight: bold;
-            font-size: 0.85rem;
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        /* Big Fluid Dynamic Game Window */
-        .video-game-container {
-            width: 100%;
-            height: 70vh; 
-            max-height: 600px;
-            background: #000;
-            border: 3px solid #00f3ff;
-            border-radius: 16px;
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
-            overflow: hidden;
-            display: none;
-        }
-
-        .video-game-container iframe {
-            width: 100% !important;
-            height: 100% !important;
-            border: none;
-            display: block;
-        }
-
-        /* Grid System for Games and Middle Ads */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        /* Game Card Block Design */
-        .game-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .game-card:hover {
-            transform: scale(1.03);
-            border-color: #00f3ff;
-            box-shadow: 0 4px 12px rgba(0, 243, 255, 0.25);
-        }
-
-        .game-card img {
-            width: 100%;
-            height: 110px;
-            object-fit: cover;
-            border-radius: 10px;
-            background-color: #16294a;
-        }
-
-        .game-card h3 {
-            font-size: 0.9rem;
-            margin: 8px 0 4px 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-transform: capitalize;
-        }
-
-        /* In-between Middle Ad Card */
-        .inline-ad-card {
-            background: rgba(0, 0, 0, 0.4);
-            border: 2px dashed rgba(0, 243, 255, 0.3);
-            border-radius: 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 10px;
-            font-size: 0.8rem;
-            color: #00f3ff;
-            font-weight: bold;
-            min-height: 140px;
-            box-sizing: border-box;
-        }
-
-        /* Mobile specific enhancements */
+        header { width: 100%; text-align: center; padding: 20px 0 10px 0; }
+        header h1 { margin: 0; font-size: 2.2rem; color: #00f3ff; text-shadow: 0 0 10px rgba(0, 243, 255, 0.4); }
+        
+        .filters { display: flex; gap: 12px; margin-bottom: 20px; justify-content: center; width: 95%; max-width: 800px; overflow-x: auto; padding: 5px; }
+        .filter-btn { background: rgba(255, 255, 255, 0.05); border: 2px solid #00f3ff; color: #fff; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; }
+        .filter-btn.active, .filter-btn:hover { background: #00f3ff; color: #0b1d3a; box-shadow: 0 0 12px #00f3ff; }
+        
+        .main-container { width: 92%; max-width: 1000px; display: flex; flex-direction: column; gap: 15px; align-items: center; margin-bottom: 40px; }
+        
+        .top-banner-ad { width: 100%; height: 75px; background: rgba(0, 0, 0, 0.6); border: 1px dashed #00f3ff; border-radius: 12px; display: none; justify-content: center; align-items: center; color: #00f3ff; font-weight: bold; font-size: 0.85rem; }
+        
+        .video-game-container { width: 100%; height: 70vh; max-height: 600px; background: #000; border: 3px solid #00f3ff; border-radius: 16px; box-shadow: 0 0 25px rgba(0, 243, 255, 0.3); overflow: hidden; display: none; }
+        .video-game-container iframe { width: 100% !important; height: 100% !important; border: none; display: block; }
+        
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; width: 100%; margin-top: 10px; }
+        .game-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 8px; text-align: center; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
+        .game-card:hover { transform: scale(1.03); border-color: #00f3ff; box-shadow: 0 4px 12px rgba(0, 243, 255, 0.25); }
+        .game-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 10px; background-color: #16294a; }
+        .game-card h3 { font-size: 0.9rem; margin: 8px 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; }
+        
+        .inline-ad-card { background: rgba(0, 0, 0, 0.4); border: 2px dashed rgba(0, 243, 255, 0.3); border-radius: 14px; display: flex; justify-content: center; align-items: center; text-align: center; padding: 10px; font-size: 0.8rem; color: #00f3ff; font-weight: bold; min-height: 140px; }
+        
         @media (max-width: 600px) {
             header h1 { font-size: 1.8rem; }
             .games-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
@@ -199,24 +61,18 @@
     </div>
 
     <div class="main-container">
-        
-        <!-- Top banner ad -->
         <div class="top-banner-ad" id="topAd">
             <span>[ GOOGLE BANNER AD - 728x90 ]</span>
         </div>
 
-        <!-- Game Screen Box -->
         <div class="video-game-container" id="gameBox">
             <iframe id="gameFrame" src=""></iframe>
         </div>
 
-        <!-- Grid Container -->
         <div class="games-grid" id="gridBox"></div>
-
     </div>
 
     <script>
-        // Global Database - top priority
         const gamesDatabase = [
             { type: "game", title: "Drive Quest", cat: "Racing", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
             { type: "game", title: "Flappy Bird Classic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" },
@@ -231,7 +87,6 @@
 
         function renderGames(list) {
             gridBox.innerHTML = "";
-            
             list.forEach(item => {
                 if (item.type === "game") {
                     const card = document.createElement('div');
@@ -242,7 +97,6 @@
                         gameFrame.src = item.url;
                         window.scrollTo({ top: 60, behavior: 'smooth' });
                     };
-
                     card.innerHTML = `
                         <img src="${item.img}" alt="${item.title}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119';">
                         <h3>${item.title}</h3>
@@ -258,15 +112,11 @@
         }
 
         function filterCat(category) {
-            // Remove active class from all buttons safely without using event.target
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             
-            // Add active class to clicked button
             const activeBtn = document.getElementById('btn-' + category);
-            if (activeBtn) {
-                activeBtn.classList.add('active');
-            }
+            if (activeBtn) activeBtn.classList.add('active');
 
             if(category === 'All') {
                 renderGames(gamesDatabase);
@@ -276,7 +126,7 @@
             }
         }
 
-        // Run on page load
+        // Yeh line page khulne par cards load karti hai
         renderGames(gamesDatabase);
     </script>
 </body>
