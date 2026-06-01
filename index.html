@@ -5,298 +5,252 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Underground Gaming - Poki Style</title>
     <style>
-        * {
+        /* Asli Dark Blue Theme Layout Jo Tumhe Pasand Hai */
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
-
-        body {
-            background: radial-gradient(circle at 50% 50%, #1f1f3a 0%, #111122 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0b1d3a, #16294a);
             color: #fff;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(0, 242, 254, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(78, 84, 200, 0.2) 0%, transparent 45%);
-            filter: blur(60px);
-            z-index: -1;
-            pointer-events: none;
+            align-items: center;
         }
 
         header {
-            background-color: rgba(22, 22, 35, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 15px;
+            width: 100%;
             text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #00f2fe;
-            border-bottom: 2px solid rgba(0, 242, 254, 0.5);
-            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.1);
-            cursor: pointer;
-            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+            padding: 20px 0;
         }
 
-        .category-bar {
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            color: #00f3ff;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Category Filter Buttons */
+        .filters {
             display: flex;
-            background: rgba(35, 35, 60, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 10px;
-            gap: 10px;
-            overflow-x: auto;
+            gap: 15px;
+            margin-bottom: 30px;
             justify-content: center;
-            border-bottom: 1px solid rgba(63, 63, 90, 0.3);
         }
 
-        .cat-btn {
-            background: rgba(78, 84, 200, 0.6);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 16px;
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #00f3ff;
+            color: #fff;
+            padding: 8px 20px;
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
 
-        .cat-btn.active, .cat-btn:hover {
-            background: #00f2fe;
-            color: #1a1a2e;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-            border-color: #00f2fe;
+        .filter-btn.active, .filter-btn:hover {
+            background: #00f3ff;
+            color: #0b1d3a;
+            box-shadow: 0 0 15px #00f3ff;
         }
 
-        .main-content {
-            flex: 1;
-            padding: 15px;
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 12px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .game-card {
-            background: rgba(22, 22, 35, 0.65);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(63, 63, 90, 0.5);
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
-            text-align: center;
+        /* 3-Column Master Layout (Ads + Game Area + Ads) */
+        .main-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px;
-        }
-
-        .game-card:hover {
-            transform: translateY(-5px);
-            border-color: #00f2fe;
-        }
-
-        .game-card img {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-
-        .game-card p {
-            font-size: 11px;
-            margin-top: 6px;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
-
-        .player-view {
-            display: none;
-            max-width: 1300px;
-            margin: 0 auto;
+            width: 95%;
+            max-width: 1400px;
             gap: 20px;
             justify-content: center;
+            margin-bottom: 40px;
         }
 
-        .ad-sidebar {
-            width: 160px;
-            height: 600px;
-            background-color: #090911;
-            border: 1px solid #23233c;
+        /* Side Ads Panels */
+        .side-ad {
+            width: 180px;
+            min-height: 600px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Central Game Zone */
+        .game-zone {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Game Screen ke Andar ka TOP AD BANNER */
+        .top-banner-ad {
+            width: 100%;
+            height: 90px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px dashed #00f3ff;
             border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        .ad-text {
-            font-size: 10px;
-            color: #444466;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .game-frame-container {
-            width: 800px;
-            height: 600px;
-            display: flex;
-            flex-direction: column;
-            background: #000;
-            border-radius: 12px;
-            border: 2px solid #3f3f5a;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-        }
-
-        .player-header {
-            background: #161623;
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #23233c;
-        }
-
-        .back-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
+            color: #00f3ff;
             font-weight: bold;
+            font-size: 0.9rem;
         }
 
-        .game-frame-container iframe {
+        /* Big Theater Mode Game Container */
+        .video-game-container {
+            width: 100%;
+            height: 600px; /* Laptop screen ke hisab se bada screen size */
+            background: #000;
+            border: 3px solid #00f3ff;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-game-container iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
 
-        .bottom-ad-bar {
-            width: 728px;
-            height: 90px;
-            background-color: #090911;
-            border: 1px solid #23233c;
-            border-radius: 8px;
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* Grid System for Games Card List Below */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
         }
 
-        @media (max-width: 1100px) {
-            .ad-sidebar { display: none; }
-            .game-frame-container { width: 100%; height: 75vh; }
-            .bottom-ad-bar { width: 100%; }
+        .game-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
         }
-        @media (max-width: 768px) {
-            .games-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
-            .game-card img { width: 65px; height: 65px; }
-            .category-bar { justify-content: flex-start; }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: #00f3ff;
+            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: #16294a;
+        }
+
+        .game-card h3 {
+            font-size: 0.95rem;
+            margin: 10px 0 5px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-transform: capitalize;
         }
     </style>
 </head>
 <body>
 
-    <header onclick="showHome()">UNDERGROUND GAMING</header>
+    <header>
+        <h1>UNDERGROUND GAMING</h1>
+    </header>
 
-    <div class="category-bar" id="category-bar">
-        <button class="cat-btn active" onclick="filterCategory('all')">All Games</button>
-        <button class="cat-btn" onclick="filterCategory('Action')">Action</button>
-        <button class="cat-btn" onclick="filterCategory('Racing')">Racing</button>
-        <button class="cat-btn" onclick="filterCategory('Retro')">Retro</button>
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterCat('All')">All Games</button>
+        <button class="filter-btn" onclick="filterCat('Action')">Action</button>
+        <button class="filter-btn" onclick="filterCat('Racing')">Racing</button>
+        <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
     </div>
 
-    <div class="main-content">
-        <div class="games-grid" id="games-grid"></div>
+    <div class="main-container">
+        
+        <div class="side-ad">ADVERTISEMENT</div>
 
-        <div class="player-view" id="player-view">
-            <div class="ad-sidebar"><div class="ad-text">Advertisement</div></div>
+        <div class="game-zone">
             
-            <div class="game-frame-container">
-                <div class="player-header">
-                    <span id="current-game-title" style="font-weight: bold; color: #00f2fe;">Loading...</span>
-                    <button class="back-btn" onclick="showHome()">⬅️ Home</button>
-                </div>
-                <iframe id="game-iframe" src="" allowfullscreen></iframe>
+            <div class="top-banner-ad">
+                <span>[ GOOGLE BANNER AD SLOT - 728x90 ]</span>
             </div>
 
-            <div class="ad-sidebar"><div class="ad-text">Advertisement</div></div>
-        </div>
-    </div>
+            <div class="video-game-container">
+                <iframe id="gameFrame" src="./flappy/index.html"></iframe>
+            </div>
 
-    <div class="bottom-ad-bar" id="bottom-ad">
-        <div class="ad-text">Advertisement</div>
+            <h2 style="align-self: flex-start; color: #00f3ff; margin-top: 30px; font-size: 1.4rem;">More Awesome Games</h2>
+            <div class="games-grid" id="gridBox"></div>
+
+        </div>
+
+        <div class="side-ad">ADVERTISEMENT</div>
+
     </div>
 
     <script>
-        // NEW UNBLOCKED OPEN-SOURCE DIRECT LINKS (Zero Restrictions)
+        // --- 100% CORRECT CLEANED DATABASE ---
         const gamesDatabase = [
-            { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=150", url: "https://playgama.com/export/game/drive-quest" },
+            { title: "Drive Quest", cat: "Racing", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" },
-            { title: "Pac-Man Retro", cat: "Retro", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150", url: "https://pacman.live/play.html" }
+            { title: "Pac-Man Retro", cat: "Retro", img: "./images/ludo.jpg", url: "https://pacman.live/play.html" }
         ];
 
-        function displayGames(gamesList) {
-            const grid = document.getElementById('games-grid');
-            grid.innerHTML = '';
-            gamesList.forEach(game => {
+        const gridBox = document.getElementById('gridBox');
+        const gameFrame = document.getElementById('gameFrame');
+
+        // Function to load and render cards dynamically
+        function renderGames(list) {
+            gridBox.innerHTML = "";
+            list.forEach(game => {
                 const card = document.createElement('div');
-                card.className = 'game-card';
-                card.onclick = () => launchGame(game.title, game.url);
+                card.className = "game-card";
+                // Click karte hi upar iframe badal jayega bina page refresh kiye
+                card.onclick = () => {
+                    gameFrame.src = game.url;
+                    window.scrollTo({ top: 100, behavior: 'smooth' });
+                };
+
                 card.innerHTML = `
-                    <img src="${game.img}">
-                    <p>${game.title}</p>
+                    <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
+                    <h3>${game.title}</h3>
                 `;
-                grid.appendChild(card);
+                gridBox.appendChild(card);
             });
         }
 
-        function filterCategory(categoryName) {
-            const buttons = document.querySelectorAll('.cat-btn');
+        // Filter engine
+        function filterCat(category) {
+            // Update active button state
+            const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
-            if(event) event.target.classList.add('active');
-            showHome();
-            if(categoryName === 'all') { displayGames(gamesDatabase); } 
-            else { const filtered = gamesDatabase.filter(g => g.cat === categoryName); displayGames(filtered); }
+            event.target.classList.add('active');
+
+            if(category === 'All') {
+                renderGames(gamesDatabase);
+            } else {
+                const filtered = gamesDatabase.filter(g => g.cat === category);
+                renderGames(filtered);
+            }
         }
 
-        function launchGame(title, url) {
-            document.getElementById('games-grid').style.display = 'none';
-            document.getElementById('category-bar').style.display = 'none';
-            document.getElementById('player-view').style.display = 'flex';
-            document.getElementById('current-game-title').innerText = title;
-            document.getElementById('game-iframe').src = url;
-        }
-
-        function showHome() {
-            document.getElementById('player-view').style.display = 'none';
-            document.getElementById('game-iframe').src = '';
-            document.getElementById('games-grid').style.display = 'grid';
-            document.getElementById('category-bar').style.display = 'flex';
-        }
-
-        displayGames(gamesDatabase);
+        // App Initializer
+        renderGames(gamesDatabase);
     </script>
 </body>
 </html>
