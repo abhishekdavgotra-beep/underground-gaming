@@ -178,10 +178,10 @@
     </header>
 
     <div class="filters">
-        <button class="filter-btn active" onclick="filterCat('All')">All Games</button>
-        <button class="filter-btn" onclick="filterCat('Action')">Action</button>
-        <button class="filter-btn" onclick="filterCat('Racing')">Racing</button>
-        <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
+        <button class="filter-btn active" onclick="filterCat('All', event)">All Games</button>
+        <button class="filter-btn" onclick="filterCat('Action', event)">Action</button>
+        <button class="filter-btn" onclick="filterCat('Racing', event)">Racing</button>
+        <button class="filter-btn" onclick="filterCat('Retro', event)">Retro</button>
     </div>
 
     <div class="main-container">
@@ -190,12 +190,12 @@
 
         <div class="game-zone">
             
-            <div class="top-banner-ad" id="topAdSlot" style="display: none; justify-content: center; align-items: center; background: #111; color: #fff; padding: 10px; margin-bottom: 15px; border-radius: 8px; width: 100%; max-width: 728px; margin-left: auto; margin-right: auto;">
+            <div class="top-banner-ad" id="topAdSlot">
                 <span>[ GOOGLE BANNER AD SLOT - 728x90 ]</span>
             </div>
 
-            <div class="video-game-container" id="gameBox" style="display: none; width: 100%; max-width: 900px; height: 500px; background: #000000; border: 3px solid #00f3ff; border-radius: 12px; box-shadow: 0 0 30px rgba(0, 243, 255, 0.4); overflow: hidden; position: relative; margin: 20px auto;">
-                <iframe id="gameFrame" src="" style="width: 100%; height: 100%; border: none; background: #000;"></iframe>
+            <div class="video-game-container" id="gameBox">
+                <iframe id="gameFrame" src=""></iframe>
             </div>
 
             <div class="games-grid" id="gridBox"></div>
@@ -220,7 +220,7 @@
         function renderGames(list, isRelatedMode = false) {
             const gridBox = document.getElementById('gridBox');
             
-            // Home page par grid saaf karo, smart filter mode mein nahi
+            // Home page par grid saaf karo
             if (!isRelatedMode && gridBox) {
                 gridBox.innerHTML = "";
             }
@@ -245,10 +245,11 @@
                     // 3. Category heading set karo
                     if (dynamicTitle) {
                         dynamicTitle.style.display = 'block';
-                        dynamicTitle.innerText = More ${game.cat} Games; 
+                        // FIXED: Added missing backticks here
+                        dynamicTitle.innerText = `More ${game.cat} Games`; 
                     }
                     
-                    // 4. 🔥 SMART FILTER ENGINE: Sirf same category ke baki games nikaalo
+                    // 4. SMART FILTER ENGINE: Sirf same category ke baki games nikaalo
                     const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
                     
                     // Grid ko saaf karke filtered games dikhao
@@ -272,7 +273,8 @@
         }
 
         // Filter engine
-        function filterCat(category) {
+        // FIXED: Explicitly passed and accepted 'event' parameter
+        function filterCat(category, event) {
             // Update active button state
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
