@@ -93,44 +93,41 @@
         }
 
         /* Game Screen ke Andar ka TOP AD BANNER */
-.top-banner-ad {
-    width: 100%;
-    height: 90px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px dashed #00f3ff;
-    border-radius: 8px;
-    display: none; /* <-- Isse ad pehle se chhupa rahega aur game click hone par hi khulega */
-    justify-content: center;
-    align-items: center;
-    color: #00f3ff;
-    font-weight: bold;
-    font-size: 0.9rem;
-}
+        .top-banner-ad {
+            width: 100%;
+            height: 90px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px dashed #00f3ff;
+            border-radius: 8px;
+            display: none; 
             justify-content: center;
             align-items: center;
-            color: #0
+            color: #00f3ff;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
 
         /* Big Theater Mode Game Container */
-.video-game-container {
-    width: 100%;
-    max-width: 900px; /* Laptop/Desktop par ekdum perfect bada size dikhane ke liye */
-    height: 500px; /* Game ki height */
-    background: #000000; /* Pure black background box ke andar */
-    border: 3px solid #00f3ff;
-    border-radius: 12px;
-    box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
-    overflow: hidden;
-    position: relative;
-    display: none;
-    margin: 20px auto;
-}
+        .video-game-container {
+            width: 100%;
+            max-width: 900px; 
+            height: 500px; 
+            background: #000000; 
+            border: 3px solid #00f3ff;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
+            overflow: hidden;
+            position: relative;
+            display: none;
+            margin: 20px auto;
+        }
 
-.video-game-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: #000;
-}
+        .video-game-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
 
         /* Grid System for Games Card List Below */
         .games-grid {
@@ -205,6 +202,8 @@
 
             <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 30px; font-size: 1.4rem; text-align: left; width: 100%;">More Awesome Games</h2>
 
+        </div>
+
         <div class="side-ad">ADVERTISEMENT</div>
 
     </div>
@@ -217,70 +216,69 @@
             { title: "Pac-Man Retro", cat: "Retro", img: "./images/ludo.jpg", url: "https://pacman.live/play.html" }
         ];
 
-        const gridBox = document.getElementById('gridBox');
-        const gameFrame = document.getElementById('gameFrame');
-
         // Function to load and render cards dynamically
         function renderGames(list, isRelatedMode = false) {
-    const gridBox = document.getElementById('gridBox');
-    
-    // Home page par grid saaf karo, smart filter mode mein nahi
-    if (!isRelatedMode && gridBox) {
-        gridBox.innerHTML = "";
-    }
-    
-    list.forEach(game => {
-        const card = document.createElement('div');
-        card.className = "game-card";
-        
-        card.onclick = () => {
-            const gameFrame = document.getElementById('gameFrame');
-            const gameBox = document.getElementById('gameBox');
-            const topAd = document.getElementById('topAdSlot');
-            const dynamicTitle = document.getElementById('moreGamesTitle');
-
-            // 1. URL aur Black Box show karo
-            if (gameFrame) gameFrame.src = game.url;
-            if (gameBox) gameBox.style.display = 'block';
+            const gridBox = document.getElementById('gridBox');
             
-            // 2. Top Banner Ad show karo
-            if (topAd) topAd.style.display = 'flex'; 
-            
-            // 3. Category heading set karo
-            if (dynamicTitle) {
-                dynamicTitle.style.display = 'block';
-                dynamicTitle.innerText = More ${game.cat} Games; 
-            }
-            
-            // 4. 🔥 SMART FILTER ENGINE: Sirf same category ke baki games nikaalo
-            const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
-            
-            // Grid ko saaf karke filtered games dikhao
-            if (gridBox) {
+            // Home page par grid saaf karo, smart filter mode mein nahi
+            if (!isRelatedMode && gridBox) {
                 gridBox.innerHTML = "";
-                renderGames(relatedGames, true); 
             }
             
-            // 5. Back button entry
-            history.pushState({ gameOpen: true }, "");
-            window.scrollTo({ top: 120, behavior: 'smooth' });
-        };
+            list.forEach(game => {
+                const card = document.createElement('div');
+                card.className = "game-card";
+                
+                card.onclick = () => {
+                    const gameFrame = document.getElementById('gameFrame');
+                    const gameBox = document.getElementById('gameBox');
+                    const topAd = document.getElementById('topAdSlot');
+                    const dynamicTitle = document.getElementById('moreGamesTitle');
 
-        // Card Layout
-        card.innerHTML = `
-            <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
-            <h3>${game.title}</h3>
-        `;
-        if (gridBox) gridBox.appendChild(card);
-    });
-}
+                    // 1. URL aur Black Box show karo
+                    if (gameFrame) gameFrame.src = game.url;
+                    if (gameBox) gameBox.style.display = 'block';
+                    
+                    // 2. Top Banner Ad show karo
+                    if (topAd) topAd.style.display = 'flex'; 
+                    
+                    // 3. Category heading set karo
+                    if (dynamicTitle) {
+                        dynamicTitle.style.display = 'block';
+                        dynamicTitle.innerText = More ${game.cat} Games; 
+                    }
+                    
+                    // 4. 🔥 SMART FILTER ENGINE: Sirf same category ke baki games nikaalo
+                    const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
+                    
+                    // Grid ko saaf karke filtered games dikhao
+                    if (gridBox) {
+                        gridBox.innerHTML = "";
+                        renderGames(relatedGames, true); 
+                    }
+                    
+                    // 5. Back button entry
+                    history.pushState({ gameOpen: true }, "");
+                    window.scrollTo({ top: 120, behavior: 'smooth' });
+                };
+
+                // Card Layout
+                card.innerHTML = `
+                    <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
+                    <h3>${game.title}</h3>
+                `;
+                if (gridBox) gridBox.appendChild(card);
+            });
+        }
 
         // Filter engine
         function filterCat(category) {
             // Update active button state
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
 
             if(category === 'All') {
                 renderGames(gamesDatabase);
@@ -294,22 +292,22 @@
         renderGames(gamesDatabase);
 
         window.onpopstate = function(event) {
-    const gameBox = document.getElementById('gameBox');
-    const dynamicTitle = document.getElementById('moreGamesTitle');
-    const topAd = document.getElementById('topAdSlot');
-    const gameFrame = document.getElementById('gameFrame');
-    
-    if (gameBox && gameBox.style.display === 'block') {
-        gameBox.style.display = 'none';
-        if (dynamicTitle) dynamicTitle.style.display = 'none';
-        if (topAd) topAd.style.display = 'none';
-        if (gameFrame) gameFrame.src = ""; 
-        
-        // Wapas saare games screen par laao
-        renderGames(gamesDatabase);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-};
+            const gameBox = document.getElementById('gameBox');
+            const dynamicTitle = document.getElementById('moreGamesTitle');
+            const topAd = document.getElementById('topAdSlot');
+            const gameFrame = document.getElementById('gameFrame');
+            
+            if (gameBox && gameBox.style.display === 'block') {
+                gameBox.style.display = 'none';
+                if (dynamicTitle) dynamicTitle.style.display = 'none';
+                if (topAd) topAd.style.display = 'none';
+                if (gameFrame) gameFrame.src = ""; 
+                
+                // Wapas saare games screen par laao
+                renderGames(gamesDatabase);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
     </script>
 </body>
 </html>
