@@ -111,23 +111,26 @@
             color: #0
 
         /* Big Theater Mode Game Container */
-        .video-game-container {
-            width: 100%;
-            height: 600px; /* Laptop screen ke hisab se bada screen size */
-            background: #000;
-            border: 3px solid #00f3ff;
-            border-radius: 12px;
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
-            overflow: hidden;
-            position: relative;
-            display: none; /* <-- Yeh ek nayi line yahan jod do */
-        }
+.video-game-container {
+    width: 100%;
+    max-width: 900px; /* Laptop/Desktop par ekdum perfect bada size dikhane ke liye */
+    height: 500px; /* Game ki height */
+    background: #000000; /* Pure black background box ke andar */
+    border: 3px solid #00f3ff;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
+    overflow: hidden;
+    position: relative;
+    display: none;
+    margin: 20px auto;
+}
 
-        .video-game-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+.video-game-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #000;
+}
 
         /* Grid System for Games Card List Below */
         .games-grid {
@@ -190,7 +193,7 @@
 
         <div class="game-zone">
             
-            <div class="top-banner-ad">
+            <div class="top-banner-ad" id="topAdSlot" style="display: none;">
                 <span>[ GOOGLE BANNER AD SLOT - 728x90 ]</span>
             </div>
 
@@ -219,24 +222,52 @@
         const gameFrame = document.getElementById('gameFrame');
 
         // Function to load and render cards dynamically
-        function renderGames(list) {
-            gridBox.innerHTML = "";
-            list.forEach(game => {
-                const card = document.createElement('div');
-                card.className = "game-card";
-                // 🛑 ISK0 COPY KARO AUR APNE CARD.ONCLICK KE ANDAR PASTE KARDO
-card.onclick = () => {
-    gameFrame.src = game.url;
+        function renderGames(list, isRelatedMode = false) {
+    const gridBox = document.getElementById('gridBox');
     
-    // 1. Click hote hi game box ko screen par dikhao
-    document.getElementById('gameBox').style.display = 'block';
+    // Agar normal home page khul raha hai toh grid saaf karo, category filter mein nahi
+    if (!isRelatedMode && gridBox) {
+        gridBox.innerHTML = "";
+    }
     
-    // 2. Click hote hi "More Awesome Games" heading ko bhi dikhao
-    document.getElementById('moreGamesTitle').style.display = 'block';
-    
-    window.scrollTo({ top: 100, behavior: 'smooth' });
-history.pushState({gameOpen: true},"");
-};
+    list.forEach(game => {
+        const card = document.createElement('div');
+        card.className = "game-card";
+        
+        card.onclick = () => {
+            const gameFrame = document.getElementById('gameFrame');
+            const gameBox = document.getElementById('gameBox');
+            const topAd = document.querySelector('.top-banner-ad') || document.getElementById('topAdSlot');
+            const dynamicTitle = document.getElementById('moreGamesTitle');
+
+            // 1. Black Box mein game ka URL load karo aur use dikhao
+            if (gameFrame) gameFrame.src = game.url;
+            if (gameBox) gameBox.style.display = 'block';
+            
+            // 2. Top advertisement banner ko show karo
+            if (topAd) topAd.style.display = 'block'; 
+            
+            // 3. Heading badlo aur show karo (Jaise: More Action Games)
+            if (dynamicTitle) {
+                dynamicTitle.style.display = 'block';
+                dynamicTitle.innerText = More ${game.cat} Games; 
+            }
+            
+            // 4. 🔥 SMART FILTER ENGINE: Sirf vohi same category ke games niche filter karo
+            const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
+            
+            // Niche wale grid ko saaf karke ab sirf filter huye games dikhao
+            if (gridBox) {
+                gridBox.innerHTML = "";
+                renderGames(relatedGames, true); // True bheja taaki related mode loop chale
+            }
+            
+            // 5. Phone back button handler ke liye history entry
+            history.pushState({ gameOpen: true }, "");
+            
+            // Smooth scroll direct game box par le jane ke liye
+            window.scrollTo({ top: 120, behavior: 'smooth' });
+        };
 
                 card.innerHTML = `
                     <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
