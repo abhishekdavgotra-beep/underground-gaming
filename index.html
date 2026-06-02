@@ -224,7 +224,7 @@
         function renderGames(list, isRelatedMode = false) {
     const gridBox = document.getElementById('gridBox');
     
-    // Agar normal home page khul raha hai toh grid saaf karo, category filter mein nahi
+    // Home page par grid saaf karo, smart filter mode mein nahi
     if (!isRelatedMode && gridBox) {
         gridBox.innerHTML = "";
     }
@@ -236,45 +236,44 @@
         card.onclick = () => {
             const gameFrame = document.getElementById('gameFrame');
             const gameBox = document.getElementById('gameBox');
-            const topAd = document.querySelector('.top-banner-ad') || document.getElementById('topAdSlot');
+            const topAd = document.getElementById('topAdSlot');
             const dynamicTitle = document.getElementById('moreGamesTitle');
 
-            // 1. Black Box mein game ka URL load karo aur use dikhao
+            // 1. URL aur Black Box show karo
             if (gameFrame) gameFrame.src = game.url;
             if (gameBox) gameBox.style.display = 'block';
             
-            // 2. Top advertisement banner ko show karo
-            if (topAd) topAd.style.display = 'block'; 
+            // 2. Top Banner Ad show karo
+            if (topAd) topAd.style.display = 'flex'; 
             
-            // 3. Heading badlo aur show karo (Jaise: More Action Games)
+            // 3. Category heading set karo
             if (dynamicTitle) {
                 dynamicTitle.style.display = 'block';
                 dynamicTitle.innerText = More ${game.cat} Games; 
             }
             
-            // 4. 🔥 SMART FILTER ENGINE: Sirf vohi same category ke games niche filter karo
+            // 4. 🔥 SMART FILTER ENGINE: Sirf same category ke baki games nikaalo
             const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
             
-            // Niche wale grid ko saaf karke ab sirf filter huye games dikhao
+            // Grid ko saaf karke filtered games dikhao
             if (gridBox) {
                 gridBox.innerHTML = "";
-                renderGames(relatedGames, true); // True bheja taaki related mode loop chale
+                renderGames(relatedGames, true); 
             }
             
-            // 5. Phone back button handler ke liye history entry
+            // 5. Back button entry
             history.pushState({ gameOpen: true }, "");
-            
-            // Smooth scroll direct game box par le jane ke liye
             window.scrollTo({ top: 120, behavior: 'smooth' });
         };
 
-                card.innerHTML = `
-                    <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
-                    <h3>${game.title}</h3>
-                `;
-                gridBox.appendChild(card);
-            });
-        }
+        // Card Layout
+        card.innerHTML = `
+            <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
+            <h3>${game.title}</h3>
+        `;
+        if (gridBox) gridBox.appendChild(card);
+    });
+}
 
         // Filter engine
         function filterCat(category) {
@@ -296,16 +295,18 @@
 
         window.onpopstate = function(event) {
     const gameBox = document.getElementById('gameBox');
-    const moreGamesTitle = document.getElementById('moreGamesTitle');
+    const dynamicTitle = document.getElementById('moreGamesTitle');
+    const topAd = document.getElementById('topAdSlot');
     const gameFrame = document.getElementById('gameFrame');
-    const topAd = document.querySelector('.top-banner-ad');
     
     if (gameBox && gameBox.style.display === 'block') {
         gameBox.style.display = 'none';
-        if (moreGamesTitle) moreGamesTitle.style.display = 'none';
-        if (gameFrame) gameFrame.src = ""; // 3. Yahan src set karne ka system ekdum perfect hai
-        if (topAd) topAd.style.display = 'none'; // Top ad ko bhi chhupa do
+        if (dynamicTitle) dynamicTitle.style.display = 'none';
+        if (topAd) topAd.style.display = 'none';
+        if (gameFrame) gameFrame.src = ""; 
         
+        // Wapas saare games screen par laao
+        renderGames(gamesDatabase);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 };
