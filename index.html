@@ -65,9 +65,18 @@
             max-width: 1600px;    
             justify-content: center;
             margin: 0 auto 40px auto;
-            gap: 0px; 
+            gap: 20px; 
             padding: 10px 0px;     
             box-sizing: border-box;
+        }
+
+        .game-zone {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
         }
 
         .games-grid {
@@ -98,15 +107,6 @@
             background-color: #16294a;
         }
 
-        .game-zone {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-            width: 100%;
-        }
-
         /* --- TOP AD BANNER --- */
         .top-banner-ad {
             width: 100%;
@@ -130,7 +130,7 @@
             width: 100%;
             max-width: 900px; 
             height: 520px; 
-            background: #000; 
+            background: #071426; /* Fixed white screen flash issue */
             border: 3px solid #00f3ff;
             border-radius: 12px;
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
@@ -138,6 +138,8 @@
             display: none;
             margin-bottom: 30px;
         }
+
+        /* FIXED: Added dark background to iframe directly */
         .video-game-container iframe {
             position: absolute;
             top: 0;
@@ -146,8 +148,9 @@
             height: 100%;
             border: none;
             z-index: 1;
+            background-color: #071426; 
         }
-      
+        
         #fullscreenBtn {
             position: absolute;
             bottom: 15px;
@@ -184,7 +187,7 @@
             text-transform: capitalize;
         }
 
-        /* --- FIXED INLINE LAPTOP BANNER (FULL WIDTH & BIGGER) --- */
+        /* --- FIXED INLINE LAPTOP BANNER --- */
         .laptop-inline-ad {
             grid-column: 1 / -1; 
             height: 180px;       
@@ -228,7 +231,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- 📱 MOBILE RESPONSIVE --- */
+        /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.9rem;
@@ -280,7 +283,6 @@
                 height: 100px;
                 background: #071426;
                 border: 2px dashed #ff007c;
-                border-radius: 10px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -348,7 +350,7 @@
                 <iframe id="gameFrame" src="" allowfullscreen></iframe>
             </div>
 
-            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 15px; margin-bottom: 15px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
+            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 10px; margin-bottom: 20px; font-size: 1.6rem; text-align: left; width: 100%; border-bottom: 2px solid rgba(0,243,255,0.3); padding-bottom: 8px; box-sizing: border-box;">More Awesome Games</h2>
 
             <div class="games-grid" id="gridBox"></div>
 
@@ -361,7 +363,7 @@
     </div>
 
     <script>
-        // --- 100% CORRECT CLEANED DATABASE ---
+        // --- DATABASE ---
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
@@ -398,7 +400,6 @@
                 if (rightAd) rightAd.style.display = 'flex';
             }
             
-            // CHANGED HERE: Yeh click hone wale game ki actual category dynamically text me set kar dega
             if (dynamicTitle) {
                 dynamicTitle.style.display = 'block';
                 dynamicTitle.innerText = `More ${game.cat} Games`; 
