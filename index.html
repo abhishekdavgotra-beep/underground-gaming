@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Premium Portal</title>
+    <title>Underground Gaming - Premium Fixed</title>
     <style>
         /* --- GLOBAL & COMMON STYLES --- */
         body {
@@ -115,7 +115,7 @@
         /* --- LAPTOP / DESKTOP INLINE AD & GRID (6 ITEMS PER ROW) --- */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr); /* Fixed 6 games per row */
+            grid-template-columns: repeat(6, 1fr);
             gap: 20px;
             width: 100%;
         }
@@ -155,9 +155,9 @@
             text-transform: capitalize;
         }
 
-        /* Huge Inline Laptop Banner (Size matching full 6-game grid space) */
+        /* Huge Inline Laptop Banner */
         .laptop-inline-ad {
-            grid-column: span 6; /* Takes full row space */
+            grid-column: span 6;
             height: 140px;
             background: #071426;
             border: 2px dashed #00f3ff;
@@ -172,7 +172,7 @@
             box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
         }
 
-        /* --- 📱 PREMIUM MOBILE RESPONSIVE ENGINE (CRAZYGAMES BASED) 📱 --- */
+        /* --- 📱 PREMIUM MOBILE RESPONSIVE ENGINE --- */
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.9rem;
@@ -182,9 +182,8 @@
                 width: 96%;
             }
 
-            /* Mobile Grid Rules */
             .games-grid {
-                grid-template-columns: repeat(3, 1fr) !important; /* Forces 3 games in sub-grids */
+                grid-template-columns: repeat(3, 1fr) !important;
                 gap: 10px;
             }
 
@@ -196,9 +195,8 @@
                 font-size: 0.8rem;
             }
 
-            /* Big Mobile Feature Box (Cover image only, no video) */
             .mobile-hero-feature {
-                grid-column: span 3; /* Takes all 3 columns width */
+                grid-column: span 3;
                 background: rgba(255, 255, 255, 0.04);
                 border: 2px solid #00f3ff;
                 border-radius: 14px;
@@ -210,7 +208,7 @@
 
             .mobile-hero-feature img {
                 width: 100%;
-                height: 180px; /* Big premium cover */
+                height: 180px;
                 object-fit: cover;
                 border-radius: 10px;
             }
@@ -221,10 +219,9 @@
                 margin: 10px 0 2px 0;
             }
 
-            /* Mobile Mid-Grid Big Loop Ad */
             .mobile-loop-ad {
                 grid-column: span 3;
-                height: 80px; /* Thinner and shorter than feature block */
+                height: 80px;
                 background: #071426;
                 border: 2px dashed #ff007c;
                 border-radius: 10px;
@@ -237,7 +234,6 @@
                 margin: 10px 0;
             }
 
-            /* Responsive Game play Box for Phone Screens */
             .video-game-container {
                 height: 280px;
                 border-width: 2px;
@@ -282,7 +278,7 @@
     </div>
 
     <script>
-        // Mocking database with global stable premium background images
+        // --- 100% CORRECT CLEANED DATABASE ---
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
@@ -298,6 +294,9 @@
             { title: "Super Sonic", cat: "Action", img: "https://images.unsplash.com/photo-1548685913-fe6574340a49?w=400", url: "./flappy/index.html" }
         ];
 
+        let currentActiveList = [...gamesDatabase];
+        let isModeActive = false;
+
         function playGame(game) {
             const gameFrame = document.getElementById('gameFrame');
             const gameBox = document.getElementById('gameBox');
@@ -310,11 +309,13 @@
             
             if (dynamicTitle) {
                 dynamicTitle.style.display = 'block';
-                dynamicTitle.innerText = More ${game.cat} Games; 
+                dynamicTitle.innerText = `More ${game.cat} Games`; 
             }
             
             const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
-            generateSmartGrid(relatedGames, true); 
+            currentActiveList = relatedGames;
+            isModeActive = true;
+            renderGames(relatedGames, true); 
             
             history.pushState({ gameOpen: true }, "");
             window.scrollTo({ top: 140, behavior: 'smooth' });
@@ -328,7 +329,8 @@
             `;
         }
 
-        function generateSmartGrid(list, isMoreGamesMode = false) {
+        // --- DYNAMIC RENDERING ENGINE ---
+        function renderGames(list, isMoreGamesMode = false) {
             const gridBox = document.getElementById('gridBox');
             if (!gridBox) return;
             gridBox.innerHTML = "";
@@ -341,33 +343,33 @@
             const isMobile = window.innerWidth <= 768;
 
             if (isMobile) {
-                // --- PHONE GENERATION LOGIC ---
                 let gameIndex = 0;
                 if (!isMoreGamesMode) {
                     while (gameIndex < list.length) {
-                        // 1. Inject Big Feature Cover Box
-                        const heroCard = document.createElement('div');
-                        heroCard.className = "mobile-hero-feature";
                         const featuredGame = list[gameIndex];
-                        heroCard.innerHTML = createCardHTML(featuredGame, true);
-                        heroCard.onclick = () => playGame(featuredGame);
-                        gridBox.appendChild(heroCard);
+                        if (featuredGame) {
+                            const heroCard = document.createElement('div');
+                            heroCard.className = "mobile-hero-feature";
+                            heroCard.innerHTML = createCardHTML(featuredGame, true);
+                            heroCard.onclick = () => playGame(featuredGame);
+                            gridBox.appendChild(heroCard);
+                        }
                         gameIndex++;
 
-                        // 2. Inject Next 9 standard items
                         let gridCount = 0;
                         while (gameIndex < list.length && gridCount < 9) {
                             const currentAsset = list[gameIndex];
-                            const standardCard = document.createElement('div');
-                            standardCard.className = "game-card";
-                            standardCard.innerHTML = createCardHTML(currentAsset);
-                            standardCard.onclick = () => playGame(currentAsset);
-                            gridBox.appendChild(standardCard);
+                            if (currentAsset) {
+                                const standardCard = document.createElement('div');
+                                standardCard.className = "game-card";
+                                standardCard.innerHTML = createCardHTML(currentAsset);
+                                standardCard.onclick = () => playGame(currentAsset);
+                                gridBox.appendChild(standardCard);
+                            }
                             gameIndex++;
                             gridCount++;
                         }
 
-                        // 3. Inject Smart Wide Banner Ad
                         if (gridCount > 0) {
                             const mobileAd = document.createElement('div');
                             mobileAd.className = "mobile-loop-ad";
@@ -376,16 +378,17 @@
                         }
                     }
                 } else {
-                    // Play Screen 'More Awesome Games' Logic
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
                         while (gameIndex < list.length && innerChunk < 3) {
                             const standardAsset = list[gameIndex];
-                            const card = document.createElement('div');
-                            card.className = "game-card";
-                            card.innerHTML = createCardHTML(standardAsset);
-                            card.onclick = () => playGame(standardAsset);
-                            gridBox.appendChild(card);
+                            if (standardAsset) {
+                                const card = document.createElement('div');
+                                card.className = "game-card";
+                                card.innerHTML = createCardHTML(standardAsset);
+                                card.onclick = () => playGame(standardAsset);
+                                gridBox.appendChild(card);
+                            }
                             gameIndex++;
                             innerChunk++;
                         }
@@ -399,7 +402,6 @@
                 }
 
             } else {
-                // --- LAPTOP GENERATION LOGIC ---
                 if (!isMoreGamesMode) {
                     let desktopCount = 0;
                     list.forEach((game) => {
@@ -423,11 +425,13 @@
                         let desktopChunk = 0;
                         while (gameIndex < list.length && desktopChunk < 3) {
                             const standardAsset = list[gameIndex];
-                            const card = document.createElement('div');
-                            card.className = "game-card";
-                            card.innerHTML = createCardHTML(standardAsset);
-                            card.onclick = () => playGame(standardAsset);
-                            gridBox.appendChild(card);
+                            if (standardAsset) {
+                                const card = document.createElement('div');
+                                card.className = "game-card";
+                                card.innerHTML = createCardHTML(standardAsset);
+                                card.onclick = () => playGame(standardAsset);
+                                gridBox.appendChild(card);
+                            }
                             gameIndex++;
                             desktopChunk++;
                         }
@@ -446,7 +450,6 @@
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             
-            // BUG FIX: Removed window.event crash engine dependency
             buttons.forEach(btn => {
                 if(btn.innerText.trim().toLowerCase() === category.trim().toLowerCase() || (category === 'All' && btn.innerText.includes('All'))) {
                     btn.classList.add('active');
@@ -456,30 +459,29 @@
             const gameBox = document.getElementById('gameBox');
             const dynamicTitle = document.getElementById('moreGamesTitle');
             const topAd = document.getElementById('topAdSlot');
+            const gameFrame = document.getElementById('gameFrame');
             
             if (gameBox) gameBox.style.display = 'none';
             if (dynamicTitle) dynamicTitle.style.display = 'none';
             if (topAd) topAd.style.display = 'none';
+            if (gameFrame) gameFrame.src = "";
 
+            isModeActive = false;
             if(category === 'All') {
-                generateSmartGrid(gamesDatabase);
+                currentActiveList = [...gamesDatabase];
             } else {
-                const filtered = gamesDatabase.filter(g => g.cat === category);
-                generateSmartGrid(filtered);
+                currentActiveList = gamesDatabase.filter(g => g.cat === category);
             }
+            renderGames(currentActiveList, false);
         }
 
-        // --- GLOBAL INITIALIZER EVENT ---
+        // --- HANDLERS TO RE-RUN THE NEW FUNCTION NAME ---
         window.addEventListener('DOMContentLoaded', () => {
-            generateSmartGrid(gamesDatabase);
+            renderGames(currentActiveList, isModeActive);
         });
 
         window.addEventListener('resize', () => {
-            const dynamicTitle = document.getElementById('moreGamesTitle');
-            if (dynamicTitle && dynamicTitle.style.display === 'block') {
-                return; 
-            }
-            generateSmartGrid(gamesDatabase);
+            renderGames(currentActiveList, isModeActive);
         });
 
         window.onpopstate = function(event) {
@@ -493,7 +495,10 @@
                 if (dynamicTitle) dynamicTitle.style.display = 'none';
                 if (topAd) topAd.style.display = 'none';
                 if (gameFrame) gameFrame.src = ""; 
-                generateSmartGrid(gamesDatabase);
+                
+                isModeActive = false;
+                currentActiveList = [...gamesDatabase];
+                renderGames(currentActiveList, false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
