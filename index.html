@@ -186,8 +186,8 @@
 
         /* --- FIXED INLINE LAPTOP BANNER (FULL WIDTH & BIGGER) --- */
         .laptop-inline-ad {
-            grid-column: 1 / -1; /* Isse ad pure 6 columns cover karega */
-            height: 180px;       /* Iski height badha di taaki mast bada dikhe */
+            grid-column: 1 / -1; 
+            height: 180px;       
             width: 100%;
             background: #071426;
             border: 2px dashed #00f3ff;
@@ -301,20 +301,19 @@
             }
         }
 
-        /* --- YAHAN PE RESOLVE KIYA HAI CONFLICT (LOCKING HATA DI) --- */
         @media (min-width: 1250px) {
             .main-container {
                 display: flex;
                 justify-content: center;
                 align-items: flex-start;
                 width: 98%;
-                max-width: 1600px; /* Purana 1400px hata kar 1600px kiya */
+                max-width: 1600px; 
                 margin: 0 auto;
                 gap: 20px;
             }
             .game-zone {
                 flex: 1;
-                width: 100%; /* max-width: 900px hata diya taaki ad full screen tak phaile */
+                width: 100%; 
             }
         }
     </style>
@@ -449,7 +448,7 @@
                         gameIndex++;
 
                         let gridCount = 0;
-                        while (gameIndex < list.length && gridCount < 6) { /* Mobile loop 6 par set kiya */
+                        while (gameIndex < list.length && gridCount < 6) { 
                             const currentAsset = list[gameIndex];
                             if (currentAsset) {
                                 const standardCard = document.createElement('div');
@@ -504,8 +503,8 @@
                         gridBox.appendChild(card);
                         desktopCount++;
 
-                        /* YAHAN FIX KIYA: Har 6 blocks ke baad (1 proper row) full width ad aayega */
-                        if (desktopCount % 6 === 0 && desktopCount > 0) {
+                        /* YAHAN FIX KIYA: Ab har 12 items ke baad (6+6 yaani 2 complete rows) full-width ad aayega */
+                        if (desktopCount % 12 === 0 && desktopCount > 0) {
                             const lapAd = document.createElement('div');
                             lapAd.className = "laptop-inline-ad";
                             lapAd.innerHTML = "<span>[ WIDE GOOGLE INLINE LAPTOP AD BANNER (FULL WIDTH) ]</span>";
@@ -516,7 +515,7 @@
                     let gameIndex = 0;
                     while (gameIndex < list.length) {
                         let desktopChunk = 0;
-                        while (gameIndex < list.length && desktopChunk < 6) { /* Related games mode me bhi 6 par fix */
+                        while (gameIndex < list.length && desktopChunk < 12) { /* Yahan bhi chunk limit 12 kar di */
                             const standardAsset = list[gameIndex];
                             if (standardAsset) {
                                 const card = document.createElement('div');
