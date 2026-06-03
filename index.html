@@ -286,13 +286,13 @@
         <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
     </div>
 
-    <div class="main-container">
+    <div class="main-container" style="display: flex; justify-content: center; align-items: flex-start; max-width: 1400px; margin: 0 auto; padding: 20px; gap: 20px;">
         
-        <div class="side-ad left-ad">
-            <span>[ LEFT SIDE BANNER ]</span>
+        <div class="side-ad left-ad" id="leftAdBox">
+            <span>[ AD BANNER ]</span>
         </div>
 
-        <div class="game-zone">
+        <div class="game-zone" style="flex: 1; max-width: 900px; position: relative;">
             
             <div class="top-banner-ad" id="topAdSlot">
                 <span>[ GOOGLE RESPONSIVE BANNER AD ]</span>
@@ -307,13 +307,11 @@
 
             <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 30px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
 
-            <div class="side-ad left-ad">
-            <span>[ LEFT AD ]</span>
+        </div> <div class="side-ad right-ad" id="rightAdBox">
+            <span>[ AD BANNER ]</span>
         </div>
-        <div class="side-ad right-ad">
-            <span>[ RIGHT AD ]</span>
-        </div>
-        </div> ```
+
+    </div>
         
         <div class="side-ad right-ad">
             <span>[ RIGHT SIDE BANNER ]</span>
@@ -348,8 +346,41 @@
             const dynamicTitle = document.getElementById('moreGamesTitle');
 
             if (gameFrame) gameFrame.src = game.url;
-            if (gameBox) gameBox.style.display = 'block';
-            if (topAd) topAd.style.display = 'flex'; 
+            /* --- NEW PERFECT SIDE ADS --- */
+        .side-ad {
+            display: none; /* By default main page par chhupa rahega */
+            width: 160px;
+            background: #071426;
+            border: 2px dashed #00f3ff;
+            border-radius: 8px;
+            color: #00f3ff;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            box-sizing: border-box;
+            
+            /* Ekdum perfect box height (Top Ad 90px + Game Box 520px + Gaps) */
+            height: 640px; 
+            margin-top: 0;
+        }
+
+        .side-ad span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Sirf Laptop screen par aur jab game open ho (#gameBox display block ho) tabhi side ads dikhein */
+        @media (min-width: 1250px) {
+            #gameBox[style*="block"] ~ .side-ad,
+            #gameBox[style*="block"] ~ #rightAdBox,
+            #main-container:has(#gameBox[style*="block"]) .side-ad {
+                /* Layout ko tute bina left right set karne ke liye */
+            }
+        } 
             
             if (dynamicTitle) {
                 dynamicTitle.style.display = 'block';
@@ -569,65 +600,39 @@
                 }
             }
         }
-        /* --- NAYA CODE: SIDE AD BANNERS FOR LAPTOP --- */
+        /* --- NEW PERFECT SIDE ADS --- */
         .side-ad {
-            display: none; /* Mobile par hide rahega */
-            width: 160px; /* Ad ki chaudai */
-            background: #071426;
-            border: 2px dashed #00f3ff;
-            border-radius: 8px;
-            color: #00f3ff;
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-            /* Screen scroll karne par ad wahi ruka rahega */
-            position: sticky;
-            top: 20px;
-            height: 600px; 
-        }
-
-       /* --- NAYA CODE: PERFECT SIDE ADS --- */
-        .game-zone {
-            position: relative; /* Ye zaroori hai taaki ads game ke level par rahein */
-        }
-
-        .side-ad {
-            position: absolute;
-            top: 0;
-            bottom: 0; /* JADOO: Isse height apne aap top-banner + game ke barabar ho jayegi! */
+            display: none; /* By default main page par chhupa rahega */
             width: 160px;
             background: #071426;
             border: 2px dashed #00f3ff;
             border-radius: 8px;
             color: #00f3ff;
             font-weight: bold;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            box-sizing: border-box;
+            
+            /* Ekdum perfect box height (Top Ad 90px + Game Box 520px + Gaps) */
+            height: 640px; 
+            margin-top: 0;
+        }
+
+        .side-ad span {
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-            
-            /* By default ads hide rahenge */
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition: 0.3s ease-in-out;
+            height: 100%;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
         }
 
-        .left-ad {
-            left: -180px; /* Game ke left mein 180px door */
-        }
-
-        .right-ad {
-            right: -180px; /* Game ke right mein 180px door */
-        }
-
-        /* Sirf Laptop par chalega AND Sirf tab jab Game chal raha ho (gameBox block ho) */
-        @media (min-width: 1280px) {
-            #gameBox[style*="block"] ~ .side-ad {
-                opacity: 1;
-                visibility: visible;
-                pointer-events: auto;
+        /* Sirf Laptop screen par aur jab game open ho (#gameBox display block ho) tabhi side ads dikhein */
+        @media (min-width: 1250px) {
+            #gameBox[style*="block"] ~ .side-ad,
+            #gameBox[style*="block"] ~ #rightAdBox,
+            #main-container:has(#gameBox[style*="block"]) .side-ad {
+                /* Layout ko tute bina left right set karne ke liye */
             }
         }
     </script>
