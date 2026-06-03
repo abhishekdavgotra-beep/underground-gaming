@@ -63,10 +63,7 @@
             width: 95%;
             max-width: 1400px;
             justify-content: center;
-            margin: 0 auto 40px auto;
-            gap: 0px; /* Shuruat mein 0px rahega taaki icons ko poori jagah mile */
-            padding: 20px;
-            box-sizing: border-box;
+            margin-bottom: 40px;
         }
 
         .game-zone {
@@ -95,7 +92,7 @@
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
         }
 
-        /* Video Game Container */
+        /* Purane wale main bas 'position: relative;' add kiya hai */
         .video-game-container {
             position: relative; 
             width: 100%;
@@ -119,7 +116,7 @@
             z-index: 1;
         }
      
-        /* Fullscreen Button ka design */
+        /* NAYA CODE: Fullscreen Button ka design */
         #fullscreenBtn {
             position: absolute;
             bottom: 15px;
@@ -202,9 +199,9 @@
             box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
         }
 
-        /* --- SIDE ADS PERFECT BOX ENGINE --- */
+        /* --- NEW PERFECT SIDE ADS FIXED --- */
         .side-ad {
-            display: none; /* Pehle se hide rahega taaki icons ko poori space mile */
+            display: none; /* Main grid page par chhupa rahega */
             width: 160px;
             background: #071426;
             border: 2px dashed #00f3ff;
@@ -214,8 +211,10 @@
             text-align: center;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
             box-sizing: border-box;
+            
+            /* Top Ad (90px) + Game Box (520px) + Gaps = Exact Height */
             height: 625px; 
-            flex-shrink: 0;
+            margin-top: 0;
         }
 
         .side-ad span {
@@ -235,7 +234,6 @@
 
             .main-container {
                 width: 96%;
-                gap: 0px !important;
             }
 
             .games-grid {
@@ -300,6 +298,22 @@
                 font-size: 0.8rem;
             }
         }
+
+        /* Laptop screen tweak for layout */
+        @media (min-width: 1250px) {
+            .main-container {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                max-width: 1400px;
+                margin: 0 auto;
+                gap: 20px;
+            }
+            .game-zone {
+                flex: 1;
+                max-width: 900px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -315,13 +329,13 @@
         <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
     </div>
 
-    <div class="main-container" id="mainContainer">
+    <div class="main-container">
         
-        <div class="side-ad" id="leftAdBox">
+        <div class="side-ad left-ad" id="leftAdBox">
             <span>[ AD BANNER ]</span>
         </div>
 
-        <div class="game-zone" id="gameZoneBox">
+        <div class="game-zone">
             
             <div class="top-banner-ad" id="topAdSlot">
                 <span>[ GOOGLE RESPONSIVE BANNER AD ]</span>
@@ -338,14 +352,14 @@
 
         </div> 
         
-        <div class="side-ad" id="rightAdBox">
+        <div class="side-ad right-ad" id="rightAdBox">
             <span>[ AD BANNER ]</span>
         </div>
 
     </div>
 
     <script>
-        // --- 100% CLEANED DATABASE ---
+        // --- 100% CORRECT CLEANED DATABASE ---
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
@@ -370,22 +384,18 @@
             const topAd = document.getElementById('topAdSlot');
             const dynamicTitle = document.getElementById('moreGamesTitle');
             
-            // AD ELEMENTS & LAYOUT CONTAINERS
+            // SIDE ADS SELECTORS
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
-            const mainContainer = document.getElementById('mainContainer');
-            const gameZoneBox = document.getElementById('gameZoneBox');
 
             if (gameFrame) gameFrame.src = game.url;
             if (gameBox) gameBox.style.display = 'block';
             if (topAd) topAd.style.display = 'flex';
             
-            // JAB GAME CHALEGA: Sirf tab laptop par ads active honge aur space adjust hoga
+            // JAB GAME CHALEGA - SIDE ADS LAPTOP PAR SHOW HONGE
             if (window.innerWidth >= 1250) {
                 if (leftAd) leftAd.style.display = 'flex';
                 if (rightAd) rightAd.style.display = 'flex';
-                if (mainContainer) mainContainer.style.gap = '20px';
-                if (gameZoneBox) gameZoneBox.style.maxWidth = '900px';
             }
             
             if (dynamicTitle) {
@@ -400,30 +410,6 @@
             
             history.pushState({ gameOpen: true }, "");
             window.scrollTo({ top: 140, behavior: 'smooth' });
-        }
-
-        // RESET LAYOUT FUNCTION (Home ya category click par use hoga)
-        function resetLayoutToNormal() {
-            const gameBox = document.getElementById('gameBox');
-            const dynamicTitle = document.getElementById('moreGamesTitle');
-            const topAd = document.getElementById('topAdSlot');
-            const gameFrame = document.getElementById('gameFrame');
-            
-            const leftAd = document.getElementById('leftAdBox');
-            const rightAd = document.getElementById('rightAdBox');
-            const mainContainer = document.getElementById('mainContainer');
-            const gameZoneBox = document.getElementById('gameZoneBox');
-
-            if (gameBox) gameBox.style.display = 'none';
-            if (dynamicTitle) dynamicTitle.style.display = 'none';
-            if (topAd) topAd.style.display = 'none';
-            if (gameFrame) gameFrame.src = "";
-            
-            // Ads band aur grid layout full wide karega
-            if (leftAd) leftAd.style.display = 'none';
-            if (rightAd) rightAd.style.display = 'none';
-            if (mainContainer) mainContainer.style.gap = '0px';
-            if (gameZoneBox) gameZoneBox.style.maxWidth = '100%';
         }
 
         function createCardHTML(game, isHero = false) {
@@ -520,26 +506,6 @@
                         if (desktopCount % 12 === 0 && desktopCount > 0) {
                             const lapAd = document.createElement('div');
                             lapAd.className = "laptop-inline-ad";
-miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
-                            gridBox.appendChild(miniAd);
-                        }
-                    }
-                }
-
-            } else {
-                if (!isMoreGamesMode) {
-                    let desktopCount = 0;
-                    list.forEach((game) => {
-                        const card = document.createElement('div');
-                        card.className = "game-card";
-                        card.innerHTML = createCardHTML(game);
-                        card.onclick = () => playGame(game);
-                        gridBox.appendChild(card);
-                        desktopCount++;
-
-                        if (desktopCount % 12 === 0 && desktopCount > 0) {
-                            const lapAd = document.createElement('div');
-                            lapAd.className = "laptop-inline-ad";
                             lapAd.innerHTML = "<span>[ WIDE GOOGLE INLINE LAPTOP AD BANNER (6-COLUMN SPAN) ]</span>";
                             gridBox.appendChild(lapAd);
                         }
@@ -562,7 +528,8 @@ miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
                         }
                         if (desktopChunk > 0) {
                             const rowAd = document.createElement('div');
-                            rowAd.className = "laptop-inline-ad";
+        
+rowAd.className = "laptop-inline-ad";
                             rowAd.innerHTML = "<span>[ DETAILED CRAZYGAMES STYLE DYNAMIC AD SLOT ]</span>";
                             gridBox.appendChild(rowAd);
                         }
@@ -581,8 +548,21 @@ miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
                 }
             });
 
-            // Layout ko wapas default karega jab category change ho
-            resetLayoutToNormal();
+            const gameBox = document.getElementById('gameBox');
+            const dynamicTitle = document.getElementById('moreGamesTitle');
+            const topAd = document.getElementById('topAdSlot');
+            const gameFrame = document.getElementById('gameFrame');
+            
+            // CLose Ads when going back to Grid
+            const leftAd = document.getElementById('leftAdBox');
+            const rightAd = document.getElementById('rightAdBox');
+            
+            if (gameBox) gameBox.style.display = 'none';
+            if (dynamicTitle) dynamicTitle.style.display = 'none';
+            if (topAd) topAd.style.display = 'none';
+            if (gameFrame) gameFrame.src = "";
+            if (leftAd) leftAd.style.display = 'none';
+            if (rightAd) rightAd.style.display = 'none';
 
             isModeActive = false;
             if(category === 'All') {
@@ -593,6 +573,7 @@ miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
             renderGames(currentActiveList, false);
         }
 
+        // --- HANDLERS TO RE-RUN THE NEW FUNCTION NAME ---
         window.addEventListener('DOMContentLoaded', () => {
             renderGames(currentActiveList, isModeActive);
         });
@@ -603,8 +584,20 @@ miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
 
         window.onpopstate = function(event) {
             const gameBox = document.getElementById('gameBox');
+            const dynamicTitle = document.getElementById('moreGamesTitle');
+            const topAd = document.getElementById('topAdSlot');
+            const gameFrame = document.getElementById('gameFrame');
+            const leftAd = document.getElementById('leftAdBox');
+            const rightAd = document.getElementById('rightAdBox');
+            
             if (gameBox && gameBox.style.display === 'block') {
-                resetLayoutToNormal();
+                gameBox.style.display = 'none';
+                if (dynamicTitle) dynamicTitle.style.display = 'none';
+                if (topAd) topAd.style.display = 'none';
+                if (gameFrame) gameFrame.src = ""; 
+                if (leftAd) leftAd.style.display = 'none';
+                if (rightAd) rightAd.style.display = 'none';
+                
                 isModeActive = false;
                 currentActiveList = [...gamesDatabase];
                 renderGames(currentActiveList, false);
@@ -612,7 +605,7 @@ miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
             }
         };
         
-        // --- FULLSCREEN ---
+        // --- NAYA FUNCTION: FULLSCREEN KE LIYE ---
         function toggleFullScreen() {
             const gameBox = document.getElementById('gameBox');
             if (!document.fullscreenElement) {
