@@ -147,6 +147,52 @@
             width: 100%;
         }
 
+        /* --- NEW PERFECT SIDE ADS FIXED --- */
+        .side-ad {
+            display: none; /* Main grid page par chhupa rahega aur space zero karega */
+            width: 160px;
+            background: #071426;
+            border: 2px dashed #00f3ff;
+            border-radius: 8px;
+            color: #00f3ff;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            box-sizing: border-box;
+            height: 625px; 
+            margin-top: 0;
+            flex-shrink: 0; /* Taki ad box squeeze na ho */
+        }
+
+        /* Laptop screen adjustment */
+        @media (min-width: 1250px) {
+            .main-container {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                width: 95%;
+                max-width: 1400px;
+                margin: 0 auto;
+                gap: 0px; /* Shuruat mein gap 0 rahega taaki full grid space mile */
+            }
+            
+            /* Jab game open ho tabhi container mein gap aaye */
+            .main-container:has(#gameBox[style*="block"]) {
+                gap: 20px;
+            }
+
+            .game-zone {
+                flex: 1;
+                width: 100%;
+                transition: max-width 0.3s ease;
+            }
+
+            /* Jab game chal raha ho sirf tab center area 900px ka ho */
+            .main-container:has(#gameBox[style*="block"]) .game-zone {
+                max-width: 900px;
+            }
+        }
+
         .game-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -329,12 +375,14 @@
         <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
     </div>
 
-    <div class="main-container">
+     <div class="main-container">
         
+        <!-- LEFT SIDE BANNER -->
         <div class="side-ad left-ad" id="leftAdBox">
             <span>[ AD BANNER ]</span>
         </div>
 
+        <!-- CENTER GAME ZONE -->
         <div class="game-zone">
             
             <div class="top-banner-ad" id="topAdSlot">
@@ -352,6 +400,7 @@
 
         </div> 
         
+        <!-- RIGHT SIDE BANNER -->
         <div class="side-ad right-ad" id="rightAdBox">
             <span>[ AD BANNER ]</span>
         </div>
@@ -553,7 +602,7 @@ rowAd.className = "laptop-inline-ad";
             const topAd = document.getElementById('topAdSlot');
             const gameFrame = document.getElementById('gameFrame');
             
-            // CLose Ads when going back to Grid
+            // SIDE ADS KO BAND KARNE KE LIYE
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
             
@@ -561,6 +610,8 @@ rowAd.className = "laptop-inline-ad";
             if (dynamicTitle) dynamicTitle.style.display = 'none';
             if (topAd) topAd.style.display = 'none';
             if (gameFrame) gameFrame.src = "";
+            
+            // Wapas main page par aate hi dabba-boxes gayab aur space khali
             if (leftAd) leftAd.style.display = 'none';
             if (rightAd) rightAd.style.display = 'none';
 
