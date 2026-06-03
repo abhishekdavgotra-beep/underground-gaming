@@ -92,8 +92,9 @@
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
         }
 
-        /* Video/Iframe Container */
+        /* Purane wale main bas 'position: relative;' add kiya hai */
         .video-game-container {
+            position: relative; 
             width: 100%;
             max-width: 900px; 
             height: 520px; 
@@ -106,10 +107,27 @@
             margin-bottom: 30px;
         }
 
-        .video-game-container iframe {
-            width: 100%;
-            height: 100%;
+        /* NAYA CODE: Fullscreen Button ka design */
+        #fullscreenBtn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 243, 255, 0.85);
+            color: #0b1d3a;
             border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        #fullscreenBtn:hover {
+            background: #fff;
+            box-shadow: 0 0 15px #00f3ff;
+            transform: scale(1.05);
         }
 
         /* --- LAPTOP / DESKTOP INLINE AD & GRID (6 ITEMS PER ROW) --- */
@@ -267,6 +285,8 @@
             </div>
 
             <div class="video-game-container" id="gameBox">
+                <!-- Ye naya button add karna hai -->
+                <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
                 <iframe id="gameFrame" src="" allowfullscreen></iframe>
             </div>
 
@@ -504,6 +524,27 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
+        // --- NAYA FUNCTION: FULLSCREEN KE LIYE ---
+        function toggleFullScreen() {
+            const gameBox = document.getElementById('gameBox');
+            if (!document.fullscreenElement) {
+                if (gameBox.requestFullscreen) {
+                    gameBox.requestFullscreen();
+                } else if (gameBox.webkitRequestFullscreen) { /* Safari */
+                    gameBox.webkitRequestFullscreen();
+                } else if (gameBox.msRequestFullscreen) { /* IE11 */
+                    gameBox.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { /* IE11 */
+                    document.msExitFullscreen();
+                }
+            }
+        }
     </script>
 </body>
 </html>
