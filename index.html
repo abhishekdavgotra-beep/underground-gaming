@@ -229,99 +229,77 @@
         }
 
         /* --- 📱 MOBILE RESPONSIVE --- */
-@media (max-width: 768px) {
-    header h1 {
-        font-size: 1.8rem;
-        letter-spacing: 1px;
-    }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.9rem;
+            }
 
-    .main-container {
-        width: 100%;          /* Mobile par poori screen ka use hoga */
-        gap: 0px !important;
-        padding: 5px 10px;    /* Side ki padding halki rakhi taaki cards bade dikhein */
-    }
+            .main-container {
+                width: 96%;
+            }
 
-    .games-grid {
-        grid-template-columns: repeat(3, 1fr) !important; /* Mobile par perfect 3-column grid */
-        gap: 12px;            /* Cards ke beech ka gap makkhan jaisa set kiya */
-        width: 100%;
-    }
+            .games-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 10px;
+            }
 
-    .game-card {
-        padding: 8px;
-        border-radius: 10px;
-    }
+            .game-card img {
+                height: 90px;
+            }
 
-    .game-card img {
-        height: 95px;         /* Mobile ke hisab se thumbnail ki height ekdum perfect */
-        border-radius: 6px;
-    }
+            .game-card h3 {
+                font-size: 0.8rem;
+            }
 
-    .game-card h3 {
-        font-size: 0.75rem;
-        margin: 6px 0 0 0;
-        text-overflow: ellipsis; /* Agar naam bada ho toh screen se baahar nahi jayega */
-    }
+            .mobile-hero-feature {
+                grid-column: span 3;
+                background: rgba(255, 255, 255, 0.04);
+                border: 2px solid #00f3ff;
+                border-radius: 14px;
+                padding: 12px;
+                cursor: pointer;
+                text-align: center;
+                box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            }
 
-    /* Mobile ka top main bada featured game */
-    .mobile-hero-feature {
-        grid-column: span 3;
-        background: rgba(255, 255, 255, 0.04);
-        border: 2px solid #00f3ff;
-        border-radius: 14px;
-        padding: 12px;
-        cursor: pointer;
-        text-align: center;
-        box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-        width: 100%;
-        box-sizing: border-box;
-    }
+            .mobile-hero-feature img {
+                width: 100%;
+                height: 180px;
+                object-fit: cover;
+                border-radius: 10px;
+            }
 
-    .mobile-hero-feature img {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-        border-radius: 10px;
-    }
+            .mobile-hero-feature h3 {
+                font-size: 1.2rem;
+                color: #00f3ff;
+                margin: 10px 0 2px 0;
+            }
 
-    .mobile-hero-feature h3 {
-        font-size: 1.1rem;
-        color: #00f3ff;
-        margin: 8px 0 2px 0;
-    }
+            .mobile-loop-ad {
+                grid-column: 1 / -1; 
+                height: 100px;
+                background: #071426;
+                border: 2px dashed #ff007c;
+                border-radius: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #ff007c;
+                font-weight: bold;
+                font-size: 0.9rem;
+                margin: 10px 0;
+            }
 
-    /* Mobile ke beech wale automatic loop ad banners */
-    .mobile-loop-ad {
-    grid-column: span 3;
-    height: 75px;
-    background: #071426;
-    border: 2px dashed #ff007c;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #ff007c;
-    font-weight: bold;
-    font-size: 0.8rem;
-    margin: 10px 0;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden; /* Yeh line ad content ko limit mein rakhegi aur white space nahi banne degi */
-}
+            .video-game-container {
+                height: 280px;
+                border-width: 2px;
+            }
 
-    /* Game chalne par video box mobile par */
-    .video-game-container {
-        height: 240px;        /* Mobile screen par game frame perfect dikhega */
-        border-width: 2px;
-        width: 100%;
-    }
-
-    .top-banner-ad {
-        height: 60px;
-        font-size: 0.75rem;
-        width: 100%;
-    }
-}
+            .top-banner-ad {
+                height: 65px;
+                font-size: 0.8rem;
+            }
+        }
 
         @media (min-width: 1250px) {
             .main-container {
@@ -456,42 +434,42 @@
 
             const isMobile = window.innerWidth <= 768;
 
-            if (isMobile) { // <--- YEH HAI WOH FIRST LINE JAHAN SE BADALNA HAI
+            if (isMobile) {
                 let gameIndex = 0;
-                
-                // Pehle check karo agar normal mode hai toh sirf pehla game HERO banega
-                if (!isMoreGamesMode && list.length > 0) {
-                    const featuredGame = list[0];
-                    const heroCard = document.createElement('div');
-                    heroCard.className = "mobile-hero-feature";
-                    heroCard.innerHTML = createCardHTML(featuredGame, true);
-                    heroCard.onclick = () => playGame(featuredGame);
-                    gridBox.appendChild(heroCard);
-                    gameIndex = 1; // Hero game ke baad baaki games 1 se shuru honge
-                }
+                if (!isMoreGamesMode) {
+                    while (gameIndex < list.length) {
+                        const featuredGame = list[gameIndex];
+                        if (featuredGame) {
+                            const heroCard = document.createElement('div');
+                            heroCard.className = "mobile-hero-feature";
+                            heroCard.innerHTML = createCardHTML(featuredGame, true);
+                            heroCard.onclick = () => playGame(featuredGame);
+                            gridBox.appendChild(heroCard);
+                        }
+                        gameIndex++;
 
-                // Baaki bache saare games normal 3-column grid mein aayenge
-                while (gameIndex < list.length) {
-                    const currentAsset = list[gameIndex];
-                    if (currentAsset) {
-                        const standardCard = document.createElement('div');
-                        standardCard.className = "game-card";
-                        standardCard.innerHTML = createCardHTML(currentAsset);
-                        standardCard.onclick = () => playGame(currentAsset);
-                        gridBox.appendChild(standardCard);
+                        let gridCount = 0;
+                        while (gameIndex < list.length && gridCount < 6) { 
+                            const currentAsset = list[gameIndex];
+                            if (currentAsset) {
+                                const standardCard = document.createElement('div');
+                                standardCard.className = "game-card";
+                                standardCard.innerHTML = createCardHTML(currentAsset);
+                                standardCard.onclick = () => playGame(currentAsset);
+                                gridBox.appendChild(standardCard);
+                            }
+                            gameIndex++;
+                            gridCount++;
+                        }
+
+                        if (gridCount > 0) {
+                            const mobileAd = document.createElement('div');
+                            mobileAd.className = "mobile-loop-ad";
+                            mobileAd.innerHTML = "<span>[ MOBILE HORIZONTAL AD BANNER ]</span>";
+                            gridBox.appendChild(mobileAd);
+                        }
                     }
-                    gameIndex++;
-
-                    // Har 9 games ke baad sirf ek bar fix banner aayega, koi faltu loop nahi chalega
-                    if (gameIndex % 9 === 0 && gameIndex < list.length) {
-                        const mobileAd = document.createElement('div');
-                        mobileAd.className = "mobile-loop-ad";
-                        mobileAd.innerHTML = "<span>[ MOBILE HORIZONTAL AD BANNER ]</span>";
-                        gridBox.appendChild(mobileAd);
-                    }
-                }
-
-            } else {
+                } else {
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
                         while (gameIndex < list.length && innerChunk < 3) {
