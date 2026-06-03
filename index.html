@@ -139,7 +139,6 @@
             margin-bottom: 30px;
         }
 
-        /* FIX: Added dark background to iframe styles to stop white screen flash */
         .video-game-container iframe {
             position: absolute;
             top: 0;
@@ -150,6 +149,8 @@
             z-index: 1;
             background-color: #071426;
             color-scheme: dark;
+            opacity: 0; /* MOBILE FIX: Pehle transparent rahega jab tak load na ho */
+            transition: opacity 0.2s ease-in-out;
         }
         
         #fullscreenBtn {
@@ -255,6 +256,14 @@
                 font-size: 0.8rem;
             }
 
+            /* MOBILE FIX: Title padding aur size responsive set kiya taaki perfectly layout ke upar fit baithe */
+            #moreGamesTitle {
+                font-size: 1.2rem !important;
+                margin-top: 15px !important;
+                margin-bottom: 10px !important;
+                padding-left: 2px;
+            }
+
             .mobile-hero-feature {
                 grid-column: span 3;
                 background: rgba(255, 255, 255, 0.04);
@@ -346,14 +355,11 @@
                 <span>[ GOOGLE RESPONSIVE BANNER AD ]</span>
             </div>
 
-            <!-- Game Display Box -->
             <div class="video-game-container" id="gameBox">
                 <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
-                <!-- FIX: Added style background and allowtransparency to prevent white background while loading -->
-                <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true" style="background: #071426;"></iframe>
+                <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true"></iframe>
             </div>
 
-            <!-- FIX: Placed title layout strictly ABOVE grid box and adjusted margins -->
             <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-bottom: 20px; margin-top: 10px; font-size: 1.5rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px; box-sizing: border-box;">More Awesome Games</h2>
 
             <div class="games-grid" id="gridBox"></div>
@@ -395,9 +401,17 @@
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
 
-            if (gameFrame) gameFrame.src = game.url;
             if (gameBox) gameBox.style.display = 'block';
             if (topAd) topAd.style.display = 'flex';
+            
+            // MOBILE & ENGINE FIX: Iframe opacity loader technique to completely stop white screen flashes
+            if (gameFrame) {
+                gameFrame.style.opacity = '0'; 
+                gameFrame.src = game.url;
+                gameFrame.onload = function() {
+                    gameFrame.style.opacity = '1'; 
+                };
+            }
             
             if (window.innerWidth >= 1250) {
                 if (leftAd) leftAd.style.display = 'flex';
@@ -415,7 +429,11 @@
             renderGames(relatedGames, true); 
             
             history.pushState({ gameOpen: true }, "");
-            window.scrollTo({ top: 140, behavior: 'smooth' });
+            
+            // MOBILE FIX: Safe scroll screen handling using scrollIntoView for responsive touchscreens
+            setTimeout(() => {
+                if(gameBox) gameBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 120);
         }
 
         function createCardHTML(game, isHero = false) {
@@ -564,7 +582,10 @@
             if (gameBox) gameBox.style.display = 'none';
             if (dynamicTitle) dynamicTitle.style.display = 'none';
             if (topAd) topAd.style.display = 'none';
-            if (gameFrame) gameFrame.src = "";
+            if (gameFrame) {
+                gameFrame.src = "";
+                gameFrame.style.opacity = '0';
+            }
             if (leftAd) leftAd.style.display = 'none';
             if (rightAd) rightAd.style.display = 'none';
 
@@ -597,7 +618,10 @@
                 gameBox.style.display = 'none';
                 if (dynamicTitle) dynamicTitle.style.display = 'none';
                 if (topAd) topAd.style.display = 'none';
-                if (gameFrame) gameFrame.src = ""; 
+                if (gameFrame) {
+                    gameFrame.src = ""; 
+                    gameFrame.style.opacity = '0';
+                }
                 if (leftAd) leftAd.style.display = 'none';
                 if (rightAd) rightAd.style.display = 'none';
                 
