@@ -292,21 +292,22 @@
 
     /* Mobile ke beech wale automatic loop ad banners */
     .mobile-loop-ad {
-        grid-column: span 3;
-        height: 75px;         /* Height thodi kam ki taaki user experience kharab na ho */
-        background: #071426;
-        border: 2px dashed #ff007c;
-        border-radius: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #ff007c;
-        font-weight: bold;
-        font-size: 0.8rem;
-        margin: 10px 0;
-        width: 100%;
-        box-sizing: border-box; /* Isse ad screen se baahar nahi bhagega */
-    }
+    grid-column: span 3;
+    height: 75px;
+    background: #071426;
+    border: 2px dashed #ff007c;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ff007c;
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden; /* Yeh line ad content ko limit mein rakhegi aur white space nahi banne degi */
+}
 
     /* Game chalne par video box mobile par */
     .video-game-container {
@@ -455,42 +456,42 @@
 
             const isMobile = window.innerWidth <= 768;
 
-            if (isMobile) {
+            if (isMobile) { // <--- YEH HAI WOH FIRST LINE JAHAN SE BADALNA HAI
                 let gameIndex = 0;
-                if (!isMoreGamesMode) {
-                    while (gameIndex < list.length) {
-                        const featuredGame = list[gameIndex];
-                        if (featuredGame) {
-                            const heroCard = document.createElement('div');
-                            heroCard.className = "mobile-hero-feature";
-                            heroCard.innerHTML = createCardHTML(featuredGame, true);
-                            heroCard.onclick = () => playGame(featuredGame);
-                            gridBox.appendChild(heroCard);
-                        }
-                        gameIndex++;
+                
+                // Pehle check karo agar normal mode hai toh sirf pehla game HERO banega
+                if (!isMoreGamesMode && list.length > 0) {
+                    const featuredGame = list[0];
+                    const heroCard = document.createElement('div');
+                    heroCard.className = "mobile-hero-feature";
+                    heroCard.innerHTML = createCardHTML(featuredGame, true);
+                    heroCard.onclick = () => playGame(featuredGame);
+                    gridBox.appendChild(heroCard);
+                    gameIndex = 1; // Hero game ke baad baaki games 1 se shuru honge
+                }
 
-                        let gridCount = 0;
-                        while (gameIndex < list.length && gridCount < 6) { 
-                            const currentAsset = list[gameIndex];
-                            if (currentAsset) {
-                                const standardCard = document.createElement('div');
-                                standardCard.className = "game-card";
-                                standardCard.innerHTML = createCardHTML(currentAsset);
-                                standardCard.onclick = () => playGame(currentAsset);
-                                gridBox.appendChild(standardCard);
-                            }
-                            gameIndex++;
-                            gridCount++;
-                        }
-
-                        if (gridCount > 0) {
-                            const mobileAd = document.createElement('div');
-                            mobileAd.className = "mobile-loop-ad";
-                            mobileAd.innerHTML = "<span>[ MOBILE HORIZONTAL AD BANNER ]</span>";
-                            gridBox.appendChild(mobileAd);
-                        }
+                // Baaki bache saare games normal 3-column grid mein aayenge
+                while (gameIndex < list.length) {
+                    const currentAsset = list[gameIndex];
+                    if (currentAsset) {
+                        const standardCard = document.createElement('div');
+                        standardCard.className = "game-card";
+                        standardCard.innerHTML = createCardHTML(currentAsset);
+                        standardCard.onclick = () => playGame(currentAsset);
+                        gridBox.appendChild(standardCard);
                     }
-                } else {
+                    gameIndex++;
+
+                    // Har 9 games ke baad sirf ek bar fix banner aayega, koi faltu loop nahi chalega
+                    if (gameIndex % 9 === 0 && gameIndex < list.length) {
+                        const mobileAd = document.createElement('div');
+                        mobileAd.className = "mobile-loop-ad";
+                        mobileAd.innerHTML = "<span>[ MOBILE HORIZONTAL AD BANNER ]</span>";
+                        gridBox.appendChild(mobileAd);
+                    }
+                }
+
+            } else {
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
                         while (gameIndex < list.length && innerChunk < 3) {
