@@ -412,7 +412,8 @@
                         gridBox.appendChild(card);
                         desktopCount++;
 
-                        if (desktopCount % 3 === 0 && desktopCount > 0) {
+                        // ONLY CHANGED 3 TO 12 HERE
+                        if (desktopCount % 12 === 0 && desktopCount > 0) {
                             const lapAd = document.createElement('div');
                             lapAd.className = "laptop-inline-ad";
                             lapAd.innerHTML = "<span>[ WIDE GOOGLE INLINE LAPTOP AD BANNER (6-COLUMN SPAN) ]</span>";
@@ -423,7 +424,8 @@
                     let gameIndex = 0;
                     while (gameIndex < list.length) {
                         let desktopChunk = 0;
-                        while (gameIndex < list.length && desktopChunk < 3) {
+                        // ONLY CHANGED 3 TO 12 HERE
+                        while (gameIndex < list.length && desktopChunk < 12) {
                             const standardAsset = list[gameIndex];
                             if (standardAsset) {
                                 const card = document.createElement('div');
