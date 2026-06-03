@@ -287,6 +287,11 @@
     </div>
 
     <div class="main-container">
+        
+        <div class="side-ad left-ad">
+            <span>[ LEFT SIDE BANNER ]</span>
+        </div>
+
         <div class="game-zone">
             
             <div class="top-banner-ad" id="topAdSlot">
@@ -294,7 +299,6 @@
             </div>
 
             <div class="video-game-container" id="gameBox">
-                <!-- Ye naya button add karna hai -->
                 <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
                 <iframe id="gameFrame" src="" allowfullscreen></iframe>
             </div>
@@ -304,6 +308,11 @@
             <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 30px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
 
         </div>
+        
+        <div class="side-ad right-ad">
+            <span>[ RIGHT SIDE BANNER ]</span>
+        </div>
+
     </div>
 
     <script>
@@ -552,6 +561,35 @@
                 } else if (document.msExitFullscreen) { /* IE11 */
                     document.msExitFullscreen();
                 }
+            }
+        }
+        /* --- NAYA CODE: SIDE AD BANNERS FOR LAPTOP --- */
+        .side-ad {
+            display: none; /* Mobile par hide rahega */
+            width: 160px; /* Ad ki chaudai */
+            background: #071426;
+            border: 2px dashed #00f3ff;
+            border-radius: 8px;
+            color: #00f3ff;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            /* Screen scroll karne par ad wahi ruka rahega */
+            position: sticky;
+            top: 20px;
+            height: 600px; 
+        }
+
+        /* Sirf badi screen (laptop/desktop) par dikhega */
+        @media (min-width: 1050px) {
+            .side-ad {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+            .main-container {
+                gap: 25px; /* Ad aur games ke beech ka gap */
             }
         }
     </script>
