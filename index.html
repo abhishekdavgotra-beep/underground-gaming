@@ -229,77 +229,98 @@
         }
 
         /* --- 📱 MOBILE RESPONSIVE --- */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.9rem;
-            }
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
 
-            .main-container {
-                width: 96%;
-            }
+    .main-container {
+        width: 100%;          /* Mobile par poori screen ka use hoga */
+        gap: 0px !important;
+        padding: 5px 10px;    /* Side ki padding halki rakhi taaki cards bade dikhein */
+    }
 
-            .games-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 10px;
-            }
+    .games-grid {
+        grid-template-columns: repeat(3, 1fr) !important; /* Mobile par perfect 3-column grid */
+        gap: 12px;            /* Cards ke beech ka gap makkhan jaisa set kiya */
+        width: 100%;
+    }
 
-            .game-card img {
-                height: 90px;
-            }
+    .game-card {
+        padding: 8px;
+        border-radius: 10px;
+    }
 
-            .game-card h3 {
-                font-size: 0.8rem;
-            }
+    .game-card img {
+        height: 95px;         /* Mobile ke hisab se thumbnail ki height ekdum perfect */
+        border-radius: 6px;
+    }
 
-            .mobile-hero-feature {
-                grid-column: span 3;
-                background: rgba(255, 255, 255, 0.04);
-                border: 2px solid #00f3ff;
-                border-radius: 14px;
-                padding: 12px;
-                cursor: pointer;
-                text-align: center;
-                box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-            }
+    .game-card h3 {
+        font-size: 0.75rem;
+        margin: 6px 0 0 0;
+        text-overflow: ellipsis; /* Agar naam bada ho toh screen se baahar nahi jayega */
+    }
 
-            .mobile-hero-feature img {
-                width: 100%;
-                height: 180px;
-                object-fit: cover;
-                border-radius: 10px;
-            }
+    /* Mobile ka top main bada featured game */
+    .mobile-hero-feature {
+        grid-column: span 3;
+        background: rgba(255, 255, 255, 0.04);
+        border: 2px solid #00f3ff;
+        border-radius: 14px;
+        padding: 12px;
+        cursor: pointer;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-            .mobile-hero-feature h3 {
-                font-size: 1.2rem;
-                color: #00f3ff;
-                margin: 10px 0 2px 0;
-            }
+    .mobile-hero-feature img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
 
-            .mobile-loop-ad {
-                grid-column: 1 / -1; 
-                height: 100px;
-                background: #071426;
-                border: 2px dashed #ff007c;
-                border-radius: 10px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: #ff007c;
-                font-weight: bold;
-                font-size: 0.9rem;
-                margin: 10px 0;
-            }
+    .mobile-hero-feature h3 {
+        font-size: 1.1rem;
+        color: #00f3ff;
+        margin: 8px 0 2px 0;
+    }
 
-            .video-game-container {
-                height: 280px;
-                border-width: 2px;
-            }
+    /* Mobile ke beech wale automatic loop ad banners */
+    .mobile-loop-ad {
+        grid-column: span 3;
+        height: 75px;         /* Height thodi kam ki taaki user experience kharab na ho */
+        background: #071426;
+        border: 2px dashed #ff007c;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ff007c;
+        font-weight: bold;
+        font-size: 0.8rem;
+        margin: 10px 0;
+        width: 100%;
+        box-sizing: border-box; /* Isse ad screen se baahar nahi bhagega */
+    }
 
-            .top-banner-ad {
-                height: 65px;
-                font-size: 0.8rem;
-            }
-        }
+    /* Game chalne par video box mobile par */
+    .video-game-container {
+        height: 240px;        /* Mobile screen par game frame perfect dikhega */
+        border-width: 2px;
+        width: 100%;
+    }
+
+    .top-banner-ad {
+        height: 60px;
+        font-size: 0.75rem;
+        width: 100%;
+    }
+}
 
         @media (min-width: 1250px) {
             .main-container {
