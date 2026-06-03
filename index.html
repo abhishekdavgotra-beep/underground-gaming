@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Poki Style</title>
+    <title>Underground Gaming - Premium Portal</title>
     <style>
-        /* Asli Dark Blue Theme Layout Jo Tumhe Pasand Hai */
+        /* --- GLOBAL & COMMON STYLES --- */
         body {
             margin: 0;
             padding: 0;
@@ -16,35 +16,36 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: hidden;
         }
 
         header {
             width: 100%;
             text-align: center;
-            padding: 20px 0;
+            padding: 25px 0;
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             letter-spacing: 2px;
             color: #00f3ff;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
         }
 
-        /* Category Filter Buttons */
         .filters {
             display: flex;
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .filter-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid #00f3ff;
             color: #fff;
-            padding: 8px 20px;
+            padding: 8px 22px;
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
@@ -57,85 +58,66 @@
             box-shadow: 0 0 15px #00f3ff;
         }
 
-        /* 3-Column Master Layout (Ads + Game Area + Ads) */
         .main-container {
             display: flex;
             width: 95%;
             max-width: 1400px;
-            gap: 20px;
             justify-content: center;
             margin-bottom: 40px;
         }
 
-        /* Side Ads Panels */
-        .side-ad {
-            width: 180px;
-            min-height: 600px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* Central Game Zone */
         .game-zone {
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 15px;
             align-items: center;
+            width: 100%;
         }
 
-        /* Game Screen ke Andar ka TOP AD BANNER */
+        /* Top Play Ad Banner */
         .top-banner-ad {
             width: 100%;
+            max-width: 900px;
             height: 90px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px dashed #00f3ff;
+            background: #071426;
+            border: 2px solid #00f3ff;
             border-radius: 8px;
             display: none; 
             justify-content: center;
             align-items: center;
             color: #00f3ff;
             font-weight: bold;
-            font-size: 0.9rem;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
         }
 
-        /* Big Theater Mode Game Container */
+        /* Video/Iframe Container */
         .video-game-container {
             width: 100%;
-            max-width: 1100px; 
-            height: 65vh; 
-            background: #000000; 
+            max-width: 900px; 
+            height: 520px; 
+            background: #000; 
             border: 3px solid #00f3ff;
             border-radius: 12px;
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
             overflow: hidden;
-            position: relative;
             display: none;
-            margin: 20px auto;
+            margin-bottom: 30px;
         }
 
         .video-game-container iframe {
             width: 100%;
             height: 100%;
             border: none;
-            background: #000;
         }
 
-        /* Grid System for Games Card List Below */
+        /* --- LAPTOP / DESKTOP INLINE AD & GRID (6 ITEMS PER ROW) --- */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(6, 1fr); /* Fixed 6 games per row */
             gap: 20px;
             width: 100%;
-            margin-top: 20px;
         }
 
         .game-card {
@@ -146,6 +128,9 @@
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .game-card:hover {
@@ -156,7 +141,7 @@
 
         .game-card img {
             width: 100%;
-            height: 120px;
+            height: 130px;
             object-fit: cover;
             border-radius: 8px;
             background-color: #16294a;
@@ -170,26 +155,98 @@
             text-transform: capitalize;
         }
 
-        /* FIXED: Fullscreen button styling ab sahi se style tag ke andar hai */
-        .fullscreen-btn {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #00f3ff;
+        /* Huge Inline Laptop Banner (Size matching full 6-game grid space) */
+        .laptop-inline-ad {
+            grid-column: span 6; /* Takes full row space */
+            height: 140px;
+            background: #071426;
+            border: 2px dashed #00f3ff;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: #00f3ff;
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
             font-weight: bold;
-            z-index: 10;
-            transition: all 0.2s ease;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
         }
-        
-        .fullscreen-btn:hover {
-            background: #00f3ff;
-            color: #0b1d3a;
-            box-shadow: 0 0 10px #00f3ff;
+
+        /* --- 📱 PREMIUM MOBILE RESPONSIVE ENGINE (CRAZYGAMES BASED) 📱 --- */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.9rem;
+            }
+
+            .main-container {
+                width: 96%;
+            }
+
+            /* Mobile Grid Rules */
+            .games-grid {
+                grid-template-columns: repeat(3, 1fr) !important; /* Forces 3 games in sub-grids */
+                gap: 10px;
+            }
+
+            .game-card img {
+                height: 90px;
+            }
+
+            .game-card h3 {
+                font-size: 0.8rem;
+            }
+
+            /* Big Mobile Feature Box (Cover image only, no video) */
+            .mobile-hero-feature {
+                grid-column: span 3; /* Takes all 3 columns width */
+                background: rgba(255, 255, 255, 0.04);
+                border: 2px solid #00f3ff;
+                border-radius: 14px;
+                padding: 12px;
+                cursor: pointer;
+                text-align: center;
+                box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            }
+
+            .mobile-hero-feature img {
+                width: 100%;
+                height: 180px; /* Big premium cover */
+                object-fit: cover;
+                border-radius: 10px;
+            }
+
+            .mobile-hero-feature h3 {
+                font-size: 1.2rem;
+                color: #00f3ff;
+                margin: 10px 0 2px 0;
+            }
+
+            /* Mobile Mid-Grid Big Loop Ad */
+            .mobile-loop-ad {
+                grid-column: span 3;
+                height: 80px; /* Thinner and shorter than feature block */
+                background: #071426;
+                border: 2px dashed #ff007c;
+                border-radius: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #ff007c;
+                font-weight: bold;
+                font-size: 0.9rem;
+                margin: 10px 0;
+            }
+
+            /* Responsive Game play Box for Phone Screens */
+            .video-game-container {
+                height: 280px;
+                border-width: 2px;
+            }
+
+            .top-banner-ad {
+                height: 65px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -200,119 +257,228 @@
     </header>
 
     <div class="filters">
-        <button class="filter-btn active" onclick="filterCat('All', event)">All Games</button>
-        <button class="filter-btn" onclick="filterCat('Action', event)">Action</button>
-        <button class="filter-btn" onclick="filterCat('Racing', event)">Racing</button>
-        <button class="filter-btn" onclick="filterCat('Retro', event)">Retro</button>
+        <button class="filter-btn active" onclick="filterCat('All')">All Games</button>
+        <button class="filter-btn" onclick="filterCat('Action')">Action</button>
+        <button class="filter-btn" onclick="filterCat('Racing')">Racing</button>
+        <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
     </div>
 
     <div class="main-container">
-        
-        <div class="side-ad">ADVERTISEMENT</div>
-
         <div class="game-zone">
             
+            <!-- Play Top Banner Ad Block -->
             <div class="top-banner-ad" id="topAdSlot">
-                <span>[ GOOGLE BANNER AD SLOT - 728x90 ]</span>
+                <span>[ GOOGLE RESPONSIVE BANNER AD ]</span>
             </div>
 
+            <!-- Game Arena Box -->
             <div class="video-game-container" id="gameBox">
-                <iframe id="gameFrame" src=""></iframe>
-                <button class="fullscreen-btn" onclick="openFullscreen()">⛶ Fullscreen</button>
+                <iframe id="gameFrame" src="" allowfullscreen></iframe>
             </div>
 
+            <!-- Main Smart Rendering Grid Container -->
             <div class="games-grid" id="gridBox"></div>
 
-            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 30px; font-size: 1.4rem; text-align: left; width: 100%;">More Awesome Games</h2>
+            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 30px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
 
         </div>
-
-        <div class="side-ad">ADVERTISEMENT</div>
-
     </div>
 
     <script>
-        // --- 100% CORRECT CLEANED DATABASE ---
+        // Mocking database for architecture flow
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" },
-            { title: "Pac-Man Retro", cat: "Retro", img: "./images/ludo.jpg", url: "https://pacman.live/play.html" }
+            { title: "Pac-Man Retro", cat: "Retro", img: "./images/ludo.jpg", url: "https://pacman.live/play.html" },
+            { title: "Thief Puzzle", cat: "Action", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
+            { title: "Paper.io 2", cat: "Racing", img: "./images/flappy.jpg", url: "./flappy/index.html" },
+            { title: "Stickman Rebirth", cat: "Retro", img: "./images/ludo.jpg", url: "https://pacman.live/play.html" },
+            { title: "Bloxd.io", cat: "Action", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
+            { title: "Deadly Descent", cat: "Racing", img: "./images/flappy.jpg", url: "./flappy/index.html" },
+            { title: "Piece of Cake", cat: "Retro", img: "./images/ludo.jpg", url: "https://pacman.live/play.html" },
+            { title: "Speed Racer", cat: "Racing", img: "./images/bike.jpg", url: "https://playgama.com/export/game/drive-quest" },
+            { title: "Space Invaders", cat: "Retro", img: "./images/ludo.jpg", url: "https://pacman.live/play.html" },
+            { title: "Super Sonic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" }
         ];
 
-        // Function to load and render cards dynamically
-        function renderGames(list, isRelatedMode = false) {
-            const gridBox = document.getElementById('gridBox');
+        function playGame(game) {
+            const gameFrame = document.getElementById('gameFrame');
+            const gameBox = document.getElementById('gameBox');
+            const topAd = document.getElementById('topAdSlot');
+            const dynamicTitle = document.getElementById('moreGamesTitle');
+
+            if (gameFrame) gameFrame.src = game.url;
+            if (gameBox) gameBox.style.display = 'block';
+            if (topAd) topAd.style.display = 'flex'; 
             
-            // Home page par grid saaf karo
-            if (!isRelatedMode && gridBox) {
-                gridBox.innerHTML = "";
+            if (dynamicTitle) {
+                dynamicTitle.style.display = 'block';
+                dynamicTitle.innerText = More ${game.cat} Games; 
             }
             
-            list.forEach(game => {
-                const card = document.createElement('div');
-                card.className = "game-card";
-                
-                card.onclick = () => {
-                    const gameFrame = document.getElementById('gameFrame');
-                    const gameBox = document.getElementById('gameBox');
-                    const topAd = document.getElementById('topAdSlot');
-                    const dynamicTitle = document.getElementById('moreGamesTitle');
-
-                    // 1. URL aur Black Box show karo
-                    if (gameFrame) gameFrame.src = game.url;
-                    if (gameBox) gameBox.style.display = 'block';
-                    
-                    // 2. Top Banner Ad show karo
-                    if (topAd) topAd.style.display = 'flex'; 
-                    
-                    // 3. Category heading set karo
-                    if (dynamicTitle) {
-                        dynamicTitle.style.display = 'block';
-                        dynamicTitle.innerText = `More ${game.cat} Games`; 
-                    }
-                    
-                    // 4. SMART FILTER ENGINE: Sirf same category ke baki games nikaalo
-                    const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
-                    
-                    // Grid ko saaf karke filtered games dikhao
-                    if (gridBox) {
-                        gridBox.innerHTML = "";
-                        renderGames(relatedGames, true); 
-                    }
-                    
-                    // 5. Back button entry
-                    history.pushState({ gameOpen: true }, "");
-                    window.scrollTo({ top: 120, behavior: 'smooth' });
-                };
-
-                // Card Layout
-                card.innerHTML = `
-                    <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
-                    <h3>${game.title}</h3>
-                `;
-                if (gridBox) gridBox.appendChild(card);
-            });
+            const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
+            generateSmartGrid(relatedGames, true); // Generates related games feed with logic
+            
+            history.pushState({ gameOpen: true }, "");
+            window.scrollTo({ top: 140, behavior: 'smooth' });
         }
 
-        // Filter engine
-        function filterCat(category, event) {
-            // Update active button state
+        function createCardHTML(game, isHero = false) {
+            return `
+                <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
+                <h3>${game.title}</h3>
+                ${isHero ? '<span style="background:#00f3ff; color:#000; padding:2px 8px; font-size:0.75rem; font-weight:bold; border-radius:4px;">FEATURED</span>' : ''}
+            `;
+        }
+
+        function generateSmartGrid(list, isMoreGamesMode = false) {
+            const gridBox = document.getElementById('gridBox');
+            if (!gridBox) return;
+            gridBox.innerHTML = "";
+
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                // --- PHONE GENERATION LOGIC ---
+                if (!isMoreGamesMode) {
+                    // Main Screen Logic: 1 Big Featured Game Cover -> 9 Games Grid -> 1 Mid Banner Ad -> Repeat
+                    let gameIndex = 0;
+                    while (gameIndex < list.length) {
+                        // 1. Inject Big Feature Cover Box
+                        const heroCard = document.createElement('div');
+                        heroCard.className = "mobile-hero-feature";
+                        const featuredGame = list[gameIndex];
+                        heroCard.innerHTML = createCardHTML(featuredGame, true);
+                        heroCard.onclick = () => playGame(featuredGame);
+                        gridBox.appendChild(heroCard);
+                        gameIndex++;
+
+                        // 2. Inject Next 9 standard items
+                        let gridCount = 0;
+                        while (gameIndex < list.length && gridCount < 9) {
+                            const currentAsset = list[gameIndex];
+                            const standardCard = document.createElement('div');
+                            standardCard.className = "game-card";
+                            standardCard.innerHTML = createCardHTML(currentAsset);
+                            standardCard.onclick = () => playGame(currentAsset);
+                            gridBox.appendChild(standardCard);
+                            gameIndex++;
+                            gridCount++;
+                        }
+
+                        // 3. Inject Smart Wide Banner Ad (Thinner/smaller than main block)
+                        if (gameIndex < list.length || gridCount === 9) {
+                            const mobileAd = document.createElement('div');
+                            mobileAd.className = "mobile-loop-ad";
+                            mobileAd.innerHTML = "<span>[ MOBILE HORIZONTAL AD BANNER ]</span>";
+                            gridBox.appendChild(mobileAd);
+                        }
+                    }
+                } else {
+                    // Play Screen 'More Awesome Games' Logic: 3 Games -> Ad Banner Loop
+                    let gameIndex = 0;
+                    while (gameIndex < list.length) {
+                        let innerChunk = 0;
+                        while (gameIndex < list.length && innerChunk < 3) {
+                            const standardAsset = list[gameIndex];
+                            const card = document.createElement('div');
+                            card.className = "game-card";
+                            card.innerHTML = createCardHTML(standardAsset);
+                            card.onclick = () => playGame(standardAsset);
+                            gridBox.appendChild(card);
+                            gameIndex++;
+                            innerChunk++;
+                        }
+                        // Banner ad after every row of 3 items
+                        const miniAd = document.createElement('div');
+                        miniAd.className = "mobile-loop-ad";
+                        miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
+                        gridBox.appendChild(miniAd);
+                    }
+                }
+
+            } else {
+                // --- LAPTOP GENERATION LOGIC ---
+                if (!isMoreGamesMode) {
+                    // Main Grid Screen: 6 Columns Wide Layout -> Ads injected after every 3 games
+                    let desktopCount = 0;
+                    list.forEach((game, index) => {
+                        const card = document.createElement('div');
+                        card.className = "game-card";
+                        card.innerHTML = createCardHTML(game);
+                        card.onclick = () => playGame(game);
+                        gridBox.appendChild(card);
+                        desktopCount++;
+
+                        // Rules: Inject huge row-span ad after every 3 games
+                        if (desktopCount % 3 === 0 && desktopCount > 0) {
+                            const lapAd = document.createElement('div');
+                            lapAd.className = "laptop-inline-ad";
+                            lapAd.innerHTML = "<span>[ WIDE GOOGLE INLINE LAPTOP AD BANNER (6-COLUMN SPAN) ]</span>";
+                            gridBox.appendChild(lapAd);
+                        }
+                    });
+                } else {
+                    // More Awesome Games Desktop Screen (CrazyGames Photo 3 Flow): 3 Games -> 1 Full Row Ad Loop
+                    let gameIndex = 0;
+                    while (gameIndex < list.length) {
+                        let desktopChunk = 0;
+                        while (gameIndex < list.length && desktopChunk < 3) {
+                            const standardAsset = list[gameIndex];
+                            const card = document.createElement('div');
+                            card.className = "game-card";
+                            card.innerHTML = createCardHTML(standardAsset);
+                            card.onclick = () => playGame(standardAsset);
+                            gridBox.appendChild(card);
+                            gameIndex++;
+                            desktopChunk++;
+                        }
+                        // Injecting banner filling full block row after 3 items
+                        const rowAd = document.createElement('div');
+                        rowAd.className = "laptop-inline-ad";
+                        rowAd.innerHTML = "<span>[ DETAILED CRAZYGAMES STYLE DYNAMIC AD SLOT ]</span>";
+                        gridBox.appendChild(rowAd);
+                    }
+                }
+            }
+        }
+
+        function filterCat(category) {
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
-            if (event && event.target) {
-                event.target.classList.add('active');
+            if (window.event && window.event.target) {
+                window.event.target.classList.add('active');
             }
 
+            const gameBox = document.getElementById('gameBox');
+            const dynamicTitle = document.getElementById('moreGamesTitle');
+            const topAd = document.getElementById('topAdSlot');
+            
+            // Clear play status when changing categories
+            if (gameBox) gameBox.style.display = 'none';
+            if (dynamicTitle) dynamicTitle.style.display = 'none';
+            if (topAd) topAd.style.display = 'none';
+
             if(category === 'All') {
-                renderGames(gamesDatabase);
+                generateSmartGrid(gamesDatabase);
             } else {
                 const filtered = gamesDatabase.filter(g => g.cat === category);
-                renderGames(filtered);
+                generateSmartGrid(filtered);
             }
         }
 
-        // App Initializer
-        renderGames(gamesDatabase);
+        // Initialize App
+        generateSmartGrid(gamesDatabase);
+
+        // Listen for viewport changes to recalculate layouts dynamically
+        window.addEventListener('resize', () => {
+            const dynamicTitle = document.getElementById('moreGamesTitle');
+            if (dynamicTitle && dynamicTitle.style.display === 'block') {
+                // If a game is currently playing, keep related items up inside engine
+                return; 
+            }
+            generateSmartGrid(gamesDatabase);
+        });
 
         window.onpopstate = function(event) {
             const gameBox = document.getElementById('gameBox');
@@ -325,25 +491,10 @@
                 if (dynamicTitle) dynamicTitle.style.display = 'none';
                 if (topAd) topAd.style.display = 'none';
                 if (gameFrame) gameFrame.src = ""; 
-                
-                // Wapas saare games screen par laao
-                renderGames(gamesDatabase);
+                generateSmartGrid(gamesDatabase);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
-
-        // Game ko full screen karne ka function
-        function openFullscreen() {
-            const gameFrame = document.getElementById("gameFrame");
-            
-            if (gameFrame.requestFullscreen) {
-                gameFrame.requestFullscreen();
-            } else if (gameFrame.webkitRequestFullscreen) { /* Safari */
-                gameFrame.webkitRequestFullscreen();
-            } else if (gameFrame.msRequestFullscreen) { /* IE11 */
-                gameFrame.msRequestFullscreen();
-            }
-        }
     </script>
 </body>
 </html>
