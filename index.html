@@ -59,44 +59,44 @@
         }
 
         /* --- BUS IS CSS BLOCK KO REPLACE KARNA HAI --- */
-.main-container {
-    display: flex;
-    width: 98%;           /* Isko 95% se badha kar 98% kar diya taaki full screen space mile */
-    max-width: 1600px;    /* Isko 1400px se badha kar 1600px kiya taaki laptop par icons bade ho sakein */
-    justify-content: center;
-    margin: 0 auto 40px auto;
-    gap: 0px; 
-    padding: 10px 0px;    /* Side ki फालतू padding ko zero kar diya */
-    box-sizing: border-box;
-}
+        .main-container {
+            display: flex;
+            width: 98%;            /* Isko 95% se badha kar 98% kar diya taaki full screen space mile */
+            max-width: 1600px;     /* Isko 1400px se badha kar 1600px kiya taaki laptop par icons bade ho sakein */
+            justify-content: center;
+            margin: 0 auto 40px auto;
+            gap: 0px; 
+            padding: 10px 0px;     /* Side ki फालतू padding ko zero kar diya */
+            box-sizing: border-box;
+        }
 
-.games-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 25px;            /* Cards ke beech ka gap badha diya taaki layout chipka hua na lage */
-    width: 100%;
-}
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 25px;             /* Cards ke beech ka gap badha diya taaki layout chipka hua na lage */
+            width: 100%;
+        }
 
-.game-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 12px;        /* Padding thodi badhai taaki card andar se bada dikhe */
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
+        .game-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;         /* Padding thodi badhai taaki card andar se bada dikhe */
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-.game-card img {
-    width: 100%;
-    height: 155px;        /* Height ko 130px se badha kar 155px kar diya taaki thumbnails bade aur mast dikhein */
-    object-fit: cover;
-    border-radius: 8px;
-    background-color: #16294a;
-}
+        .game-card img {
+            width: 100%;
+            height: 155px;         /* Height ko 130px se badha kar 155px kar diya taaki thumbnails bade aur mast dikhein */
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: #16294a;
+        }
 
         .game-zone {
             flex: 1;
@@ -108,22 +108,22 @@
         }
 
         /* --- TOP AD BANNER KO BADA AUR RESPONSIVE KARNE KE LIYE --- */
-.top-banner-ad {
-    width: 100%;
-    max-width: 100%;       /* 900px ki limit hata di taaki ye ab grid ke barabar bada ho jaye */
-    height: 120px;         /* Height ko 90px se badha kar 120px kar diya taaki ad bada dikhe */
-    background: #071426;
-    border: 2px solid #00f3ff;
-    border-radius: 8px;
-    display: none; 
-    justify-content: center;
-    align-items: center;
-    color: #00f3ff;
-    font-weight: bold;
-    margin-bottom: 20px;
-    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-    box-sizing: border-box;
-}
+        .top-banner-ad {
+            width: 100%;
+            max-width: 100%;       /* 900px ki limit hata di taaki ye ab grid ke barabar bada ho jaye */
+            height: 120px;         /* Height ko 90px se badha kar 120px kar diya taaki ad bada dikhe */
+            background: #071426;
+            border: 2px solid #00f3ff;
+            border-radius: 8px;
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            color: #00f3ff;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            box-sizing: border-box;
+        }
 
         /* Purane wale main bas 'position: relative;' add kiya hai */
         .video-game-container {
@@ -148,7 +148,7 @@
             border: none;
             z-index: 1;
         }
-     
+      
         /* NAYA CODE: Fullscreen Button ka design */
         #fullscreenBtn {
             position: absolute;
@@ -215,10 +215,11 @@
             text-transform: capitalize;
         }
 
-        /* Huge Inline Laptop Banner */
+        /* YAHAN CHANGES KIYE HAIN: Huge Inline Laptop Banner */
         .laptop-inline-ad {
-            grid-column: span 6;
-            height: 140px;
+            grid-column: 1 / -1; /* Puri screen par felaane ke liye (Har column cover karega) */
+            height: 250px; /* Lambai badha di taaki game cover jaisa bada dikhe */
+            width: 100%; 
             background: #071426;
             border: 2px dashed #00f3ff;
             border-radius: 12px;
@@ -227,9 +228,10 @@
             align-items: center;
             color: #00f3ff;
             font-weight: bold;
-            font-size: 1.2rem;
-            margin: 10px 0;
+            font-size: 1.5rem;
+            margin: 15px 0;
             box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
+            box-sizing: border-box;
         }
 
         /* --- NEW PERFECT SIDE ADS FIXED --- */
@@ -306,9 +308,11 @@
                 margin: 10px 0 2px 0;
             }
 
+            /* YAHAN CHANGES KIYE HAIN: Mobile ad banner */
             .mobile-loop-ad {
-                grid-column: span 3;
-                height: 80px;
+                grid-column: 1 / -1; /* Mobile par bhi pura span karega */
+                height: 150px; /* Mobile par bhi bada aur proper dikhega */
+                width: 100%;
                 background: #071426;
                 border: 2px dashed #ff007c;
                 border-radius: 10px;
@@ -317,8 +321,9 @@
                 align-items: center;
                 color: #ff007c;
                 font-weight: bold;
-                font-size: 0.9rem;
-                margin: 10px 0;
+                font-size: 1.1rem;
+                margin: 15px 0;
+                box-sizing: border-box;
             }
 
             .video-game-container {
@@ -539,7 +544,7 @@
                         if (desktopCount % 12 === 0 && desktopCount > 0) {
                             const lapAd = document.createElement('div');
                             lapAd.className = "laptop-inline-ad";
-                            lapAd.innerHTML = "<span>[ WIDE GOOGLE INLINE LAPTOP AD BANNER (6-COLUMN SPAN) ]</span>";
+                            lapAd.innerHTML = "<span>[ WIDE GOOGLE INLINE LAPTOP AD BANNER (FULL WIDTH) ]</span>";
                             gridBox.appendChild(lapAd);
                         }
                     });
@@ -561,8 +566,7 @@
                         }
                         if (desktopChunk > 0) {
                             const rowAd = document.createElement('div');
-        
-rowAd.className = "laptop-inline-ad";
+                            rowAd.className = "laptop-inline-ad";
                             rowAd.innerHTML = "<span>[ DETAILED CRAZYGAMES STYLE DYNAMIC AD SLOT ]</span>";
                             gridBox.appendChild(rowAd);
                         }
