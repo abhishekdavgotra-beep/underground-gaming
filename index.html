@@ -130,7 +130,7 @@
             width: 100%;
             max-width: 900px; 
             height: 520px; 
-            background: #071426; /* Fixed white screen flash issue */
+            background: #071426; 
             border: 3px solid #00f3ff;
             border-radius: 12px;
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
@@ -139,7 +139,7 @@
             margin-bottom: 30px;
         }
 
-        /* FIXED: Added dark background to iframe directly */
+        /* FIX: Added dark background to iframe styles to stop white screen flash */
         .video-game-container iframe {
             position: absolute;
             top: 0;
@@ -148,7 +148,8 @@
             height: 100%;
             border: none;
             z-index: 1;
-            background-color: #071426; 
+            background-color: #071426;
+            color-scheme: dark;
         }
         
         #fullscreenBtn {
@@ -345,12 +346,15 @@
                 <span>[ GOOGLE RESPONSIVE BANNER AD ]</span>
             </div>
 
+            <!-- Game Display Box -->
             <div class="video-game-container" id="gameBox">
                 <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
-                <iframe id="gameFrame" src="" allowfullscreen></iframe>
+                <!-- FIX: Added style background and allowtransparency to prevent white background while loading -->
+                <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true" style="background: #071426;"></iframe>
             </div>
 
-            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 10px; margin-bottom: 20px; font-size: 1.6rem; text-align: left; width: 100%; border-bottom: 2px solid rgba(0,243,255,0.3); padding-bottom: 8px; box-sizing: border-box;">More Awesome Games</h2>
+            <!-- FIX: Placed title layout strictly ABOVE grid box and adjusted margins -->
+            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-bottom: 20px; margin-top: 10px; font-size: 1.5rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px; box-sizing: border-box;">More Awesome Games</h2>
 
             <div class="games-grid" id="gridBox"></div>
 
