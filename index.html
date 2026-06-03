@@ -115,7 +115,7 @@
         /* --- LAPTOP / DESKTOP INLINE AD & GRID (6 ITEMS PER ROW) --- */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr); /* Fixed 6 games per row */
+            grid-template-columns: repeat(6, 1fr); /* Laptop wide row with 6 games */
             gap: 20px;
             width: 100%;
         }
@@ -155,9 +155,9 @@
             text-transform: capitalize;
         }
 
-        /* Huge Inline Laptop Banner (Size matching full 6-game grid space) */
+        /* Huge Inline Laptop Banner (Full width matching 6 games row space) */
         .laptop-inline-ad {
-            grid-column: span 6; /* Takes full row space */
+            grid-column: span 6; 
             height: 140px;
             background: #071426;
             border: 2px dashed #00f3ff;
@@ -184,7 +184,7 @@
 
             /* Mobile Grid Rules */
             .games-grid {
-                grid-template-columns: repeat(3, 1fr) !important; /* Forces 3 games in sub-grids */
+                grid-template-columns: repeat(3, 1fr) !important; /* 3 Games per line on Phone */
                 gap: 10px;
             }
 
@@ -198,7 +198,7 @@
 
             /* Big Mobile Feature Box (Cover image only, no video) */
             .mobile-hero-feature {
-                grid-column: span 3; /* Takes all 3 columns width */
+                grid-column: span 3; 
                 background: rgba(255, 255, 255, 0.04);
                 border: 2px solid #00f3ff;
                 border-radius: 14px;
@@ -210,7 +210,7 @@
 
             .mobile-hero-feature img {
                 width: 100%;
-                height: 180px; /* Big premium cover */
+                height: 180px; 
                 object-fit: cover;
                 border-radius: 10px;
             }
@@ -224,7 +224,7 @@
             /* Mobile Mid-Grid Big Loop Ad */
             .mobile-loop-ad {
                 grid-column: span 3;
-                height: 80px; /* Thinner and shorter than feature block */
+                height: 80px; 
                 background: #071426;
                 border: 2px dashed #ff007c;
                 border-radius: 10px;
@@ -266,17 +266,14 @@
     <div class="main-container">
         <div class="game-zone">
             
-            <!-- Play Top Banner Ad Block -->
             <div class="top-banner-ad" id="topAdSlot">
                 <span>[ GOOGLE RESPONSIVE BANNER AD ]</span>
             </div>
 
-            <!-- Game Arena Box -->
             <div class="video-game-container" id="gameBox">
                 <iframe id="gameFrame" src="" allowfullscreen></iframe>
             </div>
 
-            <!-- Main Smart Rendering Grid Container -->
             <div class="games-grid" id="gridBox"></div>
 
             <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 30px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
@@ -285,7 +282,7 @@
     </div>
 
     <script>
-        // Full Dataset
+        // Complete Database Mockup
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
@@ -342,7 +339,7 @@
             gridBox.innerHTML = "";
 
             if (!list || list.length === 0) {
-                gridBox.innerHTML = "<p style='grid-column: span 6; text-align:center; color:#00f3ff;'>No games found in this category.</p>";
+                gridBox.innerHTML = "<p style='grid-column: span 6; text-align:center; color:#00f3ff;'>No games found.</p>";
                 return;
             }
 
@@ -350,9 +347,10 @@
 
             if (isMobile) {
                 if (!isMoreGamesMode) {
+                    // --- MOBILE MAIN LOOP ---
                     let gameIndex = 0;
                     while (gameIndex < list.length) {
-                        // 1. Big Cover Feature Box
+                        // 1. Big Feature Game (1 Game Cover Only)
                         const heroCard = document.createElement('div');
                         heroCard.className = "mobile-hero-feature";
                         const featuredGame = list[gameIndex];
@@ -361,7 +359,7 @@
                         gridBox.appendChild(heroCard);
                         gameIndex++;
 
-                        // 2. Next 9 games grid
+                        // 2. Niche 9 Standard Games
                         let gridCount = 0;
                         while (gameIndex < list.length && gridCount < 9) {
                             const currentAsset = list[gameIndex];
@@ -374,7 +372,7 @@
                             gridCount++;
                         }
 
-                        // 3. Ad banner loop
+                        // 3. Smaller/Thinner Horizontal Ad Banner
                         if (gameIndex < list.length || gridCount > 0) {
                             const mobileAd = document.createElement('div');
                             mobileAd.className = "mobile-loop-ad";
@@ -383,7 +381,7 @@
                         }
                     }
                 } else {
-                    // Play Mode: 3 Games -> Ad Banner Loop
+                    // --- MOBILE MORE GAMES PLAY MODE (3 Games -> Ad Loop) ---
                     let gameIndex = 0;
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
@@ -416,7 +414,7 @@
                         gridBox.appendChild(card);
                         desktopCount++;
 
-                        // Ad after every 3 games
+                        // Laptop rule: Ad after every 3 games row chunk
                         if (desktopCount % 3 === 0 && desktopCount > 0) {
                             const lapAd = document.createElement('div');
                             lapAd.className = "laptop-inline-ad";
@@ -425,7 +423,7 @@
                         }
                     });
                 } else {
-                    // Play screen: 3 Games -> 1 Full Row Ad Loop
+                    // --- LAPTOP MORE GAMES PLAY MODE (3 Games -> Ad Full Row Loop) ---
                     let gameIndex = 0;
                     while (gameIndex < list.length) {
                         let desktopChunk = 0;
@@ -475,10 +473,12 @@
             generateSmartGrid(currentActiveList, false);
         }
 
-        // Initial setup
-        generateSmartGrid(currentActiveList, isModeActive);
+        // --- SAFE INITIALIZATION ENGINE ---
+        document.addEventListener('DOMContentLoaded', () => {
+            generateSmartGrid(currentActiveList, isModeActive);
+        });
 
-        // Screen resize dynamic refresh
+        // Screen resize system update
         window.addEventListener('resize', () => {
             generateSmartGrid(currentActiveList, isModeActive);
         });
