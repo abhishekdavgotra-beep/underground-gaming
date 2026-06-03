@@ -307,6 +307,12 @@
 
             <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 30px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
 
+            <div class="side-ad left-ad">
+            <span>[ LEFT AD ]</span>
+        </div>
+        <div class="side-ad right-ad">
+            <span>[ RIGHT AD ]</span>
+        </div>
         </div>
         
         <div class="side-ad right-ad">
@@ -580,16 +586,48 @@
             height: 600px; 
         }
 
-        /* Sirf badi screen (laptop/desktop) par dikhega */
-        @media (min-width: 1050px) {
-            .side-ad {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column;
-            }
-            .main-container {
-                gap: 25px; /* Ad aur games ke beech ka gap */
+       /* --- NAYA CODE: PERFECT SIDE ADS --- */
+        .game-zone {
+            position: relative; /* Ye zaroori hai taaki ads game ke level par rahein */
+        }
+
+        .side-ad {
+            position: absolute;
+            top: 0;
+            bottom: 0; /* JADOO: Isse height apne aap top-banner + game ke barabar ho jayegi! */
+            width: 160px;
+            background: #071426;
+            border: 2px dashed #00f3ff;
+            border-radius: 8px;
+            color: #00f3ff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            
+            /* By default ads hide rahenge */
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: 0.3s ease-in-out;
+        }
+
+        .left-ad {
+            left: -180px; /* Game ke left mein 180px door */
+        }
+
+        .right-ad {
+            right: -180px; /* Game ke right mein 180px door */
+        }
+
+        /* Sirf Laptop par chalega AND Sirf tab jab Game chal raha ho (gameBox block ho) */
+        @media (min-width: 1280px) {
+            #gameBox[style*="block"] ~ .side-ad {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
             }
         }
     </script>
