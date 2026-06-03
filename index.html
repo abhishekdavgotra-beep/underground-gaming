@@ -348,9 +348,9 @@
                 <iframe id="gameFrame" src="" allowfullscreen></iframe>
             </div>
 
-            <div class="games-grid" id="gridBox"></div>
+            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 15px; margin-bottom: 15px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
 
-            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 30px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
+            <div class="games-grid" id="gridBox"></div>
 
         </div> 
         
@@ -398,6 +398,7 @@
                 if (rightAd) rightAd.style.display = 'flex';
             }
             
+            // CHANGED HERE: Yeh click hone wale game ki actual category dynamically text me set kar dega
             if (dynamicTitle) {
                 dynamicTitle.style.display = 'block';
                 dynamicTitle.innerText = `More ${game.cat} Games`; 
@@ -503,7 +504,6 @@
                         gridBox.appendChild(card);
                         desktopCount++;
 
-                        /* YAHAN FIX KIYA: Ab har 12 items ke baad (6+6 yaani 2 complete rows) full-width ad aayega */
                         if (desktopCount % 12 === 0 && desktopCount > 0) {
                             const lapAd = document.createElement('div');
                             lapAd.className = "laptop-inline-ad";
@@ -515,7 +515,7 @@
                     let gameIndex = 0;
                     while (gameIndex < list.length) {
                         let desktopChunk = 0;
-                        while (gameIndex < list.length && desktopChunk < 12) { /* Yahan bhi chunk limit 12 kar di */
+                        while (gameIndex < list.length && desktopChunk < 12) { 
                             const standardAsset = list[gameIndex];
                             if (standardAsset) {
                                 const card = document.createElement('div');
