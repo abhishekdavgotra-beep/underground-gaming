@@ -115,7 +115,7 @@
         /* --- LAPTOP / DESKTOP INLINE AD & GRID (6 ITEMS PER ROW) --- */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr); /* Laptop wide row with 6 games */
+            grid-template-columns: repeat(6, 1fr); /* Fixed 6 games per row */
             gap: 20px;
             width: 100%;
         }
@@ -155,9 +155,9 @@
             text-transform: capitalize;
         }
 
-        /* Huge Inline Laptop Banner (Full width matching 6 games row space) */
+        /* Huge Inline Laptop Banner (Size matching full 6-game grid space) */
         .laptop-inline-ad {
-            grid-column: span 6; 
+            grid-column: span 6; /* Takes full row space */
             height: 140px;
             background: #071426;
             border: 2px dashed #00f3ff;
@@ -172,7 +172,7 @@
             box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
         }
 
-        /* --- 📱 PREMIUM MOBILE RESPONSIVE ENGINE --- */
+        /* --- 📱 PREMIUM MOBILE RESPONSIVE ENGINE (CRAZYGAMES BASED) 📱 --- */
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.9rem;
@@ -184,7 +184,7 @@
 
             /* Mobile Grid Rules */
             .games-grid {
-                grid-template-columns: repeat(3, 1fr) !important; /* 3 Games per line on Phone */
+                grid-template-columns: repeat(3, 1fr) !important; /* Forces 3 games in sub-grids */
                 gap: 10px;
             }
 
@@ -198,7 +198,7 @@
 
             /* Big Mobile Feature Box (Cover image only, no video) */
             .mobile-hero-feature {
-                grid-column: span 3; 
+                grid-column: span 3; /* Takes all 3 columns width */
                 background: rgba(255, 255, 255, 0.04);
                 border: 2px solid #00f3ff;
                 border-radius: 14px;
@@ -210,7 +210,7 @@
 
             .mobile-hero-feature img {
                 width: 100%;
-                height: 180px; 
+                height: 180px; /* Big premium cover */
                 object-fit: cover;
                 border-radius: 10px;
             }
@@ -224,7 +224,7 @@
             /* Mobile Mid-Grid Big Loop Ad */
             .mobile-loop-ad {
                 grid-column: span 3;
-                height: 80px; 
+                height: 80px; /* Thinner and shorter than feature block */
                 background: #071426;
                 border: 2px dashed #ff007c;
                 border-radius: 10px;
@@ -282,7 +282,7 @@
     </div>
 
     <script>
-        // Complete Database Mockup
+        // Mocking database with global stable premium background images
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
@@ -297,9 +297,6 @@
             { title: "Space Invaders", cat: "Retro", img: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400", url: "https://pacman.live/play.html" },
             { title: "Super Sonic", cat: "Action", img: "https://images.unsplash.com/photo-1548685913-fe6574340a49?w=400", url: "./flappy/index.html" }
         ];
-
-        let currentActiveList = [...gamesDatabase];
-        let isModeActive = false;
 
         function playGame(game) {
             const gameFrame = document.getElementById('gameFrame');
@@ -317,8 +314,6 @@
             }
             
             const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
-            currentActiveList = relatedGames;
-            isModeActive = true;
             generateSmartGrid(relatedGames, true); 
             
             history.pushState({ gameOpen: true }, "");
@@ -327,7 +322,7 @@
 
         function createCardHTML(game, isHero = false) {
             return `
-                <img src="${game.img}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119'">
+                <img src="${game.img}" alt="${game.title}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119';">
                 <h3>${game.title}</h3>
                 ${isHero ? '<span style="background:#00f3ff; color:#000; padding:2px 8px; font-size:0.75rem; font-weight:bold; border-radius:4px; display:inline-block; margin-top:5px;">FEATURED</span>' : ''}
             `;
@@ -346,11 +341,11 @@
             const isMobile = window.innerWidth <= 768;
 
             if (isMobile) {
+                // --- PHONE GENERATION LOGIC ---
+                let gameIndex = 0;
                 if (!isMoreGamesMode) {
-                    // --- MOBILE MAIN LOOP ---
-                    let gameIndex = 0;
                     while (gameIndex < list.length) {
-                        // 1. Big Feature Game (1 Game Cover Only)
+                        // 1. Inject Big Feature Cover Box
                         const heroCard = document.createElement('div');
                         heroCard.className = "mobile-hero-feature";
                         const featuredGame = list[gameIndex];
@@ -359,7 +354,7 @@
                         gridBox.appendChild(heroCard);
                         gameIndex++;
 
-                        // 2. Niche 9 Standard Games
+                        // 2. Inject Next 9 standard items
                         let gridCount = 0;
                         while (gameIndex < list.length && gridCount < 9) {
                             const currentAsset = list[gameIndex];
@@ -372,8 +367,8 @@
                             gridCount++;
                         }
 
-                        // 3. Smaller/Thinner Horizontal Ad Banner
-                        if (gameIndex < list.length || gridCount > 0) {
+                        // 3. Inject Smart Wide Banner Ad
+                        if (gridCount > 0) {
                             const mobileAd = document.createElement('div');
                             mobileAd.className = "mobile-loop-ad";
                             mobileAd.innerHTML = "<span>[ MOBILE HORIZONTAL AD BANNER ]</span>";
@@ -381,8 +376,7 @@
                         }
                     }
                 } else {
-                    // --- MOBILE MORE GAMES PLAY MODE (3 Games -> Ad Loop) ---
-                    let gameIndex = 0;
+                    // Play Screen 'More Awesome Games' Logic
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
                         while (gameIndex < list.length && innerChunk < 3) {
@@ -395,10 +389,12 @@
                             gameIndex++;
                             innerChunk++;
                         }
-                        const miniAd = document.createElement('div');
-                        miniAd.className = "mobile-loop-ad";
-                        miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
-                        gridBox.appendChild(miniAd);
+                        if (innerChunk > 0) {
+                            const miniAd = document.createElement('div');
+                            miniAd.className = "mobile-loop-ad";
+                            miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
+                            gridBox.appendChild(miniAd);
+                        }
                     }
                 }
 
@@ -414,7 +410,6 @@
                         gridBox.appendChild(card);
                         desktopCount++;
 
-                        // Laptop rule: Ad after every 3 games row chunk
                         if (desktopCount % 3 === 0 && desktopCount > 0) {
                             const lapAd = document.createElement('div');
                             lapAd.className = "laptop-inline-ad";
@@ -423,7 +418,6 @@
                         }
                     });
                 } else {
-                    // --- LAPTOP MORE GAMES PLAY MODE (3 Games -> Ad Full Row Loop) ---
                     let gameIndex = 0;
                     while (gameIndex < list.length) {
                         let desktopChunk = 0;
@@ -437,10 +431,12 @@
                             gameIndex++;
                             desktopChunk++;
                         }
-                        const rowAd = document.createElement('div');
-                        rowAd.className = "laptop-inline-ad";
-                        rowAd.innerHTML = "<span>[ DETAILED CRAZYGAMES STYLE DYNAMIC AD SLOT ]</span>";
-                        gridBox.appendChild(rowAd);
+                        if (desktopChunk > 0) {
+                            const rowAd = document.createElement('div');
+                            rowAd.className = "laptop-inline-ad";
+                            rowAd.innerHTML = "<span>[ DETAILED CRAZYGAMES STYLE DYNAMIC AD SLOT ]</span>";
+                            gridBox.appendChild(rowAd);
+                        }
                     }
                 }
             }
@@ -450,37 +446,40 @@
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             
-            if (window.event && window.event.target) {
-                window.event.target.classList.add('active');
-            }
+            // BUG FIX: Removed window.event crash engine dependency
+            buttons.forEach(btn => {
+                if(btn.innerText.trim().toLowerCase() === category.trim().toLowerCase() || (category === 'All' && btn.innerText.includes('All'))) {
+                    btn.classList.add('active');
+                }
+            });
 
             const gameBox = document.getElementById('gameBox');
             const dynamicTitle = document.getElementById('moreGamesTitle');
             const topAd = document.getElementById('topAdSlot');
-            const gameFrame = document.getElementById('gameFrame');
             
             if (gameBox) gameBox.style.display = 'none';
             if (dynamicTitle) dynamicTitle.style.display = 'none';
             if (topAd) topAd.style.display = 'none';
-            if (gameFrame) gameFrame.src = "";
 
-            isModeActive = false;
             if(category === 'All') {
-                currentActiveList = [...gamesDatabase];
+                generateSmartGrid(gamesDatabase);
             } else {
-                currentActiveList = gamesDatabase.filter(g => g.cat === category);
+                const filtered = gamesDatabase.filter(g => g.cat === category);
+                generateSmartGrid(filtered);
             }
-            generateSmartGrid(currentActiveList, false);
         }
 
-        // --- SAFE INITIALIZATION ENGINE ---
-        document.addEventListener('DOMContentLoaded', () => {
-            generateSmartGrid(currentActiveList, isModeActive);
+        // --- GLOBAL INITIALIZER EVENT ---
+        window.addEventListener('DOMContentLoaded', () => {
+            generateSmartGrid(gamesDatabase);
         });
 
-        // Screen resize system update
         window.addEventListener('resize', () => {
-            generateSmartGrid(currentActiveList, isModeActive);
+            const dynamicTitle = document.getElementById('moreGamesTitle');
+            if (dynamicTitle && dynamicTitle.style.display === 'block') {
+                return; 
+            }
+            generateSmartGrid(gamesDatabase);
         });
 
         window.onpopstate = function(event) {
@@ -494,10 +493,7 @@
                 if (dynamicTitle) dynamicTitle.style.display = 'none';
                 if (topAd) topAd.style.display = 'none';
                 if (gameFrame) gameFrame.src = ""; 
-                
-                isModeActive = false;
-                currentActiveList = [...gamesDatabase];
-                generateSmartGrid(currentActiveList, false);
+                generateSmartGrid(gamesDatabase);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
