@@ -2,13 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Scroll Jump Fixed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Underground Gaming - Shake & Jump Fixed</title>
     <style>
-        /* --- GLOBAL & COMMON STYLES --- */
-        body {
+        /* --- ⚡ GLOBAL FIXED RESET: STOPS SHAKING & WOBBLING --- */
+        *, *::before, *::after {
+            box-sizing: border-box; /* Force border & padding to stay inside width */
+        }
+
+        html, body {
             margin: 0;
             padding: 0;
+            width: 100%;
+            overflow-x: hidden; /* Strictly prevent any left-right shaking */
+            background: #0b1d3a;
+            -webkit-text-size-adjust: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0b1d3a, #16294a);
             color: #fff;
@@ -16,7 +28,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
         }
 
         header {
@@ -67,7 +78,6 @@
             margin: 0 auto 40px auto;
             gap: 0px; 
             padding: 10px 0px;     
-            box-sizing: border-box;
         }
 
         .games-grid {
@@ -122,7 +132,6 @@
             font-weight: bold;
             margin-bottom: 20px;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-            box-sizing: border-box;
         }
 
         .video-game-container {
@@ -202,7 +211,6 @@
             font-size: 1.4rem;
             margin: 15px 0;
             box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
-            box-sizing: border-box;
         }
 
         /* --- SIDE ADS --- */
@@ -216,7 +224,6 @@
             font-weight: bold;
             text-align: center;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-            box-sizing: border-box;
             height: 625px; 
             margin-top: 0;
         }
@@ -237,7 +244,8 @@
             }
 
             .main-container {
-                width: 96%;
+                width: 100%; /* Pure screen adjustment */
+                padding: 10px 8px;
             }
 
             .games-grid {
@@ -290,6 +298,7 @@
                 font-weight: bold;
                 font-size: 0.9rem;
                 margin: 10px 0;
+                width: 100%;
             }
 
             .video-game-container {
@@ -348,294 +357,3 @@
             <div class="video-game-container" id="gameBox">
                 <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
                 <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true" style="background-color: #000;"></iframe>
-            </div>
-
-            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 15px; margin-bottom: 15px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
-
-            <div class="games-grid" id="gridBox"></div>
-
-        </div> 
-        
-        <div class="side-ad right-ad" id="rightAdBox">
-            <span>[ AD BANNER ]</span>
-        </div>
-
-    </div>
-
-    <script>
-        // --- DATABASE ---
-        const gamesDatabase = [
-            { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
-            { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
-            { title: "Pac-Man Retro", cat: "Retro", img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400", url: "https://pacman.live/play.html" },
-            { title: "Thief Puzzle", cat: "Action", img: "https://images.unsplash.com/photo-1553481187-be93c21490a9?w=400", url: "https://playgama.com/export/game/drive-quest" },
-            { title: "Paper.io 2", cat: "Racing", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400", url: "./flappy/index.html" },
-            { title: "Stickman Rebirth", cat: "Retro", img: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400", url: "https://pacman.live/play.html" },
-            { title: "Bloxd.io", cat: "Action", img: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=400", url: "https://playgama.com/export/game/drive-quest" },
-            { title: "Deadly Descent", cat: "Racing", img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400", url: "./flappy/index.html" },
-            { title: "Piece of Cake", cat: "Retro", img: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=400", url: "https://pacman.live/play.html" },
-            { title: "Speed Racer", cat: "Racing", img: "https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=400", url: "https://playgama.com/export/game/drive-quest" },
-            { title: "Space Invaders", cat: "Retro", img: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400", url: "https://pacman.live/play.html" },
-            { title: "Super Sonic", cat: "Action", img: "https://images.unsplash.com/photo-1548685913-fe6574340a49?w=400", url: "./flappy/index.html" }
-        ];
-
-        let currentActiveList = [...gamesDatabase];
-        let isModeActive = false;
-
-        function playGame(game) {
-            const gameFrame = document.getElementById('gameFrame');
-            const gameBox = document.getElementById('gameBox');
-            const topAd = document.getElementById('topAdSlot');
-            const dynamicTitle = document.getElementById('moreGamesTitle');
-            
-            const leftAd = document.getElementById('leftAdBox');
-            const rightAd = document.getElementById('rightAdBox');
-
-            if (gameFrame) gameFrame.src = game.url;
-            if (gameBox) gameBox.style.display = 'block';
-            if (topAd) topAd.style.display = 'flex';
-            
-            if (window.innerWidth >= 1250) {
-                if (leftAd) leftAd.style.display = 'flex';
-                if (rightAd) rightAd.style.display = 'flex';
-            }
-            
-            if (dynamicTitle) {
-                dynamicTitle.style.display = 'block';
-                dynamicTitle.innerText = `More ${game.cat} Games`; 
-            }
-            
-            const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
-            currentActiveList = relatedGames;
-            isModeActive = true;
-            renderGames(relatedGames, true); 
-            
-            history.pushState({ gameOpen: true }, "");
-            
-            // --- ⚡ ULTRA SMOOTH & ACCURATE MOBILE SCROLL FIX ---
-            setTimeout(() => {
-                const yOffset = -15; // Keeps small beautiful padding from top border
-                const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
-                window.scrollTo({ top: yPos, behavior: 'smooth' });
-            }, 100);
-        }
-
-        function createCardHTML(game, isHero = false) {
-            return `
-                <img src="${game.img}" alt="${game.title}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119';">
-                <h3>${game.title}</h3>
-                ${isHero ? '<span style="background:#00f3ff; color:#000; padding:2px 8px; font-size:0.75rem; font-weight:bold; border-radius:4px; display:inline-block; margin-top:5px;">FEATURED</span>' : ''}
-            `;
-        }
-
-        // --- DYNAMIC RENDERING ENGINE ---
-        function renderGames(list, isMoreGamesMode = false) {
-            const gridBox = document.getElementById('gridBox');
-            if (!gridBox) return;
-            gridBox.innerHTML = "";
-
-            if (!list || list.length === 0) {
-                gridBox.innerHTML = "<p style='grid-column: span 6; text-align:center; color:#00f3ff;'>No games found.</p>";
-                return;
-            }
-
-            const isMobile = window.innerWidth <= 768;
-
-            if (isMobile) {
-                let gameIndex = 0;
-                if (!isMoreGamesMode) {
-                    while (gameIndex < list.length) {
-                        const featuredGame = list[gameIndex];
-                        if (featuredGame) {
-                            const heroCard = document.createElement('div');
-                            heroCard.className = "mobile-hero-feature";
-                            heroCard.innerHTML = createCardHTML(featuredGame, true);
-                            heroCard.onclick = () => playGame(featuredGame);
-                            gridBox.appendChild(heroCard);
-                        }
-                        gameIndex++;
-
-                        let gridCount = 0;
-                        while (gameIndex < list.length && gridCount < 6) { 
-                            const currentAsset = list[gameIndex];
-                            if (currentAsset) {
-                                const standardCard = document.createElement('div');
-                                standardCard.className = "game-card";
-                                standardCard.innerHTML = createCardHTML(currentAsset);
-                                standardCard.onclick = () => playGame(currentAsset);
-                                gridBox.appendChild(standardCard);
-                            }
-                            gameIndex++;
-                            gridCount++;
-                        }
-
-                        if (gridCount > 0) {
-                            const mobileAd = document.createElement('div');
-                            mobileAd.className = "mobile-loop-ad";
-                            mobileAd.innerHTML = "<span>[ MOBILE HORIZONTAL AD BANNER ]</span>";
-                            gridBox.appendChild(mobileAd);
-                        }
-                    }
-                } else {
-                    while (gameIndex < list.length) {
-                        let innerChunk = 0;
-                        while (gameIndex < list.length && innerChunk < 3) {
-                            const standardAsset = list[gameIndex];
-                            if (standardAsset) {
-                                const card = document.createElement('div');
-                                card.className = "game-card";
-                                card.innerHTML = createCardHTML(standardAsset);
-                                card.onclick = () => playGame(standardAsset);
-                                gridBox.appendChild(card);
-                            }
-                            gameIndex++;
-                            innerChunk++;
-                        }
-                        if (innerChunk > 0) {
-                            const miniAd = document.createElement('div');
-                            miniAd.className = "mobile-loop-ad";
-                            miniAd.innerHTML = "<span>[ REPEATED MULTI-GAME AD BANNER ]</span>";
-                            gridBox.appendChild(miniAd);
-                        }
-                    }
-                }
-
-            } else {
-                if (!isMoreGamesMode) {
-                    let desktopCount = 0;
-                    list.forEach((game) => {
-                        const card = document.createElement('div');
-                        card.className = "game-card";
-                        card.innerHTML = createCardHTML(game);
-                        card.onclick = () => playGame(game);
-                        gridBox.appendChild(card);
-                        desktopCount++;
-
-                        if (desktopCount % 12 === 0 && desktopCount > 0) {
-                            const lapAd = document.createElement('div');
-                            lapAd.className = "laptop-inline-ad";
-                            lapAd.innerHTML = "<span>[ WIDE GOOGLE INLINE LAPTOP AD BANNER (FULL WIDTH) ]</span>";
-                            gridBox.appendChild(lapAd);
-                        }
-                    });
-                } else {
-                    let gameIndex = 0;
-                    while (gameIndex < list.length) {
-                        let desktopChunk = 0;
-                        while (gameIndex < list.length && desktopChunk < 12) { 
-                            const standardAsset = list[gameIndex];
-                            if (standardAsset) {
-                                const card = document.createElement('div');
-                                card.className = "game-card";
-                                card.innerHTML = createCardHTML(standardAsset);
-                                card.onclick = () => playGame(standardAsset);
-                                gridBox.appendChild(card);
-                            }
-                            gameIndex++;
-                            desktopChunk++;
-                        }
-                        if (desktopChunk > 0) {
-                            const rowAd = document.createElement('div');
-                            rowAd.className = "laptop-inline-ad";
-                            rowAd.innerHTML = "<span>[ DETAILED CRAZYGAMES STYLE DYNAMIC AD SLOT ]</span>";
-                            gridBox.appendChild(rowAd);
-                        }
-                    }
-                }
-            }
-        }
-
-        function filterCat(category) {
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            buttons.forEach(btn => {
-                if(btn.innerText.trim().toLowerCase() === category.trim().toLowerCase() || (category === 'All' && btn.innerText.includes('All'))) {
-                    btn.classList.add('active');
-                }
-            });
-
-            const gameBox = document.getElementById('gameBox');
-            const dynamicTitle = document.getElementById('moreGamesTitle');
-            const topAd = document.getElementById('topAdSlot');
-            const gameFrame = document.getElementById('gameFrame');
-            
-            const leftAd = document.getElementById('leftAdBox');
-            const rightAd = document.getElementById('rightAdBox');
-            
-            if (gameBox) gameBox.style.display = 'none';
-            if (dynamicTitle) dynamicTitle.style.display = 'none';
-            if (topAd) topAd.style.display = 'none';
-            if (gameFrame) gameFrame.src = "";
-            if (leftAd) leftAd.style.display = 'none';
-            if (rightAd) rightAd.style.display = 'none';
-
-            isModeActive = false;
-            if(category === 'All') {
-                currentActiveList = [...gamesDatabase];
-            } else {
-                currentActiveList = gamesDatabase.filter(g => g.cat === category);
-            }
-            renderGames(currentActiveList, false);
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            renderGames(currentActiveList, isModeActive);
-        });
-
-        // --- 🛡️ CRITICAL SCROLL-JUMP RESIZE FIX FOR MOBILE ---
-        let cachedWindowWidth = window.innerWidth;
-        window.addEventListener('resize', () => {
-            // It will only re-render if the ACTUAL screen width changes (like device rotation), NOT on scroll bar collapse
-            if (window.innerWidth !== cachedWindowWidth) {
-                cachedWindowWidth = window.innerWidth;
-                renderGames(currentActiveList, isModeActive);
-            }
-        });
-
-        window.onpopstate = function(event) {
-            const gameBox = document.getElementById('gameBox');
-            const dynamicTitle = document.getElementById('moreGamesTitle');
-            const topAd = document.getElementById('topAdSlot');
-            const gameFrame = document.getElementById('gameFrame');
-            const leftAd = document.getElementById('leftAdBox');
-            const rightAd = document.getElementById('rightAdBox');
-            
-            if (gameBox && gameBox.style.display === 'block') {
-                gameBox.style.display = 'none';
-                if (dynamicTitle) dynamicTitle.style.display = 'none';
-                if (topAd) topAd.style.display = 'none';
-                if (gameFrame) gameFrame.src = ""; 
-                if (leftAd) leftAd.style.display = 'none';
-                if (rightAd) rightAd.style.display = 'none';
-                
-                isModeActive = false;
-                currentActiveList = [...gamesDatabase];
-                renderGames(currentActiveList, false);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        };
-        
-        function toggleFullScreen() {
-            const gameBox = document.getElementById('gameBox');
-            if (!document.fullscreenElement) {
-                if (gameBox.requestFullscreen) {
-                    gameBox.requestFullscreen();
-                } else if (gameBox.webkitRequestFullscreen) { 
-                    gameBox.webkitRequestFullscreen();
-                } else if (gameBox.msRequestFullscreen) { 
-                    gameBox.msRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { 
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { 
-                    document.msExitFullscreen();
-                }
-            }
-        }
-    </script>
-</body>
-</html>
