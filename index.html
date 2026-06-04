@@ -93,7 +93,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-width: 0; /* कार्ड को ओवरफ्लो होने से रोकने के लिए */
+            min-width: 0; /* कार्ड को ओवरफ्لو होने से रोकने के लिए */
         }
 
         .game-card img {
@@ -398,6 +398,7 @@
             
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
+            const gridBox = document.getElementById('gridBox');
 
             if (gameFrame) gameFrame.src = game.url;
             if (gameBox) gameBox.style.display = 'block';
@@ -416,6 +417,13 @@
             const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
             currentActiveList = relatedGames;
             isModeActive = true;
+
+            // --- SCROLL SNAP & JUMP FIX ---
+            // ग्रिड को खाली करने से पहले उसकी मौजूदा हाइट को लॉक कर रहे हैं ताकि पेज छोटा होकर ऊपर की तरफ झटका न मारे
+            if (gridBox) {
+                gridBox.style.minHeight = gridBox.offsetHeight + 'px';
+            }
+            
             renderGames(relatedGames, true); 
             
             history.pushState({ gameOpen: true }, "");
@@ -425,6 +433,11 @@
                 const yOffset = -15; 
                 const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
                 window.scrollTo({ top: yPos, behavior: 'smooth' });
+
+                // स्क्रॉल एनीमेशन शुरू होने या खत्म होने के बाद लॉक की हुई मिन-हाइट को वापस रीसेट कर रहे हैं
+                setTimeout(() => {
+                    if (gridBox) gridBox.style.minHeight = '0px';
+                }, 600);
             }, 100);
         }
 
