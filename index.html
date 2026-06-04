@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Scroll Jump Fixed</title>
+    <title>Underground Gaming - Scroll Fixed</title>
     <style>
         /* --- GLOBAL & COMMON STYLES --- */
-        body {
+        html, body {
+            width: 100%;
+            overflow-x: hidden; /* पूरी तरह से हॉरिजॉन्टल स्क्रॉल को ब्लॉक करने के लिए */
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0b1d3a, #16294a);
             color: #fff;
@@ -16,7 +22,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
         }
 
         header {
@@ -72,7 +77,7 @@
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(6, minmax(0, 1fr)); /* 1fr को minmax(0, 1fr) किया ताकि ग्रिड बाहर न भागे */
             gap: 25px;             
             width: 100%;
         }
@@ -88,6 +93,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            min-width: 0; /* कार्ड को ओवरफ्लो होने से रोकने के लिए */
         }
 
         .game-card img {
@@ -105,6 +111,7 @@
             gap: 15px;
             align-items: center;
             width: 100%;
+            min-width: 0; /* फ्लेक्स कंटेनर को स्क्रीन के अंदर सिकोड़ने में मदद करता है */
         }
 
         /* --- TOP AD BANNER --- */
@@ -183,6 +190,7 @@
             margin: 10px 0 5px 0;
             white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis; /* बड़े नाम होने पर आगे '...' आ जाएगा, जिससे लेआउट खराब नहीं होगा */
             text-transform: capitalize;
         }
 
@@ -241,7 +249,7 @@
             }
 
             .games-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important; /* मोबाइल पर भी ग्रिड फिक्स किया */
                 gap: 10px;
             }
 
@@ -414,7 +422,7 @@
             
             // --- ⚡ ULTRA SMOOTH & ACCURATE MOBILE SCROLL FIX ---
             setTimeout(() => {
-                const yOffset = -15; // Keeps small beautiful padding from top border
+                const yOffset = -15; 
                 const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
                 window.scrollTo({ top: yPos, behavior: 'smooth' });
             }, 100);
@@ -435,7 +443,7 @@
             gridBox.innerHTML = "";
 
             if (!list || list.length === 0) {
-                gridBox.innerHTML = "<p style='grid-column: span 6; text-align:center; color:#00f3ff;'>No games found.</p>";
+                gridBox.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; color:#00f3ff;'>No games found.</p>";
                 return;
             }
 
@@ -586,7 +594,6 @@
         // --- 🛡️ CRITICAL SCROLL-JUMP RESIZE FIX FOR MOBILE ---
         let cachedWindowWidth = window.innerWidth;
         window.addEventListener('resize', () => {
-            // It will only re-render if the ACTUAL screen width changes (like device rotation), NOT on scroll bar collapse
             if (window.innerWidth !== cachedWindowWidth) {
                 cachedWindowWidth = window.innerWidth;
                 renderGames(currentActiveList, isModeActive);
