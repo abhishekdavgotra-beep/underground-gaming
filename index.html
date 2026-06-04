@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Instant Load</title>
+    <title>Underground Gaming - Fully Fixed Smooth Load</title>
     
-    <!-- Browser ko pehle hi batana ki background dark hai (Instant Flash Protection) -->
     <meta name="theme-color" content="#0b1d3a">
     <style>
-        /* --- CRITICAL RENDER PATH (Sabse pehle ye load hoga) --- */
+        /* --- ANTI-WHITE FLASH FIX (Browser shuru se hi dark rahega) --- */
         html {
             color-scheme: dark;
             background-color: #0b1d3a !important;
@@ -21,8 +20,6 @@
             padding: 0;
             box-sizing: border-box;
             background: #0b1d3a !important;
-            /* Animation band kari taaki refresh instant ho */
-            transition: none !important; 
         }
 
         body {
@@ -64,6 +61,7 @@
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
+            transition: all 0.2s ease;
         }
 
         .filter-btn.active, .filter-btn:hover {
@@ -72,6 +70,7 @@
             box-shadow: 0 0 15px #00f3ff;
         }
 
+        /* --- MAIN CONTAINER ENGINE --- */
         .main-container {
             display: flex;
             width: 98%;           
@@ -90,6 +89,7 @@
             width: 100%;
         }
 
+        /* FIXED: Yahan se content-visibility hata diya hai taaki niche se na atke */
         .game-card {
             background: #071426; 
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -101,12 +101,7 @@
             flex-direction: column;
             justify-content: space-between;
             min-width: 0; 
-        }
-
-        /* content-visibility se browser cards ko super-fast render karta hai */
-        .game-card {
-            content-visibility: auto;
-            contain-intrinsic-size: 200px;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
 
         .game-card img {
@@ -236,7 +231,7 @@
             font-size: 0.9rem;
         }
 
-        /* 📱 MOBILE RESPONSIVE SPEED OPTIMIZED */
+        /* 📱 MOBILE RESPONSIVE OPTIMIZED */
         @media (max-width: 768px) {
             header h1 { font-size: 1.9rem; }
             .main-container { width: 96%; }
@@ -384,7 +379,6 @@
             renderGames(currentActiveList, true); 
             history.pushState({ gameOpen: true }, "");
             
-            // Fast Smooth Scrolling
             setTimeout(() => {
                 const yPos = gameBox.getBoundingClientRect().top + window.pageYOffset - 15;
                 window.scrollTo({ top: yPos, behavior: 'smooth' });
@@ -392,7 +386,6 @@
         }
 
         function createCardHTML(game, isHero = false) {
-            // loading="lazy" aur decoding="async" se images background me superfast load hoti hain
             return `
                 <img src="${game.img}" alt="${game.title}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119';">
                 <h3>${game.title}</h3>
