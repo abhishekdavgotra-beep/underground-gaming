@@ -13,9 +13,18 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100vw;
             overflow: hidden;
         }
         canvas {
+            /* 🔥 YAHAN BADLAV KIYA HAI: Poori lambai aur chodai cover karne ke liye */
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100%;
+            max-height: 100%;
+            box-sizing: border-box; /* Isse border screen se baahar nahi jayega */
+            object-fit: fill;       /* Isse game bina gap ke red mark tak stretch ho jayegi */
+            
             border: 4px solid #fff;
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0,0,0,0.8);
