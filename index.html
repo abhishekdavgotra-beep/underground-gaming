@@ -93,7 +93,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-width: 0; /* कार्ड को ओवरफ्لو होने से रोकने के लिए */
+            min-width: 0; /* कार्ड को ओवरफ्लो होने से रोकने के लिए */
         }
 
         .game-card img {
@@ -389,8 +389,10 @@
 
         let currentActiveList = [...gamesDatabase];
         let isModeActive = false;
+        let currentlyPlayingGame = null; // वर्तमान में चल रहे गेम को ट्रैक करने के लिए
 
         function playGame(game) {
+            currentlyPlayingGame = game; // एक्टिव गेम सेट किया
             const gameFrame = document.getElementById('gameFrame');
             const gameBox = document.getElementById('gameBox');
             const topAd = document.getElementById('topAdSlot');
@@ -398,7 +400,6 @@
             
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
-            const gridBox = document.getElementById('gridBox');
 
             if (gameFrame) gameFrame.src = game.url;
             if (gameBox) gameBox.style.display = 'block';
@@ -417,13 +418,6 @@
             const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
             currentActiveList = relatedGames;
             isModeActive = true;
-
-            // --- SCROLL SNAP & JUMP FIX ---
-            // ग्रिड को खाली करने से पहले उसकी मौजूदा हाइट को लॉक कर रहे हैं ताकि पेज छोटा होकर ऊपर की तरफ झटका न मारे
-            if (gridBox) {
-                gridBox.style.minHeight = gridBox.offsetHeight + 'px';
-            }
-            
             renderGames(relatedGames, true); 
             
             history.pushState({ gameOpen: true }, "");
@@ -433,11 +427,6 @@
                 const yOffset = -15; 
                 const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
                 window.scrollTo({ top: yPos, behavior: 'smooth' });
-
-                // स्क्रॉल एनीमेशन शुरू होने या खत्म होने के बाद लॉक की हुई मिन-हाइट को वापस रीसेट कर रहे हैं
-                setTimeout(() => {
-                    if (gridBox) gridBox.style.minHeight = '0px';
-                }, 600);
             }, 100);
         }
 
@@ -452,8 +441,18 @@
         // --- DYNAMIC RENDERING ENGINE ---
         function renderGames(list, isMoreGamesMode = false) {
             const gridBox = document.getElementById('gridBox');
+            const gameBox = document.getElementById('gameBox');
+            const gameZone = document.querySelector('.game-zone');
+            const dynamicTitle = document.getElementById('moreGamesTitle');
+
             if (!gridBox) return;
             gridBox.innerHTML = "";
+
+            // गेम बॉक्स की डिफॉल्ट स्टाइल को रीसेट करें
+            if (gameBox) {
+                gameBox.style.gridColumn = "";
+                gameBox.style.margin = "";
+            }
 
             if (!list || list.length === 0) {
                 gridBox.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; color:#00f3ff;'>No games found.</p>";
@@ -465,6 +464,11 @@
             if (isMobile) {
                 let gameIndex = 0;
                 if (!isMoreGamesMode) {
+                    // गेम बॉक्स को उसके ओरिजिनल पैरेंट (game-zone) में वापस डालें
+                    if (gameZone && gameBox && gameBox.parentNode !== gameZone) {
+                        gameZone.insertBefore(gameBox, dynamicTitle);
+                    }
+
                     while (gameIndex < list.length) {
                         const featuredGame = list[gameIndex];
                         if (featuredGame) {
@@ -498,6 +502,22 @@
                         }
                     }
                 } else {
+                    // मोबाइल पर गेम प्ले होने पर: एक्टिव गेम को सबसे ऊपर Featured बनाएं
+                    if (currentlyPlayingGame) {
+                        const heroCard = document.createElement('div');
+                        heroCard.className = "mobile-hero-feature";
+                        heroCard.innerHTML = createCardHTML(currentlyPlayingGame, true);
+                        gridBox.appendChild(heroCard);
+                    }
+
+                    // गेम बॉक्स को डायनामिकली ग्रिड के अंदर पहले Featured कार्ड के नीचे मूव करें
+                    if (gameBox) {
+                        gameBox.style.display = 'block';
+                        gameBox.style.gridColumn = "1 / -1";
+                        gameBox.style.margin = "10px 0 20px 0";
+                        gridBox.appendChild(gameBox);
+                    }
+
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
                         while (gameIndex < list.length && innerChunk < 3) {
@@ -522,6 +542,11 @@
                 }
 
             } else {
+                // डेस्कटॉप के लिए गेम बॉक्स को हमेशा game-zone में सबसे ऊपर रखें
+                if (gameZone && gameBox && gameBox.parentNode !== gameZone) {
+                    gameZone.insertBefore(gameBox, dynamicTitle);
+                }
+
                 if (!isMoreGamesMode) {
                     let desktopCount = 0;
                     list.forEach((game) => {
@@ -592,6 +617,7 @@
             if (rightAd) rightAd.style.display = 'none';
 
             isModeActive = false;
+            currentlyPlayingGame = null; // रीसेट एक्टिव गेम
             if(category === 'All') {
                 currentActiveList = [...gamesDatabase];
             } else {
@@ -630,6 +656,7 @@
                 if (rightAd) rightAd.style.display = 'none';
                 
                 isModeActive = false;
+                currentlyPlayingGame = null; // रीसेट एक्टिव गेम
                 currentActiveList = [...gamesDatabase];
                 renderGames(currentActiveList, false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
