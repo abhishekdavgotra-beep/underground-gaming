@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Fully Fixed</title>
+    <title>Underground Gaming - Fully Fixed Layout Sequence</title>
     <style>
-        /* --- ANTI-WHITE FLASH FIX (Ye browser ko shuruwat se dark mode me rakhega) --- */
+        /* --- ANTI-WHITE FLASH FIX (Browser ko shuruwat se dark mode me rakhega) --- */
         html {
             color-scheme: dark; 
         }
@@ -126,7 +126,7 @@
             width: 100%;
             max-width: 100%;       
             height: 120px;         
-            background: #071426 !important; /* Ad load hone tak dark rahega */
+            background: #071426 !important; 
             border: 2px solid #00f3ff;
             border-radius: 8px;
             display: none; 
@@ -140,6 +140,7 @@
             min-height: 120px; 
         }
 
+        /* --- GAME BOX CONTAINER --- */
         .video-game-container {
             position: relative; 
             width: 100%;
@@ -443,7 +444,7 @@
 
         function createCardHTML(game, isHero = false) {
             return `
-                <img src="${game.img}" alt="${game.title}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119';">
+                <img src="${game.img}" alt="${game.title}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119';">
                 <h3>${game.title}</h3>
                 ${isHero ? '<span style="background:#00f3ff; color:#000; padding:2px 8px; font-size:0.75rem; font-weight:bold; border-radius:4px; display:inline-block; margin-top:5px;">FEATURED</span>' : ''}
             `;
@@ -458,6 +459,12 @@
 
             if (!gridBox) return;
             gridBox.innerHTML = "";
+
+            // FIXED: gameBox ko kabhi bhi gridBox ke andar push nahi kiya jayega. 
+            // Ye hamesha apni sahi jagah par (.game-zone ke andar ad banner ke niche) secure rahega.
+            if (gameZone && gameBox && gameBox.parentNode !== gameZone) {
+                gameZone.insertBefore(gameBox, dynamicTitle);
+            }
 
             if (gameBox) {
                 gameBox.style.gridColumn = "";
@@ -474,10 +481,7 @@
             if (isMobile) {
                 let gameIndex = 0;
                 if (!isMoreGamesMode) {
-                    if (gameZone && gameBox && gameBox.parentNode !== gameZone) {
-                        gameZone.insertBefore(gameBox, dynamicTitle);
-                    }
-
+                    // Home Page / Normal Category Mode (Jab koi game played nahi ho raha)
                     while (gameIndex < list.length) {
                         const featuredGame = list[gameIndex];
                         if (featuredGame) {
@@ -511,20 +515,7 @@
                         }
                     }
                 } else {
-                    if (currentlyPlayingGame) {
-                        const heroCard = document.createElement('div');
-                        heroCard.className = "mobile-hero-feature";
-                        heroCard.innerHTML = createCardHTML(currentlyPlayingGame, true);
-                        gridBox.appendChild(heroCard);
-                    }
-
-                    if (gameBox) {
-                        gameBox.style.display = 'block';
-                        gameBox.style.gridColumn = "1 / -1";
-                        gameBox.style.margin = "10px 0 20px 0";
-                        gridBox.appendChild(gameBox);
-                    }
-
+                    // FIXED: Game Play Mode mein, gridBox ke andar sirf aur sirf doosre (Other) games hi display honge.
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
                         while (gameIndex < list.length && innerChunk < 3) {
@@ -549,10 +540,7 @@
                 }
 
             } else {
-                if (gameZone && gameBox && gameBox.parentNode !== gameZone) {
-                    gameZone.insertBefore(gameBox, dynamicTitle);
-                }
-
+                // Laptop / Desktop Render Engine
                 if (!isMoreGamesMode) {
                     let desktopCount = 0;
                     list.forEach((game) => {
