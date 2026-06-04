@@ -448,7 +448,7 @@
             if (!gridBox) return;
             gridBox.innerHTML = "";
 
-            // गेम बॉक्स की डिफॉल्ट स्टाइल को रीसेट करें
+            // गेम बॉक्स की डिफॉल्ट स्टाइल को रीсет करें
             if (gameBox) {
                 gameBox.style.gridColumn = "";
                 gameBox.style.margin = "";
@@ -631,10 +631,11 @@
         });
 
         // --- 🛡️ CRITICAL SCROLL-JUMP RESIZE FIX FOR MOBILE ---
-        let cachedWindowWidth = window.innerWidth;
+        // document.documentElement.clientWidth use kiya taaki vertical scrollbar toggles ya URL bar hide/show hone se layout crash na kare aur jump band ho jaye.
+        let cachedWindowWidth = document.documentElement.clientWidth;
         window.addEventListener('resize', () => {
-            if (window.innerWidth !== cachedWindowWidth) {
-                cachedWindowWidth = window.innerWidth;
+            if (document.documentElement.clientWidth !== cachedWindowWidth) {
+                cachedWindowWidth = document.documentElement.clientWidth;
                 renderGames(currentActiveList, isModeActive);
             }
         });
