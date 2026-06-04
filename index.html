@@ -65,18 +65,9 @@
             max-width: 1600px;    
             justify-content: center;
             margin: 0 auto 40px auto;
-            gap: 20px; 
+            gap: 0px; 
             padding: 10px 0px;     
             box-sizing: border-box;
-        }
-
-        .game-zone {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-            width: 100%;
         }
 
         .games-grid {
@@ -107,6 +98,15 @@
             background-color: #16294a;
         }
 
+        .game-zone {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
+        }
+
         /* --- TOP AD BANNER --- */
         .top-banner-ad {
             width: 100%;
@@ -130,7 +130,7 @@
             width: 100%;
             max-width: 900px; 
             height: 520px; 
-            background: #071426; 
+            background: #000; 
             border: 3px solid #00f3ff;
             border-radius: 12px;
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
@@ -138,7 +138,7 @@
             display: none;
             margin-bottom: 30px;
         }
-
+        
         .video-game-container iframe {
             position: absolute;
             top: 0;
@@ -147,12 +147,9 @@
             height: 100%;
             border: none;
             z-index: 1;
-            background-color: #071426;
-            color-scheme: dark;
-            opacity: 0; /* MOBILE FIX: Pehle transparent rahega jab tak load na ho */
-            transition: opacity 0.2s ease-in-out;
+            background-color: #000; /* FIXED: Prevents initial white flash before game loads */
         }
-        
+      
         #fullscreenBtn {
             position: absolute;
             bottom: 15px;
@@ -189,7 +186,7 @@
             text-transform: capitalize;
         }
 
-        /* --- FIXED INLINE LAPTOP BANNER --- */
+        /* --- FIXED INLINE LAPTOP BANNER (FULL WIDTH & BIGGER) --- */
         .laptop-inline-ad {
             grid-column: 1 / -1; 
             height: 180px;       
@@ -233,7 +230,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- MOBILE RESPONSIVE --- */
+        /* --- 📱 MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.9rem;
@@ -254,14 +251,6 @@
 
             .game-card h3 {
                 font-size: 0.8rem;
-            }
-
-            /* MOBILE FIX: Title padding aur size responsive set kiya taaki perfectly layout ke upar fit baithe */
-            #moreGamesTitle {
-                font-size: 1.2rem !important;
-                margin-top: 15px !important;
-                margin-bottom: 10px !important;
-                padding-left: 2px;
             }
 
             .mobile-hero-feature {
@@ -293,6 +282,7 @@
                 height: 100px;
                 background: #071426;
                 border: 2px dashed #ff007c;
+                border-radius: 10px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -360,7 +350,7 @@
                 <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true"></iframe>
             </div>
 
-            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-bottom: 20px; margin-top: 10px; font-size: 1.5rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px; box-sizing: border-box;">More Awesome Games</h2>
+            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 15px; margin-bottom: 15px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
 
             <div class="games-grid" id="gridBox"></div>
 
@@ -373,7 +363,7 @@
     </div>
 
     <script>
-        // --- DATABASE ---
+        // --- 100% CORRECT CLEANED DATABASE ---
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
@@ -401,23 +391,16 @@
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
 
+            if (gameFrame) gameFrame.src = game.url;
             if (gameBox) gameBox.style.display = 'block';
             if (topAd) topAd.style.display = 'flex';
-            
-            // MOBILE & ENGINE FIX: Iframe opacity loader technique to completely stop white screen flashes
-            if (gameFrame) {
-                gameFrame.style.opacity = '0'; 
-                gameFrame.src = game.url;
-                gameFrame.onload = function() {
-                    gameFrame.style.opacity = '1'; 
-                };
-            }
             
             if (window.innerWidth >= 1250) {
                 if (leftAd) leftAd.style.display = 'flex';
                 if (rightAd) rightAd.style.display = 'flex';
             }
             
+            // FIXED: Dynamic Category Name change hoga jab aap game par click karoge
             if (dynamicTitle) {
                 dynamicTitle.style.display = 'block';
                 dynamicTitle.innerText = `More ${game.cat} Games`; 
@@ -430,10 +413,14 @@
             
             history.pushState({ gameOpen: true }, "");
             
-            // MOBILE FIX: Safe scroll screen handling using scrollIntoView for responsive touchscreens
-            setTimeout(() => {
-                if(gameBox) gameBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 120);
+            // FIXED: Mobile scroll logic jo pehle screen ko white space par bhej raha tha (Video wali problem)
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    gameBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            } else {
+                window.scrollTo({ top: 140, behavior: 'smooth' });
+            }
         }
 
         function createCardHTML(game, isHero = false) {
@@ -582,10 +569,7 @@
             if (gameBox) gameBox.style.display = 'none';
             if (dynamicTitle) dynamicTitle.style.display = 'none';
             if (topAd) topAd.style.display = 'none';
-            if (gameFrame) {
-                gameFrame.src = "";
-                gameFrame.style.opacity = '0';
-            }
+            if (gameFrame) gameFrame.src = "";
             if (leftAd) leftAd.style.display = 'none';
             if (rightAd) rightAd.style.display = 'none';
 
@@ -618,10 +602,7 @@
                 gameBox.style.display = 'none';
                 if (dynamicTitle) dynamicTitle.style.display = 'none';
                 if (topAd) topAd.style.display = 'none';
-                if (gameFrame) {
-                    gameFrame.src = ""; 
-                    gameFrame.style.opacity = '0';
-                }
+                if (gameFrame) gameFrame.src = ""; 
                 if (leftAd) leftAd.style.display = 'none';
                 if (rightAd) rightAd.style.display = 'none';
                 
