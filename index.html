@@ -2,25 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Underground Gaming - Shake & Jump Fixed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underground Gaming - Smooth Layout Fixed</title>
     <style>
-        /* --- ⚡ GLOBAL FIXED RESET: STOPS SHAKING & WOBBLING --- */
-        *, *::before, *::after {
-            box-sizing: border-box; /* Force border & padding to stay inside width */
-        }
-
-        html, body {
+        /* --- GLOBAL & COMMON STYLES --- */
+        body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            overflow-x: hidden; /* Strictly prevent any left-right shaking */
-            background: #0b1d3a;
-            -webkit-text-size-adjust: 100%;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0b1d3a, #16294a);
             color: #fff;
@@ -28,6 +16,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: hidden;
         }
 
         header {
@@ -78,6 +67,7 @@
             margin: 0 auto 40px auto;
             gap: 0px; 
             padding: 10px 0px;     
+            box-sizing: border-box;
         }
 
         .games-grid {
@@ -115,6 +105,7 @@
             gap: 15px;
             align-items: center;
             width: 100%;
+            min-height: 750px; /* FIXED: Prevents page layout from collapsing and jumping up/down */
         }
 
         /* --- TOP AD BANNER --- */
@@ -132,6 +123,7 @@
             font-weight: bold;
             margin-bottom: 20px;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            box-sizing: border-box;
         }
 
         .video-game-container {
@@ -211,6 +203,7 @@
             font-size: 1.4rem;
             margin: 15px 0;
             box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
+            box-sizing: border-box;
         }
 
         /* --- SIDE ADS --- */
@@ -224,8 +217,10 @@
             font-weight: bold;
             text-align: center;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            box-sizing: border-box;
             height: 625px; 
             margin-top: 0;
+            flex-shrink: 0; /* FIXED: Ad boxes won't squish */
         }
 
         .side-ad span {
@@ -244,8 +239,7 @@
             }
 
             .main-container {
-                width: 100%; /* Pure screen adjustment */
-                padding: 10px 8px;
+                width: 96%;
             }
 
             .games-grid {
@@ -298,7 +292,6 @@
                 font-weight: bold;
                 font-size: 0.9rem;
                 margin: 10px 0;
-                width: 100%;
             }
 
             .video-game-container {
@@ -325,6 +318,12 @@
             .game-zone {
                 flex: 1;
                 width: 100%; 
+            }
+            .side-ad {
+                display: flex; /* FIXED: Keeps layout static and reserves space */
+                visibility: hidden; /* Hidden by default but takes layout space */
+                opacity: 0;
+                transition: opacity 0.3s ease;
             }
         }
     </style>
@@ -357,3 +356,6 @@
             <div class="video-game-container" id="gameBox">
                 <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
                 <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true" style="background-color: #000;"></iframe>
+            </div>
+
+            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 15px
