@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Scroll Fixed</title>
+    <title>Underground Gaming - Fully Fixed</title>
     <style>
+        /* --- ANTI-WHITE FLASH FIX (Ye browser ko shuruwat se dark mode me rakhega) --- */
+        html {
+            color-scheme: dark; 
+        }
+
         /* --- GLOBAL & COMMON STYLES --- */
         html, body {
             width: 100%;
-            overflow-x: hidden; /* पूरी तरह से हॉरिजॉन्टल स्क्रॉल को ब्लॉक करने के लिए */
+            overflow-x: hidden; 
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            background-color: #0b1d3a !important; /* Load hote waqt solid dark color */
         }
 
         body {
@@ -77,7 +83,7 @@
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr)); /* 1fr को minmax(0, 1fr) किया ताकि ग्रिड बाहर न भागे */
+            grid-template-columns: repeat(6, minmax(0, 1fr)); 
             gap: 25px;             
             width: 100%;
         }
@@ -93,7 +99,8 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-width: 0; /* कार्ड को ओवरफ्लो होने से रोकने के लिए */
+            min-width: 0; 
+            background-color: #071426; /* Dark placeholder while loading */
         }
 
         .game-card img {
@@ -111,7 +118,7 @@
             gap: 15px;
             align-items: center;
             width: 100%;
-            min-width: 0; /* फ्लेक्स कंटेनर को स्क्रीन के अंदर सिकोड़ने में मदद करता है */
+            min-width: 0; 
         }
 
         /* --- TOP AD BANNER --- */
@@ -119,7 +126,7 @@
             width: 100%;
             max-width: 100%;       
             height: 120px;         
-            background: #071426;
+            background: #071426 !important; /* Ad load hone tak dark rahega */
             border: 2px solid #00f3ff;
             border-radius: 8px;
             display: none; 
@@ -130,6 +137,7 @@
             margin-bottom: 20px;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
             box-sizing: border-box;
+            min-height: 120px; 
         }
 
         .video-game-container {
@@ -190,7 +198,7 @@
             margin: 10px 0 5px 0;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis; /* बड़े नाम होने पर आगे '...' आ जाएगा, जिससे लेआउट खराब नहीं होगा */
+            text-overflow: ellipsis; 
             text-transform: capitalize;
         }
 
@@ -199,7 +207,7 @@
             grid-column: 1 / -1; 
             height: 180px;       
             width: 100%;
-            background: #071426;
+            background: #071426 !important;
             border: 2px dashed #00f3ff;
             border-radius: 12px;
             display: flex;
@@ -211,13 +219,14 @@
             margin: 15px 0;
             box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
             box-sizing: border-box;
+            min-height: 180px;
         }
 
         /* --- SIDE ADS --- */
         .side-ad {
             display: none; 
             width: 160px;
-            background: #071426;
+            background: #071426 !important;
             border: 2px dashed #00f3ff;
             border-radius: 8px;
             color: #00f3ff;
@@ -249,7 +258,7 @@
             }
 
             .games-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr)) !important; /* मोबाइल पर भी ग्रिड फिक्स किया */
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important; 
                 gap: 10px;
             }
 
@@ -288,7 +297,7 @@
             .mobile-loop-ad {
                 grid-column: 1 / -1; 
                 height: 100px;
-                background: #071426;
+                background: #071426 !important;
                 border: 2px dashed #ff007c;
                 border-radius: 10px;
                 display: flex;
@@ -298,6 +307,7 @@
                 font-weight: bold;
                 font-size: 0.9rem;
                 margin: 10px 0;
+                min-height: 100px;
             }
 
             .video-game-container {
@@ -308,6 +318,7 @@
             .top-banner-ad {
                 height: 65px;
                 font-size: 0.8rem;
+                min-height: 65px;
             }
         }
 
@@ -389,10 +400,10 @@
 
         let currentActiveList = [...gamesDatabase];
         let isModeActive = false;
-        let currentlyPlayingGame = null; // वर्तमान में चल रहे गेम को ट्रैक करने के लिए
+        let currentlyPlayingGame = null; 
 
         function playGame(game) {
-            currentlyPlayingGame = game; // एक्टिव गेम सेट किया
+            currentlyPlayingGame = game; 
             const gameFrame = document.getElementById('gameFrame');
             const gameBox = document.getElementById('gameBox');
             const topAd = document.getElementById('topAdSlot');
@@ -448,7 +459,6 @@
             if (!gridBox) return;
             gridBox.innerHTML = "";
 
-            // गेम बॉक्स की डिफॉल्ट स्टाइल को रीсет करें
             if (gameBox) {
                 gameBox.style.gridColumn = "";
                 gameBox.style.margin = "";
@@ -464,7 +474,6 @@
             if (isMobile) {
                 let gameIndex = 0;
                 if (!isMoreGamesMode) {
-                    // गेम बॉक्स को उसके ओरिजिनल पैरेंट (game-zone) में वापस डालें
                     if (gameZone && gameBox && gameBox.parentNode !== gameZone) {
                         gameZone.insertBefore(gameBox, dynamicTitle);
                     }
@@ -502,7 +511,6 @@
                         }
                     }
                 } else {
-                    // मोबाइल पर गेम प्ले होने पर: एक्टिव गेम को सबसे ऊपर Featured बनाएं
                     if (currentlyPlayingGame) {
                         const heroCard = document.createElement('div');
                         heroCard.className = "mobile-hero-feature";
@@ -510,7 +518,6 @@
                         gridBox.appendChild(heroCard);
                     }
 
-                    // गेम बॉक्स को डायनामिकली ग्रिड के अंदर पहले Featured कार्ड के नीचे मूव करें
                     if (gameBox) {
                         gameBox.style.display = 'block';
                         gameBox.style.gridColumn = "1 / -1";
@@ -542,7 +549,6 @@
                 }
 
             } else {
-                // डेस्कटॉप के लिए गेम बॉक्स को हमेशा game-zone में सबसे ऊपर रखें
                 if (gameZone && gameBox && gameBox.parentNode !== gameZone) {
                     gameZone.insertBefore(gameBox, dynamicTitle);
                 }
@@ -617,7 +623,7 @@
             if (rightAd) rightAd.style.display = 'none';
 
             isModeActive = false;
-            currentlyPlayingGame = null; // रीसेट एक्टिव गेम
+            currentlyPlayingGame = null; 
             if(category === 'All') {
                 currentActiveList = [...gamesDatabase];
             } else {
@@ -631,7 +637,6 @@
         });
 
         // --- 🛡️ CRITICAL SCROLL-JUMP RESIZE FIX FOR MOBILE ---
-        // document.documentElement.clientWidth use kiya taaki vertical scrollbar toggles ya URL bar hide/show hone se layout crash na kare aur jump band ho jaye.
         let cachedWindowWidth = document.documentElement.clientWidth;
         window.addEventListener('resize', () => {
             if (document.documentElement.clientWidth !== cachedWindowWidth) {
@@ -657,7 +662,7 @@
                 if (rightAd) rightAd.style.display = 'none';
                 
                 isModeActive = false;
-                currentlyPlayingGame = null; // रीसेट एक्टिव गेम
+                currentlyPlayingGame = null;
                 currentActiveList = [...gamesDatabase];
                 renderGames(currentActiveList, false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
