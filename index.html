@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Fully Fixed</title>
+    <title>Underground Gaming - Instant Load</title>
+    
+    <!-- Browser ko pehle hi batana ki background dark hai (Instant Flash Protection) -->
+    <meta name="theme-color" content="#0b1d3a">
     <style>
-        /* --- ANTI-WHITE FLASH FIX (Ye browser ko shuruwat se dark mode me rakhega) --- */
+        /* --- CRITICAL RENDER PATH (Sabse pehle ye load hoga) --- */
         html {
-            color-scheme: dark; 
+            color-scheme: dark;
+            background-color: #0b1d3a !important;
         }
 
-        /* --- GLOBAL & COMMON STYLES --- */
         html, body {
             width: 100%;
             overflow-x: hidden; 
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            background-color: #0b1d3a !important; /* Load hote waqt solid dark color */
+            background: #0b1d3a !important;
+            /* Animation band kari taaki refresh instant ho */
+            transition: none !important; 
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0b1d3a, #16294a);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -60,7 +64,6 @@
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s ease;
         }
 
         .filter-btn.active, .filter-btn:hover {
@@ -69,7 +72,6 @@
             box-shadow: 0 0 15px #00f3ff;
         }
 
-        /* --- MAIN CONTAINER ENGINE --- */
         .main-container {
             display: flex;
             width: 98%;           
@@ -89,18 +91,22 @@
         }
 
         .game-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: #071426; 
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 12px;         
             text-align: center;
             cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             min-width: 0; 
-            background-color: #071426; /* Dark placeholder while loading */
+        }
+
+        /* content-visibility se browser cards ko super-fast render karta hai */
+        .game-card {
+            content-visibility: auto;
+            contain-intrinsic-size: 200px;
         }
 
         .game-card img {
@@ -121,12 +127,11 @@
             min-width: 0; 
         }
 
-        /* --- TOP AD BANNER --- */
         .top-banner-ad {
             width: 100%;
             max-width: 100%;       
             height: 120px;         
-            background: #071426 !important; /* Ad load hone tak dark rahega */
+            background: #071426 !important; 
             border: 2px solid #00f3ff;
             border-radius: 8px;
             display: none; 
@@ -177,14 +182,6 @@
             font-weight: bold;
             cursor: pointer;
             z-index: 10;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-
-        #fullscreenBtn:hover {
-            background: #fff;
-            box-shadow: 0 0 15px #00f3ff;
-            transform: scale(1.05);
         }
 
         .game-card:hover {
@@ -202,7 +199,6 @@
             text-transform: capitalize;
         }
 
-        /* --- FIXED INLINE LAPTOP BANNER --- */
         .laptop-inline-ad {
             grid-column: 1 / -1; 
             height: 180px;       
@@ -217,12 +213,9 @@
             font-weight: bold;
             font-size: 1.4rem;
             margin: 15px 0;
-            box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
-            box-sizing: border-box;
             min-height: 180px;
         }
 
-        /* --- SIDE ADS --- */
         .side-ad {
             display: none; 
             width: 160px;
@@ -232,10 +225,7 @@
             color: #00f3ff;
             font-weight: bold;
             text-align: center;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
-            box-sizing: border-box;
             height: 625px; 
-            margin-top: 0;
         }
 
         .side-ad span {
@@ -244,41 +234,27 @@
             justify-content: center;
             height: 100%;
             font-size: 0.9rem;
-            letter-spacing: 1px;
         }
 
-        /* --- 📱 MOBILE RESPONSIVE --- */
+        /* 📱 MOBILE RESPONSIVE SPEED OPTIMIZED */
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.9rem;
-            }
-
-            .main-container {
-                width: 96%;
-            }
-
+            header h1 { font-size: 1.9rem; }
+            .main-container { width: 96%; }
             .games-grid {
                 grid-template-columns: repeat(3, minmax(0, 1fr)) !important; 
                 gap: 10px;
             }
-
-            .game-card img {
-                height: 90px;
-            }
-
-            .game-card h3 {
-                font-size: 0.8rem;
-            }
+            .game-card img { height: 90px; }
+            .game-card h3 { font-size: 0.8rem; }
 
             .mobile-hero-feature {
                 grid-column: span 3;
-                background: rgba(255, 255, 255, 0.04);
+                background: #071426;
                 border: 2px solid #00f3ff;
                 border-radius: 14px;
                 padding: 12px;
                 cursor: pointer;
                 text-align: center;
-                box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
             }
 
             .mobile-hero-feature img {
@@ -310,16 +286,8 @@
                 min-height: 100px;
             }
 
-            .video-game-container {
-                height: 280px;
-                border-width: 2px;
-            }
-
-            .top-banner-ad {
-                height: 65px;
-                font-size: 0.8rem;
-                min-height: 65px;
-            }
+            .video-game-container { height: 280px; }
+            .top-banner-ad { height: 65px; min-height: 65px; }
         }
 
         @media (min-width: 1250px) {
@@ -332,10 +300,7 @@
                 margin: 0 auto;
                 gap: 20px;
             }
-            .game-zone {
-                flex: 1;
-                width: 100%; 
-            }
+            .game-zone { flex: 1; width: 100%; }
         }
     </style>
 </head>
@@ -353,36 +318,25 @@
     </div>
 
     <div class="main-container">
-        
-        <div class="side-ad left-ad" id="leftAdBox">
-            <span>[ AD BANNER ]</span>
-        </div>
+        <div class="side-ad left-ad" id="leftAdBox"><span>[ AD BANNER ]</span></div>
 
         <div class="game-zone">
-            
-            <div class="top-banner-ad" id="topAdSlot">
-                <span>[ GOOGLE RESPONSIVE BANNER AD ]</span>
-            </div>
+            <div class="top-banner-ad" id="topAdSlot"><span>[ GOOGLE RESPONSIVE BANNER AD ]</span></div>
 
             <div class="video-game-container" id="gameBox">
                 <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
-                <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true" style="background-color: #000;"></iframe>
+                <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true"></iframe>
             </div>
 
-            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 15px; margin-bottom: 15px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
+            <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin: 15px 0 5px 0; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
 
             <div class="games-grid" id="gridBox"></div>
-
         </div> 
-        
-        <div class="side-ad right-ad" id="rightAdBox">
-            <span>[ AD BANNER ]</span>
-        </div>
 
+        <div class="side-ad right-ad" id="rightAdBox"><span>[ AD BANNER ]</span></div>
     </div>
 
     <script>
-        // --- DATABASE ---
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
@@ -408,7 +362,6 @@
             const gameBox = document.getElementById('gameBox');
             const topAd = document.getElementById('topAdSlot');
             const dynamicTitle = document.getElementById('moreGamesTitle');
-            
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
 
@@ -426,30 +379,27 @@
                 dynamicTitle.innerText = `More ${game.cat} Games`; 
             }
             
-            const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
-            currentActiveList = relatedGames;
+            currentActiveList = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
             isModeActive = true;
-            renderGames(relatedGames, true); 
-            
+            renderGames(currentActiveList, true); 
             history.pushState({ gameOpen: true }, "");
             
-            // --- ⚡ ULTRA SMOOTH & ACCURATE MOBILE SCROLL FIX ---
+            // Fast Smooth Scrolling
             setTimeout(() => {
-                const yOffset = -15; 
-                const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
+                const yPos = gameBox.getBoundingClientRect().top + window.pageYOffset - 15;
                 window.scrollTo({ top: yPos, behavior: 'smooth' });
-            }, 100);
+            }, 50);
         }
 
         function createCardHTML(game, isHero = false) {
+            // loading="lazy" aur decoding="async" se images background me superfast load hoti hain
             return `
-                <img src="${game.img}" alt="${game.title}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119';">
+                <img src="${game.img}" alt="${game.title}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783900882-c0d3dad7b119';">
                 <h3>${game.title}</h3>
                 ${isHero ? '<span style="background:#00f3ff; color:#000; padding:2px 8px; font-size:0.75rem; font-weight:bold; border-radius:4px; display:inline-block; margin-top:5px;">FEATURED</span>' : ''}
             `;
         }
 
-        // --- DYNAMIC RENDERING ENGINE ---
         function renderGames(list, isMoreGamesMode = false) {
             const gridBox = document.getElementById('gridBox');
             const gameBox = document.getElementById('gameBox');
@@ -600,7 +550,6 @@
         function filterCat(category) {
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
-            
             buttons.forEach(btn => {
                 if(btn.innerText.trim().toLowerCase() === category.trim().toLowerCase() || (category === 'All' && btn.innerText.includes('All'))) {
                     btn.classList.add('active');
@@ -611,7 +560,6 @@
             const dynamicTitle = document.getElementById('moreGamesTitle');
             const topAd = document.getElementById('topAdSlot');
             const gameFrame = document.getElementById('gameFrame');
-            
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
             
@@ -624,11 +572,7 @@
 
             isModeActive = false;
             currentlyPlayingGame = null; 
-            if(category === 'All') {
-                currentActiveList = [...gamesDatabase];
-            } else {
-                currentActiveList = gamesDatabase.filter(g => g.cat === category);
-            }
+            currentActiveList = (category === 'All') ? [...gamesDatabase] : gamesDatabase.filter(g => g.cat === category);
             renderGames(currentActiveList, false);
         }
 
@@ -636,7 +580,6 @@
             renderGames(currentActiveList, isModeActive);
         });
 
-        // --- 🛡️ CRITICAL SCROLL-JUMP RESIZE FIX FOR MOBILE ---
         let cachedWindowWidth = document.documentElement.clientWidth;
         window.addEventListener('resize', () => {
             if (document.documentElement.clientWidth !== cachedWindowWidth) {
@@ -665,28 +608,17 @@
                 currentlyPlayingGame = null;
                 currentActiveList = [...gamesDatabase];
                 renderGames(currentActiveList, false);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo({ top: 0, behavior: 'auto' });
             }
         };
         
         function toggleFullScreen() {
             const gameBox = document.getElementById('gameBox');
             if (!document.fullscreenElement) {
-                if (gameBox.requestFullscreen) {
-                    gameBox.requestFullscreen();
-                } else if (gameBox.webkitRequestFullscreen) { 
-                    gameBox.webkitRequestFullscreen();
-                } else if (gameBox.msRequestFullscreen) { 
-                    gameBox.msRequestFullscreen();
-                }
+                if (gameBox.requestFullscreen) gameBox.requestFullscreen();
+                else if (gameBox.webkitRequestFullscreen) gameBox.webkitRequestFullscreen();
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { 
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { 
-                    document.msExitFullscreen();
-                }
+                if (document.exitFullscreen) document.exitFullscreen();
             }
         }
     </script>
