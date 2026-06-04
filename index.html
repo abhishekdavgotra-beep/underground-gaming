@@ -147,7 +147,7 @@
             height: 100%;
             border: none;
             z-index: 1;
-            background-color: #000; /* FIXED: Prevents initial white flash before game loads */
+            background-color: #000 !important; /* STRICT FIXED: loading ke time white screen nahi aayegi */
         }
       
         #fullscreenBtn {
@@ -347,7 +347,7 @@
 
             <div class="video-game-container" id="gameBox">
                 <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
-                <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true"></iframe>
+                <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true" style="background-color: #000;"></iframe>
             </div>
 
             <h2 id="moreGamesTitle" style="display: none; color: #00f3ff; margin-top: 15px; margin-bottom: 15px; font-size: 1.4rem; text-align: left; width: 100%; border-bottom: 1px solid rgba(0,243,255,0.2); padding-bottom: 5px;">More Awesome Games</h2>
@@ -363,7 +363,7 @@
     </div>
 
     <script>
-        // --- 100% CORRECT CLEANED DATABASE ---
+        // --- DATABASE ---
         const gamesDatabase = [
             { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
             { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
@@ -400,7 +400,6 @@
                 if (rightAd) rightAd.style.display = 'flex';
             }
             
-            // FIXED: Dynamic Category Name change hoga jab aap game par click karoge
             if (dynamicTitle) {
                 dynamicTitle.style.display = 'block';
                 dynamicTitle.innerText = `More ${game.cat} Games`; 
@@ -413,11 +412,12 @@
             
             history.pushState({ gameOpen: true }, "");
             
-            // FIXED: Mobile scroll logic jo pehle screen ko white space par bhej raha tha (Video wali problem)
+            // --- ⚡ PERMANENT MOBILE SCROLL FIX ---
             if (window.innerWidth <= 768) {
                 setTimeout(() => {
-                    gameBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
+                    // 'block: start' aligns the game player perfectly with the top edge of mobile screen without glitch
+                    gameBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 150);
             } else {
                 window.scrollTo({ top: 140, behavior: 'smooth' });
             }
