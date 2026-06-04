@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Premium Fixed</title>
+    <title>Underground Gaming - Scroll Jump Fixed</title>
     <style>
         /* --- GLOBAL & COMMON STYLES --- */
         body {
@@ -147,7 +147,7 @@
             height: 100%;
             border: none;
             z-index: 1;
-            background-color: #000 !important; /* STRICT FIXED: loading ke time white screen nahi aayegi */
+            background-color: #000 !important;
         }
       
         #fullscreenBtn {
@@ -186,7 +186,7 @@
             text-transform: capitalize;
         }
 
-        /* --- FIXED INLINE LAPTOP BANNER (FULL WIDTH & BIGGER) --- */
+        /* --- FIXED INLINE LAPTOP BANNER --- */
         .laptop-inline-ad {
             grid-column: 1 / -1; 
             height: 180px;       
@@ -412,15 +412,12 @@
             
             history.pushState({ gameOpen: true }, "");
             
-            // --- ⚡ PERMANENT MOBILE SCROLL FIX ---
-            if (window.innerWidth <= 768) {
-                setTimeout(() => {
-                    // 'block: start' aligns the game player perfectly with the top edge of mobile screen without glitch
-                    gameBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 150);
-            } else {
-                window.scrollTo({ top: 140, behavior: 'smooth' });
-            }
+            // --- ⚡ ULTRA SMOOTH & ACCURATE MOBILE SCROLL FIX ---
+            setTimeout(() => {
+                const yOffset = -15; // Keeps small beautiful padding from top border
+                const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
+                window.scrollTo({ top: yPos, behavior: 'smooth' });
+            }, 100);
         }
 
         function createCardHTML(game, isHero = false) {
@@ -586,8 +583,14 @@
             renderGames(currentActiveList, isModeActive);
         });
 
+        // --- 🛡️ CRITICAL SCROLL-JUMP RESIZE FIX FOR MOBILE ---
+        let cachedWindowWidth = window.innerWidth;
         window.addEventListener('resize', () => {
-            renderGames(currentActiveList, isModeActive);
+            // It will only re-render if the ACTUAL screen width changes (like device rotation), NOT on scroll bar collapse
+            if (window.innerWidth !== cachedWindowWidth) {
+                cachedWindowWidth = window.innerWidth;
+                renderGames(currentActiveList, isModeActive);
+            }
         });
 
         window.onpopstate = function(event) {
