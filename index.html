@@ -189,38 +189,40 @@
             transform: scale(1.05);
         }
 
-        /* --- 🎯 FIXED PRE-GAME AD SCREEN (NOW EXACT GAME BOX SIZE) --- */
+        /* --- 🎯 FIXED PRE-GAME AD SCREEN (EQUAL TO BORDER SIZE) --- */
         .pre-game-ad-screen {
-            position: absolute; /* Fixed se Absolute kar diya */
+            position: absolute; 
             top: 0;
             left: 0;
-            width: 100%; /* Game box ke bilkul baraber width */
-            height: 100%; /* Game box ke bilkul baraber height */
-            background-color: #071426; /* Dark theme layout inside the container */
-            z-index: 5; /* Iframe ke upar layer */
+            width: 100%; 
+            height: 100%; 
+            background-color: #071426; 
+            z-index: 5; 
             display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             box-sizing: border-box;
-            padding: 15px;
+            padding: 0; /* Padding hata di taaki andar ka ad box poora touch kare */
         }
 
         .ad-box-content {
-            border: 2px dashed #00f3ff;
+            border: 3px dashed #00f3ff; /* Yeh dashed border ab outer border ke bilkul equal chalega */
             background: #0b1d3a;
-            padding: 30px 20px;
-            border-radius: 12px;
+            width: 100%; /* Poori width cover karega */
+            height: 100%; /* Poori height cover karega */
+            max-width: 100%;
+            border-radius: 9px; /* Container ke internal corners ke mutabik curved */
             text-align: center;
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
-            max-width: 90%;
-            width: 440px;
+            box-shadow: inset 0 0 30px rgba(0, 243, 255, 0.2);
             box-sizing: border-box;
+            display: flex; /* Content ko perfectly center me alignment dene ke liye */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
         .ad-title {
             color: #00f3ff;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: bold;
             margin: 0 0 15px 0;
             letter-spacing: 1px;
@@ -228,7 +230,7 @@
         }
 
         .ad-timer-text {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #fff;
             margin: 0;
         }
@@ -236,7 +238,7 @@
         #countdownTimer {
             color: #ff007c;
             font-weight: bold;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             text-shadow: 0 0 10px rgba(255, 0, 124, 0.5);
         }
 
@@ -378,10 +380,10 @@
                 padding: 20px 15px;
             }
             .ad-title {
-                font-size: 1.2rem;
+                font-size: 1.3rem;
             }
             .ad-timer-text {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
             }
         }
 
@@ -489,7 +491,6 @@
 
             if (adCountdownInterval) clearInterval(adCountdownInterval);
 
-            // Frame ko chupao aur ad screen ko box ke andar show karo
             if (gameFrame) {
                 gameFrame.src = "";
                 gameFrame.style.display = 'none';
@@ -497,7 +498,7 @@
             if (fullscreenBtn) fullscreenBtn.style.display = 'none';
             
             if (gameBox) gameBox.style.display = 'block';
-            if (preGameAdScreen) preGameAdScreen.style.display = 'flex'; // Box size ad opens here
+            if (preGameAdScreen) preGameAdScreen.style.display = 'flex'; 
             if (topAd) topAd.style.display = 'flex';
             
             if (window.innerWidth >= 1250) {
@@ -517,7 +518,6 @@
             
             history.pushState({ gameOpen: true }, "");
             
-            // Smoothly scroll to the game area
             setTimeout(() => {
                 const yOffset = -15; 
                 const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
@@ -534,7 +534,7 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(adCountdownInterval); 
-                    if (preGameAdScreen) preGameAdScreen.style.display = 'none'; // Close box-ad overlay
+                    if (preGameAdScreen) preGameAdScreen.style.display = 'none'; 
                     if (gameFrame) {
                         gameFrame.style.display = 'block'; 
                         gameFrame.src = game.url; 
