@@ -404,31 +404,25 @@
         let currentlyPlayingGame = null; 
 
         function playGame(game) {
-            // 1. Pehle full screen ad overlay dikhao aur countdown shuru karo
-            const adOverlay = document.getElementById('gameAdOverlay');
-            const timerElement = document.getElementById('adOverlayTimer');
-            
-            let timeLeft = 5;
-            timerElement.textContent = timeLeft;
-            if (adOverlay) adOverlay.style.display = 'flex';
+            function playGame(game) { ke theek niche paste karein
+const adOverlay = document.getElementById('gameAdOverlay');
+const timerElement = document.getElementById('adOverlayTimer');
+let timeLeft = 5;
 
-            // 2. Timer Loop Engine
-            const adCountdown = setInterval(() => {
-                timeLeft--;
-                timerElement.textContent = timeLeft;
+if (adOverlay) {
+    timerElement.textContent = timeLeft;
+    adOverlay.style.display = 'flex';
 
-                if (timeLeft <= 0) {
-                    clearInterval(adCountdown);
-                    if (adOverlay) adOverlay.style.display = 'none'; // Ad chhupao
+    const adCountdown = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = timeLeft;
 
-                    // 3. 5 second khatam hote hi asli game load karo
-                    executeActualGameLoad(game); 
-                }
-            }, 1000);
+        if (timeLeft <= 0) {
+            clearInterval(adCountdown);
+            adOverlay.style.display = 'none';
         }
-
-        // 🚀 Baki bacha hua saara asli game loading mechanism jo tumne likha tha
-        function executeActualGameLoad(game) {
+    }, 1000);
+}
             currentlyPlayingGame = game; 
             const gameFrame = document.getElementById('gameFrame');
             const gameBox = document.getElementById('gameBox');
@@ -449,7 +443,7 @@
             
             if (dynamicTitle) {
                 dynamicTitle.style.display = 'block';
-                dynamicTitle.innerText = More ${game.cat} Games; 
+                dynamicTitle.innerText = `More ${game.cat} Games`; 
             }
             
             const relatedGames = gamesDatabase.filter(g => g.cat === game.cat && g.title !== game.title);
@@ -703,16 +697,13 @@
         }
     </script>
     <div id="gameAdOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 29, 58, 0.98); z-index: 99999; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; font-family: 'Segoe UI', sans-serif;">
-        <div style="background: #071426; padding: 25px; border-radius: 16px; text-align: center; border: 2px solid #00f3ff; width: 90%; max-width: 360px; box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);">
-            <h3 style="margin: 0 0 15px 0; color: #00f3ff; font-size: 1.3rem; letter-spacing: 1px;">Loading Game...</h3>
-            
-            <div id="interstitial-ad-slot" style="width: 300px; height: 250px; background: #16294a; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; border-radius: 8px; border: 1px dashed rgba(0, 243, 255, 0.3);">
-                <span style="color: #617d9e; font-size: 0.9rem;">[ AD BANNER PLACEHOLDER ]</span>
-            </div>
-
-            <p style="font-size: 1rem; margin: 0; color: #fff;">Game starts in <span id="adOverlayTimer" style="font-weight: bold; color: #ff007c; font-size: 1.4rem;">5</span> seconds...</p>
+    <div style="background: #071426; padding: 25px; border-radius: 16px; text-align: center; border: 2px solid #00f3ff; width: 90%; max-width: 360px; box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);">
+        <h3 style="margin: 0 0 15px 0; color: #00f3ff; font-size: 1.3rem; letter-spacing: 1px;">Loading Game...</h3>
+        <div id="interstitial-ad-slot" style="width: 300px; height: 250px; background: #16294a; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto; border-radius: 8px; border: 1px dashed rgba(0, 243, 255, 0.3);">
+            <span style="color: #617d9e; font-size: 0.9rem;">[ AD BANNER PLACEHOLDER ]</span>
         </div>
+        <p style="font-size: 1rem; margin: 0; color: #fff;">Game starts in <span id="adOverlayTimer" style="font-weight: bold; color: #ff007c; font-size: 1.4rem;">5</span> seconds...</p>
     </div>
-    ```
+</div>
 </body>
 </html>
