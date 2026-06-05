@@ -180,12 +180,63 @@
             z-index: 10;
             transition: all 0.3s ease;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: none; /* Starting hidden until ad ends */
         }
 
         #fullscreenBtn:hover {
             background: #fff;
             box-shadow: 0 0 15px #00f3ff;
             transform: scale(1.05);
+        }
+
+        /* --- 5 SECOND PRE-GAME AD SCREEN STYLE --- */
+        .pre-game-ad-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #071426;
+            z-index: 5;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .ad-box-content {
+            border: 2px dashed #00f3ff;
+            background: rgba(11, 29, 58, 0.85);
+            padding: 35px 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+            max-width: 90%;
+            width: 450px;
+        }
+
+        .ad-title {
+            color: #00f3ff;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
+        }
+
+        .ad-timer-text {
+            font-size: 1.05rem;
+            color: #fff;
+            margin: 0;
+        }
+
+        #countdownTimer {
+            color: #ff007c;
+            font-weight: bold;
+            font-size: 1.6rem;
+            text-shadow: 0 0 10px rgba(255, 0, 124, 0.5);
         }
 
         .game-card:hover {
@@ -321,6 +372,16 @@
                 font-size: 0.8rem;
                 min-height: 65px;
             }
+
+            .ad-box-content {
+                padding: 20px 15px;
+            }
+            .ad-title {
+                font-size: 1.1rem;
+            }
+            .ad-timer-text {
+                font-size: 0.9rem;
+            }
         }
 
         @media (min-width: 1250px) {
@@ -367,6 +428,14 @@
 
             <div class="video-game-container" id="gameBox">
                 <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
+                
+                <div id="preGameAdScreen" class="pre-game-ad-screen">
+                    <div class="ad-box-content">
+                        <div class="ad-title">[ PRE-GAME AD BANNER ]</div>
+                        <p class="ad-timer-text">Your game is loading, wait <span id="countdownTimer">5</span> seconds...</p>
+                    </div>
+                </div>
+
                 <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true" style="background-color: #000;"></iframe>
             </div>
 
@@ -385,10 +454,10 @@
     <script>
         // --- DATABASE ---
         const gamesDatabase = [
-            { title: "Drive Quest", cat: "Racing", img: "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400", url: "https://playgama.com/export/game/drive-quest" },
-            { title: "Flappy Bird Classic", cat: "Action", img: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400", url: "./flappy/index.html" },
-            { title: "Pac-Man Retro", cat: "Retro", img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400", url: "https://pacman.live/play.html" },
-            { title: "Thief Puzzle", cat: "Action", img: "https://images.unsplash.com/photo-1553481187-be93c21490a9?w=400", url: "https://playgama.com/export/game/drive-quest" },
+            { title: "2048", cat: "Retro", img: "./images/2048.jpg", url: "https://abhishekdavgotra-beep.github.io/2048/" },
+            { title: "Flappy Bird Classic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" },
+            { title: "Pac-Man Retro", cat: "Retro", img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400", url: "https://abhishekdavgotra-beep.github.io/pacman/" },
+            { title: "Subway Surfers", cat: "Action", img: "https://images.unsplash.com/photo-1553481187-be93c21490a9?w=400", url: "https://abhishekdavgotra-beep.github.io/Subway-Surfers/" },
             { title: "Paper.io 2", cat: "Racing", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400", url: "./flappy/index.html" },
             { title: "Stickman Rebirth", cat: "Retro", img: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400", url: "https://pacman.live/play.html" },
             { title: "Bloxd.io", cat: "Action", img: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=400", url: "https://playgama.com/export/game/drive-quest" },
@@ -402,18 +471,34 @@
         let currentActiveList = [...gamesDatabase];
         let isModeActive = false;
         let currentlyPlayingGame = null; 
+        let adCountdownInterval = null; // Timer track karne ke liye variable
 
         function playGame(game) {
             currentlyPlayingGame = game; 
+            
             const gameFrame = document.getElementById('gameFrame');
             const gameBox = document.getElementById('gameBox');
             const topAd = document.getElementById('topAdSlot');
             const dynamicTitle = document.getElementById('moreGamesTitle');
-            
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
+            
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const preGameAdScreen = document.getElementById('preGameAdScreen');
+            const countdownTimer = document.getElementById('countdownTimer');
 
-            if (gameFrame) gameFrame.src = game.url;
+            // Agar pehle se koi timer chal rha ho toh clear karein
+            if (adCountdownInterval) clearInterval(adCountdownInterval);
+
+            // Game frame ko initially blank rakhein aur fullscreen button chupayein
+            if (gameFrame) {
+                gameFrame.src = "";
+                gameFrame.style.display = 'none';
+            }
+            if (fullscreenBtn) fullscreenBtn.style.display = 'none';
+            
+            // 5 second ki ad screen display karein
+            if (preGameAdScreen) preGameAdScreen.style.display = 'flex';
             if (gameBox) gameBox.style.display = 'block';
             if (topAd) topAd.style.display = 'flex';
             
@@ -439,6 +524,25 @@
                 const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
                 window.scrollTo({ top: yPos, behavior: 'smooth' });
             }, 100);
+
+            // --- 5 SECOND TIMER LOGIC ---
+            let timeLeft = 5;
+            if (countdownTimer) countdownTimer.innerText = timeLeft;
+
+            adCountdownInterval = setInterval(() => {
+                timeLeft--;
+                if (countdownTimer) countdownTimer.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(adCountdownInterval); // Timer stop karein
+                    if (preGameAdScreen) preGameAdScreen.style.display = 'none'; // Ad hide karein
+                    if (gameFrame) {
+                        gameFrame.style.display = 'block'; // Frame show karein
+                        gameFrame.src = game.url; // Game load karein
+                    }
+                    if (fullscreenBtn) fullscreenBtn.style.display = 'block'; // Fullscreen button show karein
+                }
+            }, 1000);
         }
 
         function createCardHTML(game, isHero = false) {
@@ -478,7 +582,6 @@
             if (isMobile) {
                 let gameIndex = 0;
                 if (!isMoreGamesMode) {
-                    // Home Page / Normal Category Mode
                     while (gameIndex < list.length) {
                         const featuredGame = list[gameIndex];
                         if (featuredGame) {
@@ -491,7 +594,6 @@
                         gameIndex++;
 
                         let gridCount = 0;
-                        // 🔥 FIXED: Isko wapas 6 kar diya hai! Ab 1 bade cover ke neeche barabar 6 chote game covers aayenge (3 upar, 3 neeche).
                         while (gameIndex < list.length && gridCount < 6) { 
                             const currentAsset = list[gameIndex];
                             if (currentAsset) {
@@ -513,10 +615,8 @@
                         }
                     }
                 } else {
-                    // Game Play Mode
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
-                        // 🔥 FIXED: More games section me bhi 6 chote cards (3 upar, 3 neeche) ka group banega.
                         while (gameIndex < list.length && innerChunk < 6) {
                             const standardAsset = list[gameIndex];
                             if (standardAsset) {
@@ -539,7 +639,6 @@
                 }
 
             } else {
-                // Laptop / Desktop Render Engine
                 if (!isMoreGamesMode) {
                     let desktopCount = 0;
                     list.forEach((game) => {
@@ -585,6 +684,9 @@
         }
 
         function filterCat(category) {
+            // Category change hone par chal rhe ad timer ko band karein
+            if (adCountdownInterval) clearInterval(adCountdownInterval);
+
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             
@@ -598,6 +700,7 @@
             const dynamicTitle = document.getElementById('moreGamesTitle');
             const topAd = document.getElementById('topAdSlot');
             const gameFrame = document.getElementById('gameFrame');
+            const preGameAdScreen = document.getElementById('preGameAdScreen');
             
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
@@ -606,6 +709,7 @@
             if (dynamicTitle) dynamicTitle.style.display = 'none';
             if (topAd) topAd.style.display = 'none';
             if (gameFrame) gameFrame.src = "";
+            if (preGameAdScreen) preGameAdScreen.style.display = 'none';
             if (leftAd) leftAd.style.display = 'none';
             if (rightAd) rightAd.style.display = 'none';
 
@@ -633,18 +737,23 @@
         });
 
         window.onpopstate = function(event) {
+            // Back press hone par chal rhe ad timer ko band karein
+            if (adCountdownInterval) clearInterval(adCountdownInterval);
+
             const gameBox = document.getElementById('gameBox');
             const dynamicTitle = document.getElementById('moreGamesTitle');
             const topAd = document.getElementById('topAdSlot');
             const gameFrame = document.getElementById('gameFrame');
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
+            const preGameAdScreen = document.getElementById('preGameAdScreen');
             
             if (gameBox && gameBox.style.display === 'block') {
                 gameBox.style.display = 'none';
                 if (dynamicTitle) dynamicTitle.style.display = 'none';
                 if (topAd) topAd.style.display = 'none';
                 if (gameFrame) gameFrame.src = ""; 
+                if (preGameAdScreen) preGameAdScreen.style.display = 'none';
                 if (leftAd) leftAd.style.display = 'none';
                 if (rightAd) rightAd.style.display = 'none';
                 
