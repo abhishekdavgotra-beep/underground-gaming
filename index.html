@@ -189,45 +189,46 @@
             transform: scale(1.05);
         }
 
-        /* --- 🔥 GLOBAL 5 SECOND PRE-GAME AD SCREEN STYLE (FULL SCREEN) --- */
+        /* --- 🎯 FIXED PRE-GAME AD SCREEN (NOW EXACT GAME BOX SIZE) --- */
         .pre-game-ad-screen {
-            position: fixed;
+            position: absolute; /* Fixed se Absolute kar diya */
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(7, 20, 38, 0.98); /* Solid Dark Theme Overlay */
-            z-index: 99999; /* Har ek cheez ke upar dikhega */
+            width: 100%; /* Game box ke bilkul baraber width */
+            height: 100%; /* Game box ke bilkul baraber height */
+            background-color: #071426; /* Dark theme layout inside the container */
+            z-index: 5; /* Iframe ke upar layer */
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
-            padding: 20px;
+            padding: 15px;
         }
 
         .ad-box-content {
             border: 2px dashed #00f3ff;
             background: #0b1d3a;
-            padding: 40px 30px;
-            border-radius: 16px;
+            padding: 30px 20px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 0 35px rgba(0, 243, 255, 0.4);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
             max-width: 90%;
-            width: 500px;
+            width: 440px;
+            box-sizing: border-box;
         }
 
         .ad-title {
             color: #00f3ff;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            margin: 0 0 20px 0;
+            margin: 0 0 15px 0;
             letter-spacing: 1px;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
         }
 
         .ad-timer-text {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #fff;
             margin: 0;
         }
@@ -235,7 +236,7 @@
         #countdownTimer {
             color: #ff007c;
             font-weight: bold;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             text-shadow: 0 0 10px rgba(255, 0, 124, 0.5);
         }
 
@@ -374,13 +375,13 @@
             }
 
             .ad-box-content {
-                padding: 25px 15px;
+                padding: 20px 15px;
             }
             .ad-title {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
             .ad-timer-text {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
             }
         }
 
@@ -402,14 +403,6 @@
     </style>
 </head>
 <body>
-
-    <!-- 🔥 GLOBAL FULL SCREEN AD BANNER OVERLAY -->
-    <div id="preGameAdScreen" class="pre-game-ad-screen">
-        <div class="ad-box-content">
-            <div class="ad-title">[ PRE-GAME AD BANNER ]</div>
-            <p class="ad-timer-text">Your game is loading, wait <span id="countdownTimer">5</span> seconds...</p>
-        </div>
-    </div>
 
     <header>
         <h1>UNDERGROUND GAMING</h1>
@@ -435,6 +428,13 @@
             </div>
 
             <div class="video-game-container" id="gameBox">
+                <div id="preGameAdScreen" class="pre-game-ad-screen">
+                    <div class="ad-box-content">
+                        <div class="ad-title">[ PRE-GAME AD BANNER ]</div>
+                        <p class="ad-timer-text">Your game is loading, wait <span id="countdownTimer">5</span> seconds...</p>
+                    </div>
+                </div>
+
                 <button id="fullscreenBtn" onclick="toggleFullScreen()">⛶ Fullscreen</button>
                 <iframe id="gameFrame" src="" allowfullscreen allowtransparency="true" style="background-color: #000;"></iframe>
             </div>
@@ -489,15 +489,15 @@
 
             if (adCountdownInterval) clearInterval(adCountdownInterval);
 
-            // Initially frame chupao aur global overlay pure screen par open karo
+            // Frame ko chupao aur ad screen ko box ke andar show karo
             if (gameFrame) {
                 gameFrame.src = "";
                 gameFrame.style.display = 'none';
             }
             if (fullscreenBtn) fullscreenBtn.style.display = 'none';
             
-            if (preGameAdScreen) preGameAdScreen.style.display = 'flex'; // Full Screen Open
             if (gameBox) gameBox.style.display = 'block';
+            if (preGameAdScreen) preGameAdScreen.style.display = 'flex'; // Box size ad opens here
             if (topAd) topAd.style.display = 'flex';
             
             if (window.innerWidth >= 1250) {
@@ -517,7 +517,7 @@
             
             history.pushState({ gameOpen: true }, "");
             
-            // Full Screen Overlay aate hi smoothly window container par auto-scroll ho jayegi piche
+            // Smoothly scroll to the game area
             setTimeout(() => {
                 const yOffset = -15; 
                 const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
@@ -534,7 +534,7 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(adCountdownInterval); 
-                    if (preGameAdScreen) preGameAdScreen.style.display = 'none'; // Ad Full Screen Close
+                    if (preGameAdScreen) preGameAdScreen.style.display = 'none'; // Close box-ad overlay
                     if (gameFrame) {
                         gameFrame.style.display = 'block'; 
                         gameFrame.src = game.url; 
