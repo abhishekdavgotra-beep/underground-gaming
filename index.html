@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underground Gaming - Fully Fixed Layout Sequence</title>
+    <title>Underground Gaming - Fixed Mobile 3x2 Grid</title>
     <style>
-        /* --- ANTI-WHITE FLASH FIX (Browser ko shuruwat se dark mode me rakhega) --- */
+        /* --- ANTI-WHITE FLASH FIX --- */
         html {
             color-scheme: dark; 
         }
@@ -17,7 +17,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            background-color: #0b1d3a !important; /* Load hote waqt solid dark color */
+            background-color: #0b1d3a !important;
         }
 
         body {
@@ -100,7 +100,7 @@
             flex-direction: column;
             justify-content: space-between;
             min-width: 0; 
-            background-color: #071426; /* Dark placeholder while loading */
+            background-color: #071426;
         }
 
         .game-card img {
@@ -312,7 +312,7 @@
             }
 
             .video-game-container {
-                height: 380px; /* Portrait games ke liye thodi lambai badha di mobile par */
+                height: 380px; 
                 border-width: 2px;
             }
 
@@ -434,7 +434,6 @@
             
             history.pushState({ gameOpen: true }, "");
             
-            // --- ⚡ ULTRA SMOOTH & ACCURATE MOBILE SCROLL FIX ---
             setTimeout(() => {
                 const yOffset = -15; 
                 const yPos = gameBox.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) + yOffset;
@@ -492,8 +491,8 @@
                         gameIndex++;
 
                         let gridCount = 0;
-                        // 🔥 FIXED: Isko 6 se badal kar 3 kar diya hai taaki mobile ke 3-column ke sath saare cards line se render hon, koi gayab na ho
-                        while (gameIndex < list.length && gridCount < 3) { 
+                        // 🔥 FIXED: Isko wapas 6 kar diya hai! Ab 1 bade cover ke neeche barabar 6 chote game covers aayenge (3 upar, 3 neeche).
+                        while (gameIndex < list.length && gridCount < 6) { 
                             const currentAsset = list[gameIndex];
                             if (currentAsset) {
                                 const standardCard = document.createElement('div');
@@ -517,7 +516,8 @@
                     // Game Play Mode
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
-                        while (gameIndex < list.length && innerChunk < 3) {
+                        // 🔥 FIXED: More games section me bhi 6 chote cards (3 upar, 3 neeche) ka group banega.
+                        while (gameIndex < list.length && innerChunk < 6) {
                             const standardAsset = list[gameIndex];
                             if (standardAsset) {
                                 const card = document.createElement('div');
@@ -623,8 +623,7 @@
             renderGames(currentActiveList, isModeActive);
         });
 
-        // --- 🛡️ CRITICAL SCROLL-JUMP RESIZE FIX FOR MOBILE ---
-        // 🔥 FIXED: Isko pure window width thresholds par lock kar diya hai, ab mobile scroll karne par keyboard ya URL bar ki vajah se page flicker ya jhatke nahi marega aur khali black space nahi banega.
+        /* --- ANTI-SCROLL JUMP WINDOW LOCK --- */
         let cachedWindowWidth = window.innerWidth;
         window.addEventListener('resize', () => {
             if (Math.abs(window.innerWidth - cachedWindowWidth) > 40) {
