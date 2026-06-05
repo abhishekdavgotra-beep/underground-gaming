@@ -312,7 +312,7 @@
             }
 
             .video-game-container {
-                height: 280px;
+                height: 380px; /* Portrait games ke liye thodi lambai badha di mobile par */
                 border-width: 2px;
             }
 
@@ -460,8 +460,6 @@
             if (!gridBox) return;
             gridBox.innerHTML = "";
 
-            // FIXED: gameBox ko kabhi bhi gridBox ke andar push nahi kiya jayega. 
-            // Ye hamesha apni sahi jagah par (.game-zone ke andar ad banner ke niche) secure rahega.
             if (gameZone && gameBox && gameBox.parentNode !== gameZone) {
                 gameZone.insertBefore(gameBox, dynamicTitle);
             }
@@ -481,7 +479,7 @@
             if (isMobile) {
                 let gameIndex = 0;
                 if (!isMoreGamesMode) {
-                    // Home Page / Normal Category Mode (Jab koi game played nahi ho raha)
+                    // Home Page / Normal Category Mode
                     while (gameIndex < list.length) {
                         const featuredGame = list[gameIndex];
                         if (featuredGame) {
@@ -494,7 +492,8 @@
                         gameIndex++;
 
                         let gridCount = 0;
-                        while (gameIndex < list.length && gridCount < 6) { 
+                        // 🔥 FIXED: Isko 6 se badal kar 3 kar diya hai taaki mobile ke 3-column ke sath saare cards line se render hon, koi gayab na ho
+                        while (gameIndex < list.length && gridCount < 3) { 
                             const currentAsset = list[gameIndex];
                             if (currentAsset) {
                                 const standardCard = document.createElement('div');
@@ -515,7 +514,7 @@
                         }
                     }
                 } else {
-                    // FIXED: Game Play Mode mein, gridBox ke andar sirf aur sirf doosre (Other) games hi display honge.
+                    // Game Play Mode
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
                         while (gameIndex < list.length && innerChunk < 3) {
@@ -625,10 +624,11 @@
         });
 
         // --- 🛡️ CRITICAL SCROLL-JUMP RESIZE FIX FOR MOBILE ---
-        let cachedWindowWidth = document.documentElement.clientWidth;
+        // 🔥 FIXED: Isko pure window width thresholds par lock kar diya hai, ab mobile scroll karne par keyboard ya URL bar ki vajah se page flicker ya jhatke nahi marega aur khali black space nahi banega.
+        let cachedWindowWidth = window.innerWidth;
         window.addEventListener('resize', () => {
-            if (document.documentElement.clientWidth !== cachedWindowWidth) {
-                cachedWindowWidth = document.documentElement.clientWidth;
+            if (Math.abs(window.innerWidth - cachedWindowWidth) > 40) {
+                cachedWindowWidth = window.innerWidth;
                 renderGames(currentActiveList, isModeActive);
             }
         });
