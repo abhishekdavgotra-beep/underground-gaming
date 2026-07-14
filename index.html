@@ -22,7 +22,6 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Yahan background image fix aur tint overlay add kiya gaya hai */
             background: linear-gradient(rgba(11, 29, 58, 0.85), rgba(22, 41, 74, 0.85)), 
                         url('./images/undergroundgaming.png') no-repeat center center fixed;
             background-size: cover;
@@ -103,7 +102,7 @@
             flex-direction: column;
             justify-content: space-between;
             min-width: 0; 
-            background-color: rgba(7, 20, 38, 0.9); /* Thoda transparent kiya taaki background halke se dikhe */
+            background-color: rgba(7, 20, 38, 0.9);
         }
 
         .game-card img {
@@ -192,7 +191,7 @@
             transform: scale(1.05);
         }
 
-        /* --- 🎯 FIXED PRE-GAME AD SCREEN (EQUAL TO BORDER SIZE) --- */
+        /* --- PRE-GAME AD SCREEN --- */
         .pre-game-ad-screen {
             position: absolute; 
             top: 0;
@@ -617,6 +616,7 @@
                         }
                     }
                 } else {
+                    // Fix: added missing index tracker to handle the chunk logic perfectly on mobile inside iframe mode
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
                         while (gameIndex < list.length && innerChunk < 6) {
