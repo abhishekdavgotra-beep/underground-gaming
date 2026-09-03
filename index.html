@@ -8,6 +8,7 @@
         /* --- ANTI-WHITE FLASH FIX --- */
         html {
             color-scheme: dark; 
+            scroll-behavior: smooth;
         }
 
         /* --- GLOBAL & COMMON STYLES --- */
@@ -18,6 +19,7 @@
             padding: 0;
             box-sizing: border-box;
             background-color: #0b1d3a !important;
+            -webkit-overflow-scrolling: touch;
         }
 
         body {
@@ -553,8 +555,7 @@
             { title: "BMG Crash Test", cat: "Retro", img: "./images/BMGCrashTest.jpg", url: "https://playgama.com/export/game/bmg-crash-test?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
             { title: "Mansion Design - Match 3", cat: "Retro", img: "./images/MansionDesignMatch3.jpg", url: "https://playgama.com/export/game/mansion-design--match-3?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
             { title: "Fortress Clash", cat: "Retro", img: "./images/FortressClash.jpg", url: "https://playgama.com/export/game/fortress-clash?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Airplane Flight Manager Game", cat: "Retro", img: "./images/AirplaneFlightManagerGame.jpg", url: "https://playgama.com/export/game/airplane-flight-manager-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            
+            { title: "Airplane Flight Manager Game", cat: "Retro", img: "./images/AirplaneFlightManagerGame.jpg", url: "https://playgama.com/export/game/airplane-flight-manager-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" }
         ];
 
         let currentActiveList = [...gamesDatabase];
@@ -701,7 +702,6 @@
                         }
                     }
                 } else {
-                    // Fix: added missing index tracker to handle the chunk logic perfectly on mobile inside iframe mode
                     while (gameIndex < list.length) {
                         let innerChunk = 0;
                         while (gameIndex < list.length && innerChunk < 6) {
