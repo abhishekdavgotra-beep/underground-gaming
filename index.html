@@ -21,6 +21,9 @@
             background-color: #0b1d3a !important;
             -webkit-overflow-scrolling: touch !important;
             scroll-behavior: smooth !important;
+            /* GPU hardware acceleration & paint optimization */
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
 
         body {
@@ -84,6 +87,8 @@
             gap: 0px; 
             padding: 10px 0px;     
             box-sizing: border-box;
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .games-grid {
@@ -106,6 +111,11 @@
             justify-content: space-between;
             min-width: 0; 
             background-color: rgba(7, 20, 38, 0.9);
+            /* GPU Acceleration & Performance Layer */
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            contain: content;
         }
 
         .game-card img {
@@ -114,6 +124,9 @@
             object-fit: cover;
             border-radius: 8px;
             background-color: #16294a;
+            image-rendering: -webkit-optimize-contrast;
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .game-zone {
@@ -158,6 +171,8 @@
             overflow: hidden;
             display: none;
             margin-bottom: 30px;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
         }
         
         .video-game-container iframe {
@@ -169,6 +184,8 @@
             border: none;
             z-index: 1;
             background-color: #000 !important;
+            will-change: transform;
+            transform: translateZ(0);
         }
       
         #fullscreenBtn {
@@ -248,7 +265,7 @@
         }
 
         .game-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) translateZ(0);
             border-color: #00f3ff;
             box-shadow: 0 5px 15px rgba(0, 243, 255, 0.2);
         }
@@ -280,6 +297,8 @@
             box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
             box-sizing: border-box;
             min-height: 180px;
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         /* --- SIDE ADS --- */
@@ -339,6 +358,8 @@
                 cursor: pointer;
                 text-align: center;
                 box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+                will-change: transform;
+                transform: translateZ(0);
             }
 
             .mobile-hero-feature img {
@@ -368,6 +389,8 @@
                 font-size: 0.9rem;
                 margin: 10px 0;
                 min-height: 100px;
+                will-change: transform;
+                transform: translateZ(0);
             }
 
             .video-game-container {
@@ -608,6 +631,24 @@
         let isModeActive = false;
         let currentlyPlayingGame = null; 
         let adCountdownInterval = null; 
+
+        // --- SCROLL OPTIMIZATION ENGINE ---
+        (function setupScrollPerformance() {
+            window.addEventListener('wheel', function () {}, { passive: true });
+            window.addEventListener('touchstart', function () {}, { passive: true });
+
+            let isScrolling;
+            window.addEventListener('scroll', () => {
+                const iframe = document.getElementById('gameFrame');
+                if (iframe && iframe.style.display !== 'none') {
+                    iframe.style.pointerEvents = 'none';
+                }
+                clearTimeout(isScrolling);
+                isScrolling = setTimeout(() => {
+                    if (iframe) iframe.style.pointerEvents = 'auto';
+                }, 100);
+            }, { passive: true });
+        })();
 
         function playGame(game) {
             currentlyPlayingGame = game; 
