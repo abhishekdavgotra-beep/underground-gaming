@@ -655,10 +655,10 @@
         function playGame(game, setHash = true) {
             currentlyPlayingGame = game; 
             
-            // Set URL Hash so Page Refresh opens the exact same game
+            // Set URL Hash for back button and refresh handling
             if (setHash) {
                 const slug = getGameSlug(game.title);
-                window.location.hash = `play-${slug}`;
+                location.hash = `play-${slug}`;
             }
 
             const gameFrame = document.getElementById('gameFrame');
@@ -699,7 +699,7 @@
             isModeActive = true;
             renderGames(relatedGames, true); 
             
-            // --- SMOOTH SCROLL ENHANCEMENT ---
+            // Smooth scroll to top of game box
             setTimeout(() => {
                 const yOffset = -15; 
                 const yPos = gameBox.getBoundingClientRect().top + window.pageYOffset + yOffset;
@@ -865,7 +865,9 @@
         }
 
         function goHome() {
-            history.pushState("", document.title, window.location.pathname + window.location.search);
+            if (location.hash) {
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            }
             closeGameBox();
             filterCat('All');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -895,7 +897,7 @@
         }
 
         function filterCat(category) {
-            if (!currentlyPlayingGame) {
+            if (!currentlyPlayingGame && location.hash) {
                 history.pushState("", document.title, window.location.pathname + window.location.search);
             }
             closeGameBox();
@@ -931,6 +933,19 @@
             return false;
         }
 
+        // --- FIXED BACK BUTTON NAVIGATION ENGINE ---
+        function handleNavigationState() {
+            const isPlayed = checkUrlAndPlay();
+            if (!isPlayed) {
+                closeGameBox();
+                currentActiveList = [...gamesDatabase];
+                renderGames(currentActiveList, false);
+            }
+        }
+
+        window.addEventListener('hashchange', handleNavigationState);
+        window.addEventListener('popstate', handleNavigationState);
+
         window.addEventListener('DOMContentLoaded', () => {
             preloadImages();
             const loadedFromHash = checkUrlAndPlay();
@@ -948,16 +963,6 @@
             }
         });
 
-        window.onpopstate = function(event) {
-            const loadedFromHash = checkUrlAndPlay();
-            if (!loadedFromHash) {
-                closeGameBox();
-                currentActiveList = [...gamesDatabase];
-                renderGames(currentActiveList, false);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        };
-        
         function toggleFullScreen() {
             const gameBox = document.getElementById('gameBox');
             if (!document.fullscreenElement) {
