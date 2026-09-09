@@ -41,6 +41,7 @@
             width: 100%;
             text-align: center;
             padding: 25px 0;
+            position: relative;
         }
 
         header h1 {
@@ -51,29 +52,108 @@
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
         }
 
-        .filters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.05);
+        /* --- SIDEBAR TOGGLE BUTTON --- */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: rgba(7, 20, 38, 0.9);
             border: 2px solid #00f3ff;
-            color: #fff;
-            padding: 8px 22px;
-            border-radius: 20px;
+            color: #00f3ff;
+            padding: 10px 16px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
             transition: all 0.3s ease;
         }
 
-        .filter-btn.active, .filter-btn:hover {
+        .sidebar-toggle-btn:hover {
             background: #00f3ff;
             color: #0b1d3a;
             box-shadow: 0 0 15px #00f3ff;
+        }
+
+        /* --- SLIDE-OUT SIDEBAR DRAWER --- */
+        .sidebar-drawer {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1002;
+            top: 0;
+            left: 0;
+            background-color: rgba(7, 20, 38, 0.98);
+            border-right: 2px solid #00f3ff;
+            overflow-x: hidden;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-top: 60px;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.8);
+            box-sizing: border-box;
+        }
+
+        .sidebar-drawer .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            color: #ff007c;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .sidebar-drawer h3 {
+            color: #00f3ff;
+            padding: 0 20px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .category-item {
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+        }
+
+        .category-item:hover, .category-item.active {
+            background: rgba(0, 243, 255, 0.1);
+            color: #00f3ff;
+            border-left-color: #00f3ff;
+        }
+
+        .category-item svg {
+            width: 20px;
+            height: 20px;
+            fill: #00f3ff;
+        }
+
+        /* Backdrop Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            display: none;
         }
 
         /* --- MAIN CONTAINER ENGINE --- */
@@ -327,7 +407,15 @@
         /* --- 📱 MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
             header h1 {
-                font-size: 1.9rem;
+                font-size: 1.6rem;
+                margin-top: 10px;
+            }
+
+            .sidebar-toggle-btn {
+                top: 15px;
+                left: 10px;
+                padding: 6px 12px;
+                font-size: 0.85rem;
             }
 
             .main-container {
@@ -432,16 +520,73 @@
 </head>
 <body>
 
+    <!-- TOGGLE BUTTON -->
+    <button class="sidebar-toggle-btn" onclick="openSidebar()">
+        <span>☰</span> Categories
+    </button>
+
+    <!-- SIDEBAR DRAWER -->
+    <div id="sidebarDrawer" class="sidebar-drawer">
+        <span class="close-btn" onclick="closeSidebar()">&times;</span>
+        <h3>Categories</h3>
+
+        <div class="category-item active" onclick="filterCat('All')">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>All Games</span>
+        </div>
+
+        <div class="category-item" onclick="filterCat('Puzzle / Brain')">
+            <svg viewBox="0 0 24 24"><path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.4 0 2.5 1.1 2.5 2.5s-1.1 2.5-2.5 2.5H2v4c0 1.1.9 2 2 2h3.8v-1.5c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5V21H17c1.1 0 2-.9 2-2v-4h1.5c1.4 0 2.5-1.1 2.5-2.5s-1.1-2.5-2.5-2.5z"/></svg>
+            <span>Puzzle / Brain</span>
+        </div>
+
+        <div class="category-item" onclick="filterCat('Shooter / FPS')">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            <span>Shooter / FPS</span>
+        </div>
+
+        <div class="category-item" onclick="filterCat('Simulation')">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+            <span>Simulation</span>
+        </div>
+
+        <div class="category-item" onclick="filterCat('Casual / Arcade')">
+            <svg viewBox="0 0 24 24"><path d="M21.58 16.09l-1.09-7.66C20.21 6.46 18.52 5 16.53 5H7.47C5.48 5 3.79 6.46 3.51 8.43l-1.09 7.66C2.2 17.63 3.39 19 4.94 19h.03c.84 0 1.62-.43 2.06-1.14L8.8 15h6.4l1.77 2.86c.44.71 1.22 1.14 2.06 1.14h.03c1.55 0 2.74-1.37 2.52-2.91zM11 11H9v2H8v-2H6v-1h2V8h1v2h2v1zm4-1c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm2 3c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
+            <span>Casual / Arcade</span>
+        </div>
+
+        <div class="category-item" onclick="filterCat('Stunt / Driving')">
+            <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4h14v4z"/></svg>
+            <span>Stunt / Driving</span>
+        </div>
+
+        <div class="category-item" onclick="filterCat('Girls / Beauty')">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span>Girls / Beauty</span>
+        </div>
+
+        <div class="category-item" onclick="filterCat('Strategy / Defense')">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            <span>Strategy / Defense</span>
+        </div>
+
+        <div class="category-item" onclick="filterCat('Horror / Survival')">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-9c.83 0 1.5-.67 1.5-1.5S10.33 8 9.5 8 8 8.67 8 9.5s.67 1.5 1.5 1.5zm5 0c.83 0 1.5-.67 1.5-1.5S15.33 8 14.5 8 13 8.67 13 9.5s.67 1.5 1.5 1.5zm-2.5 3c-2.33 0-4.31 1.46-5.11 3.5h10.22c-.8-2.04-2.78-3.5-5.11-3.5z"/></svg>
+            <span>Horror / Survival</span>
+        </div>
+
+        <div class="category-item" onclick="filterCat('Hypercasual / Obby')">
+            <svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7z"/></svg>
+            <span>Hypercasual / Obby</span>
+        </div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
     <header>
         <h1 style="cursor: pointer;" onclick="goHome()">UNDERGROUND GAMING</h1>
     </header>
-
-    <div class="filters">
-        <button class="filter-btn active" onclick="filterCat('All')">All Games</button>
-        <button class="filter-btn" onclick="filterCat('Action')">Action</button>
-        <button class="filter-btn" onclick="filterCat('Racing')">Racing</button>
-        <button class="filter-btn" onclick="filterCat('Retro')">Retro</button>
-    </div>
 
     <div class="main-container">
         
@@ -480,140 +625,135 @@
     </div>
 
     <script>
-        // --- DATABASE ---
+        // --- SIDEBAR DRAWER LOGIC ---
+        function openSidebar() {
+            document.getElementById("sidebarDrawer").style.width = "280px";
+            document.getElementById("sidebarOverlay").style.display = "block";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebarDrawer").style.width = "0";
+            document.getElementById("sidebarOverlay").style.display = "none";
+        }
+
+        // --- DATABASE RE-CATEGORIZED WITH NEW CATEGORIES ---
         const gamesDatabase = [
-            { title: "2048", cat: "Retro", img: "./images/2048.jpg", url: "https://abhishekdavgotra-beep.github.io/2048/" },
-            { title: "Flappy Bird Classic", cat: "Action", img: "./images/flappy.jpg", url: "./flappy/index.html" },
-            { title: "Final War Dead Zone", cat: "Action", img: "./images/zone.jpg", url: "https://zv1y2i8p.play.gamezop.com/g/gTD1yQp3R" },
-            { title: "GT Cars Mega Rammps", cat: "Racing", img: "./images/qwerty.jpg", url: "https://playgama.com/export/game/gt-cars-mega-ramps" },
-            { title: "Assassin's Hunt: Wild West", cat: "Action", img: "./images/west.jpg", url: "https://zv1y2i8p.play.gamezop.com/g/9lpHai56Q" },
-            { title: "Stack Fire Ball", cat: "Retro", img: "./images/stack.jpg", url: "https://www.onlinegames.io/games/2021/unity/stack-fire-ball/index.html" },
-            { title: "Drive Quest", cat: "Racing", img: "./images/runner.jpg", url: "https://playgama.com/export/game/drive-quest" },
-            { title: "Happy Glass", cat: "Action", img: "./images/happyglass.jpg", url: "https://www.madkidgames.com/full/happy-glass" },
-            { title: "Bus Simulator Ultimate", cat: "Retro", img: "./images/ultimate.jpg", url: "https://www.madkidgames.com/full/bus-simulator-ultimate" },
-            { title: "Angry Birds 2", cat: "Racing", img: "./images/angry.jpg", url: "https://www.madkidgames.com/game/angry-birds-2" },
-            { title: "Train Driver 2018", cat: "Retro", img: "./images/traindriver.jpg", url: "https://www.madkidgames.com/full/train-driver-2018" },
-            { title: "Subway Surfers", cat: "Action", img: "./images/subway.jpg", url: "https://www.madkidgames.com/full/subway-surfers" },
-            { title: "Mountain Climb 4x4 Car Drive", cat: "Racing", img: "./images/mountain.jpg", url: "https://www.madkidgames.com/full/mountain-climb-4x4-car-drive" },
-            { title: "Color Bump 3D", cat: "Racing", img: "./images/colorbump3d.jpg", url: "https://www.madkidgames.com/full/color-bump-3d-asmr-ball-game" },
-            { title: "Good Sort Master: Triple Match", cat: "Retro", img: "./images/triplematch.jpg", url: "https://playgama.com/export/game/good-sort-master?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Hazmob FPS: Online Shooter", cat: "Retro", img: "./images/hazmobFPS.jpg", url: "https://playgama.com/export/game/hazmob-fps-online-shooter?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Nuts Puzzle: Sort By Color", cat: "Retro", img: "./images/nutspuzzle.jpg", url: "https://playgama.com/export/game/nuts-puzzle-sort-by-color?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "RIVALS FPS: Online Shooter", cat: "Retro", img: "./images/RIVALSFPS.jpg", url: "https://playgama.com/export/game/rivals-fps-online-shooter?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Deadly Descent", cat: "Retro", img: "./images/DeadlyDescent.jpg", url: "https://deadlydescent.net/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Master Chess", cat: "Retro", img: "./images/MasterChess.jpg", url: "https://playgama.com/export/game/master-chess?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Bubble Shooter: Tap & Pop", cat: "Retro", img: "./images/BubbleShooter.jpg", url: "https://playgama.com/export/game/bubble-shooter-tap--pop?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Build an Aquapark", cat: "Retro", img: "./images/BuildanAquapark.jpg", url: "https://playgama.com/export/game/build-an-aquapark?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "+1 Speed: Escape Prison", cat: "Retro", img: "./images/+1Speed.jpg", url: "https://playgama.com/export/game/1-speed-escape-prison?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Arrow Exit Puzzle", cat: "Retro", img: "./images/ArrowExitPuzzle.jpg", url: "https://playgama.com/export/game/arrow-exit-puzzle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "MR RACER - Car Racing", cat: "Retro", img: "./images/MRRACER.jpg", url: "https://mrracer.online/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Mahjong Unlimited", cat: "Retro", img: "./images/MahjongUnlimited.jpg", url: "https://playgama.com/export/game/mahjong-unlimited?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Favorite Puzzles", cat: "Retro", img: "./images/FavoritePuzzles.jpg", url: "https://playgama.com/export/game/favorite-puzzles?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Mahjong Puzzle: Tile Match", cat: "Retro", img: "./images/MahjongPuzzle.jpg", url: "https://playgama.com/export/game/mahjong-puzzle-tile-match?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Word Search Hidden Words", cat: "Retro", img: "./images/WordSearchHiddenWords.jpg", url: "https://playgama.com/export/game/word-search-hidden-words?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Home Design: Decorate House", cat: "Retro", img: "./images/HomeDesign.jpg", url: "https://playgama.com/export/game/home-design-decorate-house?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Geometry Arrow 2", cat: "Retro", img: "./images/GeometryArrow2.jpg", url: "https://playgama.com/export/game/geometry-arrow-2?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Drive Quest Retro", cat: "Retro", img: "./images/DriveQuest.jpg", url: "https://drivequest.io/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Sudoku Online", cat: "Retro", img: "./images/SudokuOnline.jpg", url: "https://playgama.com/export/game/sudoku-online?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Car Destruction King", cat: "Retro", img: "./images/CarDestructionKing.jpg", url: "https://playgama.com/export/game/car-destruction-king?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Beam Drive Car Crash Test Simulator", cat: "Retro", img: "./images/BeamDriveCarCrashTestSimulator.jpg", url: "https://playgama.com/export/game/beam-drive-car-crash-test-simulator?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Moto X3M", cat: "Retro", img: "./images/MotoX3M.jpg", url: "https://playgama.com/export/game/moto-x3m?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Burger Restaurant Simulator 3D", cat: "Retro", img: "./images/BurgerRestaurantSimulator3D.jpg", url: "https://playgama.com/export/game/burger-restaurant-simulator-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Car Smash Simulator: Crash & Tune", cat: "Retro", img: "./images/CarSmashSimulator.jpg", url: "https://playgama.com/export/game/car-smash-simulator-crash--tune?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Barry Prison: Parkour Escape!", cat: "Retro", img: "./images/BarryPrison.jpg", url: "https://barryprison.io/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Obby: Mini-Games VS 1000", cat: "Retro", img: "./images/Obby.jpg", url: "https://playgama.com/export/game/obby-minigames-vs-1000?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Flying Robot Transform Car Games", cat: "Retro", img: "./images/FlyingRobotTransformCarGames.jpg", url: "https://playgama.com/export/game/flying-robot-transform-car-games?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Imposter 3D online horror", cat: "Retro", img: "./images/Imposter3Donlinehorror.jpg", url: "https://playgama.com/export/game/imposter-3d-online-horror?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "From Nerd to School Popular", cat: "Retro", img: "./images/FromNerdtoSchoolPopular.jpg", url: "https://playgama.com/export/game/from-nerd-to-popular-school?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Numicolor", cat: "Retro", img: "./images/Numicolor.jpg", url: "https://numicolor.com/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Hair Salon", cat: "Retro", img: "./images/HairSalon.jpg", url: "https://playgama.com/export/game/hair-salon?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Escape School Duel", cat: "Retro", img: "./images/EscapeSchoolDuel.jpg", url: "https://playgama.com/export/game/escape-school-duel?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Ellie Summer Spa Beauty Salon", cat: "Retro", img: "./images/EllieSummerSpaBeautySalon.jpg", url: "https://playgama.com/export/game/ellie-summer-spa-beauty-salon?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Obby: Mini-Games", cat: "Retro", img: "./images/ObbyMiniGames.jpg", url: "https://playgama.com/export/game/obby-minigames?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Ball Sort Puzzle", cat: "Retro", img: "./images/BallSortPuzzle.jpg", url: "https://playgama.com/export/game/ball-sort-puzzle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Skyblock 3D: Survival", cat: "Retro", img: "./images/Skyblock3DSurvival.jpg", url: "https://playgama.com/export/game/skyblock-3d-survival?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Rise of the Dead", cat: "Retro", img: "./images/RiseoftheDead.jpg", url: "https://playgama.com/export/game/rise-of-the-dead?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Crime and Vice City Police", cat: "Retro", img: "./images/CrimeandViceCityPolice.jpg", url: "https://playgama.com/export/game/crime-and-vice-city-police?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Block Blast Master", cat: "Retro", img: "./images/BlockBlastMaster.jpg", url: "https://blockblastmaster.io/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Cooking City", cat: "Retro", img: "./images/CookingCity.jpg", url: "https://playgama.com/export/game/cooking-city?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Your Obby Size", cat: "Retro", img: "./images/YourObbySize.jpg", url: "https://playgama.com/export/game/your-obby-size?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Solar Smash", cat: "Retro", img: "./images/SolarSmash.jpg", url: "https://playgama.com/export/game/solar-smash?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Special Ops: GO", cat: "Retro", img: "./images/SpecialOpsGO.jpg", url: "https://playgama.com/export/game/special-ops?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Mom Life Simulator Baby Care", cat: "Retro", img: "./images/MomLifeSimulatorBabyCare.jpg", url: "https://playgama.com/export/game/mom-life-simulator-baby-care?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "The Tall Man", cat: "Retro", img: "./images/TheTallMan.jpg", url: "https://playgama.com/export/game/the-tall-man?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "The Aesthetic World of Obby", cat: "Retro", img: "./images/TheAestheticWorldofObby.jpg", url: "https://playgama.com/export/game/the-aesthetic-world-of-obby?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Escape the Monster", cat: "Retro", img: "./images/EscapetheMonster.jpg", url: "https://playgama.com/export/game/escape-the-monster?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Roll Rush", cat: "Retro", img: "./images/RollRush.jpg", url: "https://playgama.com/export/game/roll-rush?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Block Blast Master: Puzzle", cat: "Retro", img: "./images/BlockBlastMasterPuzzle.jpg", url: "https://playgama.com/export/game/block-blast-master-puzzle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "3D Acrylic Nail: Nail Art Game", cat: "Retro", img: "./images/3DAcrylicNailNailArtGame.jpg", url: "https://playgama.com/export/game/3d-acrylic-nail-nail-art-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Sniper Attack2", cat: "Retro", img: "./images/SniperAttack2.jpg", url: "https://playgama.com/export/game/sniper-attack2?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Save The Pets: Draw to Save", cat: "Retro", img: "./images/SaveThePetsDrawtoSave.jpg", url: "https://playgama.com/export/game/save-the-pets-draw-to-save?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Car Crash Sandbox", cat: "Retro", img: "./images/CarCrashSandbox.jpg", url: "https://playgama.com/export/game/car-crash-sandbox?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Fashion Week 2025", cat: "Retro", img: "./images/FashionWeek2025.jpg", url: "https://playgama.com/export/game/fashion-week-2025?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Kendel 7 Days 7 Styles", cat: "Retro", img: "./images/Kendel7Days7Styles.jpg", url: "https://playgama.com/export/game/kendel-7-days-7-styles?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Rooftop Run", cat: "Retro", img: "./images/RooftopRun.jpg", url: "https://rooftoprun.net/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Your Obby Escape", cat: "Retro", img: "./images/YourObbyEscape.jpg", url: "https://playgama.com/export/game/your-obby-escape?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Snow Rush 3D", cat: "Retro", img: "./images/SnowRush3D.jpg", url: "https://playgama.com/export/game/snow-rush-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Snake 2077: Glitch War", cat: "Retro", img: "./images/Snake2077GlitchWar.jpg", url: "https://playgama.com/export/game/snake-2077-glitch-war?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Rolling Balls Sea Race", cat: "Retro", img: "./images/RollingBallsSeaRace.jpg", url: "https://playgama.com/export/game/rolling-balls-sea-race?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Cube Snake 2048", cat: "Retro", img: "./images/CubeSnake2048.jpg", url: "https://playgama.com/export/game/cube-snake-2048?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Police Chase Simulator", cat: "Retro", img: "./images/PoliceChaseSimulator.jpg", url: "https://playgama.com/export/game/police-chase-simulator?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Online Car Destruction Simulator 3D", cat: "Retro", img: "./images/OnlineCarDestructionSimulator3D.jpg", url: "https://playgama.com/export/game/online-car-destruction?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Field Master", cat: "Retro", img: "./images/FieldMaster.jpg", url: "https://playgama.com/export/game/field-master?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Popping Candies", cat: "Retro", img: "./images/PoppingCandies.jpg", url: "https://playgama.com/export/game/popping-candies?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Jigsaw Puzzles", cat: "Retro", img: "./images/JigsawPuzzles.jpg", url: "https://playgama.com/export/game/jigsaw-puzzles?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Italian Brainrot Find the Difference", cat: "Retro", img: "./images/ItalianBrainrotFindtheDifference.jpg", url: "https://playgama.com/export/game/italian-brainrot-find-the-difference?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Soda Sandbox", cat: "Retro", img: "./images/SodaSandbox.jpg", url: "https://playgama.com/export/game/soda-sandbox?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Maths Puzzle", cat: "Retro", img: "./images/MathsPuzzle.jpg", url: "https://playgama.com/export/game/maths-puzzle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Far Island: Tactical Warfare", cat: "Retro", img: "./images/FarIslandTacticalWarfare.jpg", url: "https://playgama.com/export/game/far-island-tactical-warfare?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Tall io", cat: "Retro", img: "./images/Tallio.jpg", url: "https://playgama.com/export/game/tall-io?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Obby: +1 Speed Car Escape", cat: "Retro", img: "./images/Obby1SpeedCarEscape.jpg", url: "https://playgama.com/export/game/obby-1-speed-car-escape?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Jump to the Rhythm of Songs! Musical Ball!", cat: "Retro", img: "./images/JumptotheRhythmofSongs!MusicalBall!.jpg", url: "https://playgama.com/export/game/jump-to-the-rhythm-of-songs-musical-ball?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Frogtastic Marble Adventure", cat: "Retro", img: "./images/FrogtasticMarbleAdventure.jpg", url: "https://playgama.com/export/game/frogtastic-marble-adventure?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "MR RACER Stunt Mania", cat: "Retro", img: "./images/MRRACERStuntMania.jpg", url: "https://playgama.com/export/game/mr-racer-stunt-mania?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Detective Max Mystery: The Disappearance of Mr. Winters", cat: "Retro", img: "./images/DetectiveMaxMysteryTheDisappearanceofMr.Winters.jpg", url: "https://playgama.com/export/game/detective-max-mystery-the-disappearance-of-mr-winters?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Home Design - Match 3", cat: "Retro", img: "./images/HomeDesignMatch3.jpg", url: "https://playgama.com/export/game/home-design--match-3?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Tiny Cars", cat: "Retro", img: "./images/TinyCars.jpg", url: "https://playgama.com/export/game/tiny-cars?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "BMG Crash Test", cat: "Retro", img: "./images/BMGCrashTest.jpg", url: "https://playgama.com/export/game/bmg-crash-test?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Mansion Design - Match 3", cat: "Retro", img: "./images/MansionDesignMatch3.jpg", url: "https://playgama.com/export/game/mansion-design--match-3?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Fortress Clash", cat: "Retro", img: "./images/FortressClash.jpg", url: "https://playgama.com/export/game/fortress-clash?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Airplane Flight Manager Game", cat: "Retro", img: "./images/AirplaneFlightManagerGame.jpg", url: "https://playgama.com/export/game/airplane-flight-manager-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Police Car Simulator Game Criminal Case", cat: "Retro", img: "./images/PoliceCarSimulatorGameCriminalCase.jpg", url: "https://playgama.com/export/game/police-car-simulator-game-criminal-case?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Color by Numbers: Anti-stress Drawings", cat: "Retro", img: "./images/ColorbyNumbersAntistressDrawings.jpg", url: "https://playgama.com/export/game/color-by-numbers-antistress-drawings?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Snake Puzzle: Slither to Eat!", cat: "Retro", img: "./images/SnakePuzzleSlithertoEat!.jpg", url: "https://playgama.com/export/game/snake-puzzle-slither-to-eat?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Turbo Stunt Racing", cat: "Retro", img: "./images/TurboStuntRacing.jpg", url: "https://playgama.com/export/game/turbo-stunt-racing?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Race On Cars in Moscow", cat: "Retro", img: "./images/RaceOnCarsinMoscow.jpg", url: "https://playgama.com/export/game/race-on-cars-in-moscow?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Drifting Car Master", cat: "Retro", img: "./images/DriftingCarMaster.jpg", url: "https://playgama.com/export/game/drifting-car-master?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Car Sales Empire Simulator", cat: "Retro", img: "./images/CarSalesEmpireSimulator.jpg", url: "https://playgama.com/export/game/car-sales-empire-simulator?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Crash Test Simulator 3d", cat: "Retro", img: "./images/CrashTestSimulator3d.jpg", url: "https://playgama.com/export/game/crash-test-simulator-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Smash & Speed", cat: "Retro", img: "./images/SmashSpeed.jpg", url: "https://playgama.com/export/game/smash-speed?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Simulator GT Motorsport", cat: "Retro", img: "./images/SimulatorGTMotorsport.jpg", url: "https://playgama.com/export/game/simulator-gt-motorsport?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Car Parking 3D", cat: "Retro", img: "./images/CarParking3D.jpg", url: "https://playgama.com/export/game/car-parking-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Daddy Escape", cat: "Retro", img: "./images/DaddyEscape.jpg", url: "https://playgama.com/export/game/daddy-escape?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Crazy Motorcycle", cat: "Retro", img: "./images/CrazyMotorcycle.jpg", url: "https://playgama.com/export/game/crazy-motorcycle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Hyper Cars Ramp Crash", cat: "Retro", img: "./images/HyperCarsRampCrash.jpg", url: "https://playgama.com/export/game/hyper-cars-ramp-crash?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Bike Stunt Game", cat: "Retro", img: "./images/BikeStuntGame.jpg", url: "https://playgama.com/export/game/bike-stunt-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Adventure Crazy Ramp Bike Stunt Game", cat: "Retro", img: "./images/AdventureCrazyRampBikeStuntGame.jpg", url: "https://playgama.com/export/game/adventure-crazy-ramp-bike-stunt-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Mechanic Simulator: Car Repair", cat: "Retro", img: "./images/MechanicSimulatorCarRepair.jpg", url: "https://playgama.com/export/game/mechanic-simulator-car-repair?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Ninja Obby Speed Run", cat: "Retro", img: "./images/NinjaObbySpeedRun.jpg", url: "https://playgama.com/export/game/ninja-obby-speed-run?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Shape Transform Race", cat: "Retro", img: "./images/ShapeTransformRace.jpg", url: "https://playgama.com/export/game/shape-transform-race?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Cooking Shawarma Idle Game", cat: "Retro", img: "./images/CookingShawarmaIdleGame.jpg", url: "https://playgama.com/export/game/cooking-shawarma-idle-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Trial Xtreme", cat: "Retro", img: "./images/TrialXtreme.jpg", url: "https://playgama.com/export/game/trial-xtreme?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "City Tuk Tuk Simulator: Racing Game 3D", cat: "Retro", img: "./images/CityTukTukSimulatorRacingGame3D.jpg", url: "https://playgama.com/export/game/city-tuk-tuk-simulator--racing-game-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Abandoned Mansion", cat: "Retro", img: "./images/AbandonedMansion.jpg", url: "https://playgama.com/export/game/abandoned-mansion?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Summer Rider 3D", cat: "Retro", img: "./images/SummerRider3D.jpg", url: "https://playgama.com/export/game/summer-rider-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Impossible Parkour 3D", cat: "Retro", img: "./images/ImpossibleParkour3D.jpg", url: "https://playgama.com/export/game/impossible-parkour-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Car Stunts Driving", cat: "Retro", img: "./images/CarStuntsDriving.jpg", url: "https://playgama.com/export/game/car-stunts-driving?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "FPS Gun Shooting Game 3D", cat: "Retro", img: "./images/FPSGunShootingGame3D.jpg", url: "https://playgama.com/export/game/fps-gun-shooting-game-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Mega Ramp Car", cat: "Retro", img: "./images/MegaRampCar.jpg", url: "https://playgama.com/export/game/mega-ramp-car?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Sworded io - Spin and Rub", cat: "Retro", img: "./images/SwordedioSpinandRub.jpg", url: "https://playgama.com/export/game/sworded-io--spin-and-rub?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Mega Car Stunts", cat: "Retro", img: "./images/MegaCarStunts.jpg", url: "https://playgama.com/export/game/mega-car-stunts?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Car Stunt Racing Game 3D : Car Games", cat: "Retro", img: "./images/CarStuntRacingGame3DCarGames.jpg", url: "https://playgama.com/export/game/car-stunt-racing-game-3d--car-games?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Moto X3M Spooky Land", cat: "Retro", img: "./images/MotoX3MSpookyLand.jpg", url: "https://playgama.com/export/game/moto-x3m-spooky-land?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Fast and Wild in Sky", cat: "Retro", img: "./images/FastandWildinSky.jpg", url: "https://playgama.com/export/game/fast-and-wild-in-sky?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Santa Stunt Racer Christmas Delivery", cat: "Retro", img: "./images/SantaStuntRacerChristmasDelivery.jpg", url: "https://playgama.com/export/game/santa-stunt-racer-christmas-delivery?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Granny", cat: "Retro", img: "./images/Granny.jpg", url: "https://www.madkidgames.com/full/granny" },
-            { title: "GTA Car Stunt Mega Ramp", cat: "Retro", img: "./images/GTACarStuntMegaRamp.jpg", url: "https://www.madkidgames.com/full/gta-car-stunt-mega-ramp" }
+            { title: "2048", cat: "Puzzle / Brain", img: "./images/2048.jpg", url: "https://abhishekdavgotra-beep.github.io/2048/" },
+            { title: "Flappy Bird Classic", cat: "Casual / Arcade", img: "./images/flappy.jpg", url: "./flappy/index.html" },
+            { title: "Final War Dead Zone", cat: "Shooter / FPS", img: "./images/zone.jpg", url: "https://zv1y2i8p.play.gamezop.com/g/gTD1yQp3R" },
+            { title: "GT Cars Mega Rammps", cat: "Stunt / Driving", img: "./images/qwerty.jpg", url: "https://playgama.com/export/game/gt-cars-mega-ramps" },
+            { title: "Assassin's Hunt: Wild West", cat: "Shooter / FPS", img: "./images/west.jpg", url: "https://zv1y2i8p.play.gamezop.com/g/9lpHai56Q" },
+            { title: "Stack Fire Ball", cat: "Casual / Arcade", img: "./images/stack.jpg", url: "https://www.onlinegames.io/games/2021/unity/stack-fire-ball/index.html" },
+            { title: "Drive Quest", cat: "Stunt / Driving", img: "./images/runner.jpg", url: "https://playgama.com/export/game/drive-quest" },
+            { title: "Happy Glass", cat: "Puzzle / Brain", img: "./images/happyglass.jpg", url: "https://www.madkidgames.com/full/happy-glass" },
+            { title: "Bus Simulator Ultimate", cat: "Simulation", img: "./images/ultimate.jpg", url: "https://www.madkidgames.com/full/bus-simulator-ultimate" },
+            { title: "Angry Birds 2", cat: "Casual / Arcade", img: "./images/angry.jpg", url: "https://www.madkidgames.com/game/angry-birds-2" },
+            { title: "Train Driver 2018", cat: "Simulation", img: "./images/traindriver.jpg", url: "https://www.madkidgames.com/full/train-driver-2018" },
+            { title: "Subway Surfers", cat: "Casual / Arcade", img: "./images/subway.jpg", url: "https://www.madkidgames.com/full/subway-surfers" },
+            { title: "Mountain Climb 4x4 Car Drive", cat: "Stunt / Driving", img: "./images/mountain.jpg", url: "https://www.madkidgames.com/full/mountain-climb-4x4-car-drive" },
+            { title: "Color Bump 3D", cat: "Casual / Arcade", img: "./images/colorbump3d.jpg", url: "https://www.madkidgames.com/full/color-bump-3d-asmr-ball-game" },
+            { title: "Good Sort Master: Triple Match", cat: "Puzzle / Brain", img: "./images/triplematch.jpg", url: "https://playgama.com/export/game/good-sort-master?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Hazmob FPS: Online Shooter", cat: "Shooter / FPS", img: "./images/hazmobFPS.jpg", url: "https://playgama.com/export/game/hazmob-fps-online-shooter?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Nuts Puzzle: Sort By Color", cat: "Puzzle / Brain", img: "./images/nutspuzzle.jpg", url: "https://playgama.com/export/game/nuts-puzzle-sort-by-color?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "RIVALS FPS: Online Shooter", cat: "Shooter / FPS", img: "./images/RIVALSFPS.jpg", url: "https://playgama.com/export/game/rivals-fps-online-shooter?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Deadly Descent", cat: "Stunt / Driving", img: "./images/DeadlyDescent.jpg", url: "https://deadlydescent.net/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Master Chess", cat: "Puzzle / Brain", img: "./images/MasterChess.jpg", url: "https://playgama.com/export/game/master-chess?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Bubble Shooter: Tap & Pop", cat: "Casual / Arcade", img: "./images/BubbleShooter.jpg", url: "https://playgama.com/export/game/bubble-shooter-tap--pop?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Build an Aquapark", cat: "Simulation", img: "./images/BuildanAquapark.jpg", url: "https://playgama.com/export/game/build-an-aquapark?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "+1 Speed: Escape Prison", cat: "Hypercasual / Obby", img: "./images/+1Speed.jpg", url: "https://playgama.com/export/game/1-speed-escape-prison?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Arrow Exit Puzzle", cat: "Puzzle / Brain", img: "./images/ArrowExitPuzzle.jpg", url: "https://playgama.com/export/game/arrow-exit-puzzle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "MR RACER - Car Racing", cat: "Stunt / Driving", img: "./images/MRRACER.jpg", url: "https://mrracer.online/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Mahjong Unlimited", cat: "Puzzle / Brain", img: "./images/MahjongUnlimited.jpg", url: "https://playgama.com/export/game/mahjong-unlimited?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Favorite Puzzles", cat: "Puzzle / Brain", img: "./images/FavoritePuzzles.jpg", url: "https://playgama.com/export/game/favorite-puzzles?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Mahjong Puzzle: Tile Match", cat: "Puzzle / Brain", img: "./images/MahjongPuzzle.jpg", url: "https://playgama.com/export/game/mahjong-puzzle-tile-match?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Word Search Hidden Words", cat: "Puzzle / Brain", img: "./images/WordSearchHiddenWords.jpg", url: "https://playgama.com/export/game/word-search-hidden-words?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Home Design: Decorate House", cat: "Girls / Beauty", img: "./images/HomeDesign.jpg", url: "https://playgama.com/export/game/home-design-decorate-house?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Geometry Arrow 2", cat: "Casual / Arcade", img: "./images/GeometryArrow2.jpg", url: "https://playgama.com/export/game/geometry-arrow-2?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Drive Quest Retro", cat: "Stunt / Driving", img: "./images/DriveQuest.jpg", url: "https://drivequest.io/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Sudoku Online", cat: "Puzzle / Brain", img: "./images/SudokuOnline.jpg", url: "https://playgama.com/export/game/sudoku-online?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Car Destruction King", cat: "Stunt / Driving", img: "./images/CarDestructionKing.jpg", url: "https://playgama.com/export/game/car-destruction-king?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Beam Drive Car Crash Test Simulator", cat: "Stunt / Driving", img: "./images/BeamDriveCarCrashTestSimulator.jpg", url: "https://playgama.com/export/game/beam-drive-car-crash-test-simulator?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Moto X3M", cat: "Stunt / Driving", img: "./images/MotoX3M.jpg", url: "https://playgama.com/export/game/moto-x3m?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Burger Restaurant Simulator 3D", cat: "Simulation", img: "./images/BurgerRestaurantSimulator3D.jpg", url: "https://playgama.com/export/game/burger-restaurant-simulator-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Car Smash Simulator: Crash & Tune", cat: "Simulation", img: "./images/CarSmashSimulator.jpg", url: "https://playgama.com/export/game/car-smash-simulator-crash--tune?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Barry Prison: Parkour Escape!", cat: "Hypercasual / Obby", img: "./images/BarryPrison.jpg", url: "https://barryprison.io/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Obby: Mini-Games VS 1000", cat: "Hypercasual / Obby", img: "./images/Obby.jpg", url: "https://playgama.com/export/game/obby-minigames-vs-1000?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Flying Robot Transform Car Games", cat: "Casual / Arcade", img: "./images/FlyingRobotTransformCarGames.jpg", url: "https://playgama.com/export/game/flying-robot-transform-car-games?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Imposter 3D online horror", cat: "Horror / Survival", img: "./images/Imposter3Donlinehorror.jpg", url: "https://playgama.com/export/game/imposter-3d-online-horror?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "From Nerd to School Popular", cat: "Girls / Beauty", img: "./images/FromNerdtoSchoolPopular.jpg", url: "https://playgama.com/export/game/from-nerd-to-popular-school?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Numicolor", cat: "Puzzle / Brain", img: "./images/Numicolor.jpg", url: "https://numicolor.com/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Hair Salon", cat: "Girls / Beauty", img: "./images/HairSalon.jpg", url: "https://playgama.com/export/game/hair-salon?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Escape School Duel", cat: "Hypercasual / Obby", img: "./images/EscapeSchoolDuel.jpg", url: "https://playgama.com/export/game/escape-school-duel?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Ellie Summer Spa Beauty Salon", cat: "Girls / Beauty", img: "./images/EllieSummerSpaBeautySalon.jpg", url: "https://playgama.com/export/game/ellie-summer-spa-beauty-salon?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Obby: Mini-Games", cat: "Hypercasual / Obby", img: "./images/ObbyMiniGames.jpg", url: "https://playgama.com/export/game/obby-minigames?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Ball Sort Puzzle", cat: "Puzzle / Brain", img: "./images/BallSortPuzzle.jpg", url: "https://playgama.com/export/game/ball-sort-puzzle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Skyblock 3D: Survival", cat: "Horror / Survival", img: "./images/Skyblock3DSurvival.jpg", url: "https://playgama.com/export/game/skyblock-3d-survival?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Rise of the Dead", cat: "Horror / Survival", img: "./images/RiseoftheDead.jpg", url: "https://playgama.com/export/game/rise-of-the-dead?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Crime and Vice City Police", cat: "Simulation", img: "./images/CrimeandViceCityPolice.jpg", url: "https://playgama.com/export/game/crime-and-vice-city-police?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Block Blast Master", cat: "Puzzle / Brain", img: "./images/BlockBlastMaster.jpg", url: "https://blockblastmaster.io/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Cooking City", cat: "Simulation", img: "./images/CookingCity.jpg", url: "https://playgama.com/export/game/cooking-city?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Your Obby Size", cat: "Hypercasual / Obby", img: "./images/YourObbySize.jpg", url: "https://playgama.com/export/game/your-obby-size?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Solar Smash", cat: "Casual / Arcade", img: "./images/SolarSmash.jpg", url: "https://playgama.com/export/game/solar-smash?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Special Ops: GO", cat: "Shooter / FPS", img: "./images/SpecialOpsGO.jpg", url: "https://playgama.com/export/game/special-ops?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Mom Life Simulator Baby Care", cat: "Simulation", img: "./images/MomLifeSimulatorBabyCare.jpg", url: "https://playgama.com/export/game/mom-life-simulator-baby-care?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "The Tall Man", cat: "Hypercasual / Obby", img: "./images/TheTallMan.jpg", url: "https://playgama.com/export/game/the-tall-man?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "The Aesthetic World of Obby", cat: "Hypercasual / Obby", img: "./images/TheAestheticWorldofObby.jpg", url: "https://playgama.com/export/game/the-aesthetic-world-of-obby?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Escape the Monster", cat: "Horror / Survival", img: "./images/EscapetheMonster.jpg", url: "https://playgama.com/export/game/escape-the-monster?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Roll Rush", cat: "Casual / Arcade", img: "./images/RollRush.jpg", url: "https://playgama.com/export/game/roll-rush?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Block Blast Master: Puzzle", cat: "Puzzle / Brain", img: "./images/BlockBlastMasterPuzzle.jpg", url: "https://playgama.com/export/game/block-blast-master-puzzle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "3D Acrylic Nail: Nail Art Game", cat: "Girls / Beauty", img: "./images/3DAcrylicNailNailArtGame.jpg", url: "https://playgama.com/export/game/3d-acrylic-nail-nail-art-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Sniper Attack2", cat: "Shooter / FPS", img: "./images/SniperAttack2.jpg", url: "https://playgama.com/export/game/sniper-attack2?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Save The Pets: Draw to Save", cat: "Puzzle / Brain", img: "./images/SaveThePetsDrawtoSave.jpg", url: "https://playgama.com/export/game/save-the-pets-draw-to-save?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Car Crash Sandbox", cat: "Stunt / Driving", img: "./images/CarCrashSandbox.jpg", url: "https://playgama.com/export/game/car-crash-sandbox?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Fashion Week 2025", cat: "Girls / Beauty", img: "./images/FashionWeek2025.jpg", url: "https://playgama.com/export/game/fashion-week-2025?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Kendel 7 Days 7 Styles", cat: "Girls / Beauty", img: "./images/Kendel7Days7Styles.jpg", url: "https://playgama.com/export/game/kendel-7-days-7-styles?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Rooftop Run", cat: "Casual / Arcade", img: "./images/RooftopRun.jpg", url: "https://rooftoprun.net/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Your Obby Escape", cat: "Hypercasual / Obby", img: "./images/YourObbyEscape.jpg", url: "https://playgama.com/export/game/your-obby-escape?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Snow Rush 3D", cat: "Casual / Arcade", img: "./images/SnowRush3D.jpg", url: "https://playgama.com/export/game/snow-rush-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Snake 2077: Glitch War", cat: "Casual / Arcade", img: "./images/Snake2077GlitchWar.jpg", url: "https://playgama.com/export/game/snake-2077-glitch-war?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Rolling Balls Sea Race", cat: "Casual / Arcade", img: "./images/RollingBallsSeaRace.jpg", url: "https://playgama.com/export/game/rolling-balls-sea-race?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Cube Snake 2048", cat: "Casual / Arcade", img: "./images/CubeSnake2048.jpg", url: "https://playgama.com/export/game/cube-snake-2048?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Police Chase Simulator", cat: "Simulation", img: "./images/PoliceChaseSimulator.jpg", url: "https://playgama.com/export/game/police-chase-simulator?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Online Car Destruction Simulator 3D", cat: "Stunt / Driving", img: "./images/OnlineCarDestructionSimulator3D.jpg", url: "https://playgama.com/export/game/online-car-destruction?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Field Master", cat: "Simulation", img: "./images/FieldMaster.jpg", url: "https://playgama.com/export/game/field-master?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Popping Candies", cat: "Casual / Arcade", img: "./images/PoppingCandies.jpg", url: "https://playgama.com/export/game/popping-candies?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Jigsaw Puzzles", cat: "Puzzle / Brain", img: "./images/JigsawPuzzles.jpg", url: "https://playgama.com/export/game/jigsaw-puzzles?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Soda Sandbox", cat: "Casual / Arcade", img: "./images/SodaSandbox.jpg", url: "https://playgama.com/export/game/soda-sandbox?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Maths Puzzle", cat: "Puzzle / Brain", img: "./images/MathsPuzzle.jpg", url: "https://playgama.com/export/game/maths-puzzle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Far Island: Tactical Warfare", cat: "Strategy / Defense", img: "./images/FarIslandTacticalWarfare.jpg", url: "https://playgama.com/export/game/far-island-tactical-warfare?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Tall io", cat: "Casual / Arcade", img: "./images/Tallio.jpg", url: "https://playgama.com/export/game/tall-io?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Obby: +1 Speed Car Escape", cat: "Hypercasual / Obby", img: "./images/Obby1SpeedCarEscape.jpg", url: "https://playgama.com/export/game/obby-1-speed-car-escape?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Frogtastic Marble Adventure", cat: "Casual / Arcade", img: "./images/FrogtasticMarbleAdventure.jpg", url: "https://playgama.com/export/game/frogtastic-marble-adventure?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "MR RACER Stunt Mania", cat: "Stunt / Driving", img: "./images/MRRACERStuntMania.jpg", url: "https://playgama.com/export/game/mr-racer-stunt-mania?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Detective Max Mystery: The Disappearance of Mr. Winters", cat: "Puzzle / Brain", img: "./images/DetectiveMaxMysteryTheDisappearanceofMr.Winters.jpg", url: "https://playgama.com/export/game/detective-max-mystery-the-disappearance-of-mr-winters?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Home Design - Match 3", cat: "Girls / Beauty", img: "./images/HomeDesignMatch3.jpg", url: "https://playgama.com/export/game/home-design--match-3?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Tiny Cars", cat: "Stunt / Driving", img: "./images/TinyCars.jpg", url: "https://playgama.com/export/game/tiny-cars?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "BMG Crash Test", cat: "Stunt / Driving", img: "./images/BMGCrashTest.jpg", url: "https://playgama.com/export/game/bmg-crash-test?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Fortress Clash", cat: "Strategy / Defense", img: "./images/FortressClash.jpg", url: "https://playgama.com/export/game/fortress-clash?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Airplane Flight Manager Game", cat: "Simulation", img: "./images/AirplaneFlightManagerGame.jpg", url: "https://playgama.com/export/game/airplane-flight-manager-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Police Car Simulator Game Criminal Case", cat: "Simulation", img: "./images/PoliceCarSimulatorGameCriminalCase.jpg", url: "https://playgama.com/export/game/police-car-simulator-game-criminal-case?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Snake Puzzle: Slither to Eat!", cat: "Puzzle / Brain", img: "./images/SnakePuzzleSlithertoEat!.jpg", url: "https://playgama.com/export/game/snake-puzzle-slither-to-eat?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Turbo Stunt Racing", cat: "Stunt / Driving", img: "./images/TurboStuntRacing.jpg", url: "https://playgama.com/export/game/turbo-stunt-racing?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Race On Cars in Moscow", cat: "Stunt / Driving", img: "./images/RaceOnCarsinMoscow.jpg", url: "https://playgama.com/export/game/race-on-cars-in-moscow?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Drifting Car Master", cat: "Stunt / Driving", img: "./images/DriftingCarMaster.jpg", url: "https://playgama.com/export/game/drifting-car-master?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Car Sales Empire Simulator", cat: "Simulation", img: "./images/CarSalesEmpireSimulator.jpg", url: "https://playgama.com/export/game/car-sales-empire-simulator?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Crash Test Simulator 3d", cat: "Stunt / Driving", img: "./images/CrashTestSimulator3d.jpg", url: "https://playgama.com/export/game/crash-test-simulator-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Smash & Speed", cat: "Stunt / Driving", img: "./images/SmashSpeed.jpg", url: "https://playgama.com/export/game/smash-speed?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Simulator GT Motorsport", cat: "Stunt / Driving", img: "./images/SimulatorGTMotorsport.jpg", url: "https://playgama.com/export/game/simulator-gt-motorsport?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Car Parking 3D", cat: "Simulation", img: "./images/CarParking3D.jpg", url: "https://playgama.com/export/game/car-parking-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Daddy Escape", cat: "Puzzle / Brain", img: "./images/DaddyEscape.jpg", url: "https://playgama.com/export/game/daddy-escape?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Crazy Motorcycle", cat: "Stunt / Driving", img: "./images/CrazyMotorcycle.jpg", url: "https://playgama.com/export/game/crazy-motorcycle?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Hyper Cars Ramp Crash", cat: "Stunt / Driving", img: "./images/HyperCarsRampCrash.jpg", url: "https://playgama.com/export/game/hyper-cars-ramp-crash?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Bike Stunt Game", cat: "Stunt / Driving", img: "./images/BikeStuntGame.jpg", url: "https://playgama.com/export/game/bike-stunt-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Mechanic Simulator: Car Repair", cat: "Simulation", img: "./images/MechanicSimulatorCarRepair.jpg", url: "https://playgama.com/export/game/mechanic-simulator-car-repair?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Ninja Obby Speed Run", cat: "Hypercasual / Obby", img: "./images/NinjaObbySpeedRun.jpg", url: "https://playgama.com/export/game/ninja-obby-speed-run?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Cooking Shawarma Idle Game", cat: "Simulation", img: "./images/CookingShawarmaIdleGame.jpg", url: "https://playgama.com/export/game/cooking-shawarma-idle-game?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Trial Xtreme", cat: "Stunt / Driving", img: "./images/TrialXtreme.jpg", url: "https://playgama.com/export/game/trial-xtreme?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "City Tuk Tuk Simulator: Racing Game 3D", cat: "Stunt / Driving", img: "./images/CityTukTukSimulatorRacingGame3D.jpg", url: "https://playgama.com/export/game/city-tuk-tuk-simulator--racing-game-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Abandoned Mansion", cat: "Horror / Survival", img: "./images/AbandonedMansion.jpg", url: "https://playgama.com/export/game/abandoned-mansion?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "FPS Gun Shooting Game 3D", cat: "Shooter / FPS", img: "./images/FPSGunShootingGame3D.jpg", url: "https://playgama.com/export/game/fps-gun-shooting-game-3d?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Mega Ramp Car", cat: "Stunt / Driving", img: "./images/MegaRampCar.jpg", url: "https://playgama.com/export/game/mega-ramp-car?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Granny", cat: "Horror / Survival", img: "./images/Granny.jpg", url: "https://www.madkidgames.com/full/granny" }
         ];
 
         // --- AUTOMATIC IMAGE PRELOADER ---
@@ -655,7 +795,6 @@
         function playGame(game, setHash = true) {
             currentlyPlayingGame = game; 
             
-            // Set URL Hash for back button and refresh handling
             if (setHash) {
                 const slug = getGameSlug(game.title);
                 location.hash = `play-${slug}`;
@@ -699,14 +838,12 @@
             isModeActive = true;
             renderGames(relatedGames, true); 
             
-            // Smooth scroll to top of game box
             setTimeout(() => {
                 const yOffset = -15; 
                 const yPos = gameBox.getBoundingClientRect().top + window.pageYOffset + yOffset;
                 window.scrollTo({ top: yPos, behavior: 'smooth' });
             }, 150);
 
-            // --- 5 SECOND TIMER LOGIC ---
             let timeLeft = 5;
             if (countdownTimer) countdownTimer.innerText = timeLeft;
 
@@ -734,7 +871,6 @@
             `;
         }
 
-        // --- DYNAMIC RENDERING ENGINE ---
         function renderGames(list, isMoreGamesMode = false) {
             const gridBox = document.getElementById('gridBox');
             const gameBox = document.getElementById('gameBox');
@@ -754,7 +890,7 @@
             }
 
             if (!list || list.length === 0) {
-                gridBox.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; color:#00f3ff;'>No games found.</p>";
+                gridBox.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; color:#00f3ff;'>No games found in this category.</p>";
                 return;
             }
 
@@ -896,18 +1032,19 @@
             currentlyPlayingGame = null;
         }
 
+        // --- FILTER FUNCTION WITH SIDEBAR AUTO-CLOSE ---
         function filterCat(category) {
             if (!currentlyPlayingGame && location.hash) {
                 history.pushState("", document.title, window.location.pathname + window.location.search);
             }
             closeGameBox();
 
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            buttons.forEach(btn => {
-                if(btn.innerText.trim().toLowerCase() === category.trim().toLowerCase() || (category === 'All' && btn.innerText.includes('All'))) {
-                    btn.classList.add('active');
+            // Highlight Active Category in Drawer
+            const catItems = document.querySelectorAll('.category-item');
+            catItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.innerText.trim().toLowerCase() === category.trim().toLowerCase()) {
+                    item.classList.add('active');
                 }
             });
 
@@ -916,10 +1053,13 @@
             } else {
                 currentActiveList = gamesDatabase.filter(g => g.cat === category);
             }
+
             renderGames(currentActiveList, false);
+            
+            // Auto close sidebar drawer after selecting category
+            closeSidebar();
         }
 
-        // --- CHECK URL HASH FOR REFRESH AUTO-PLAY ---
         function checkUrlAndPlay() {
             const hash = window.location.hash;
             if (hash && hash.startsWith('#play-')) {
@@ -933,7 +1073,6 @@
             return false;
         }
 
-        // --- FIXED BACK BUTTON NAVIGATION ENGINE ---
         function handleNavigationState() {
             const isPlayed = checkUrlAndPlay();
             if (!isPlayed) {
@@ -954,7 +1093,6 @@
             }
         });
 
-        /* --- ANTI-SCROLL JUMP WINDOW LOCK --- */
         let cachedWindowWidth = window.innerWidth;
         window.addEventListener('resize', () => {
             if (Math.abs(window.innerWidth - cachedWindowWidth) > 40) {
