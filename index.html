@@ -21,7 +21,6 @@
             background-color: #0b1d3a !important;
             -webkit-overflow-scrolling: touch !important;
             scroll-behavior: smooth !important;
-            /* GPU hardware acceleration & paint optimization */
             transform: translateZ(0);
             backface-visibility: hidden;
         }
@@ -111,7 +110,6 @@
             justify-content: space-between;
             min-width: 0; 
             background-color: rgba(7, 20, 38, 0.9);
-            /* GPU Acceleration & Performance Layer */
             will-change: transform;
             transform: translate3d(0, 0, 0);
             backface-visibility: hidden;
@@ -435,7 +433,7 @@
 <body>
 
     <header>
-        <h1>UNDERGROUND GAMING</h1>
+        <h1 style="cursor: pointer;" onclick="goHome()">UNDERGROUND GAMING</h1>
     </header>
 
     <div class="filters">
@@ -515,7 +513,7 @@
             { title: "Word Search Hidden Words", cat: "Retro", img: "./images/WordSearchHiddenWords.jpg", url: "https://playgama.com/export/game/word-search-hidden-words?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
             { title: "Home Design: Decorate House", cat: "Retro", img: "./images/HomeDesign.jpg", url: "https://playgama.com/export/game/home-design-decorate-house?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
             { title: "Geometry Arrow 2", cat: "Retro", img: "./images/GeometryArrow2.jpg", url: "https://playgama.com/export/game/geometry-arrow-2?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
-            { title: "Drive Quest", cat: "Retro", img: "./images/DriveQuest.jpg", url: "https://drivequest.io/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
+            { title: "Drive Quest Retro", cat: "Retro", img: "./images/DriveQuest.jpg", url: "https://drivequest.io/export?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
             { title: "Sudoku Online", cat: "Retro", img: "./images/SudokuOnline.jpg", url: "https://playgama.com/export/game/sudoku-online?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
             { title: "Car Destruction King", cat: "Retro", img: "./images/CarDestructionKing.jpg", url: "https://playgama.com/export/game/car-destruction-king?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
             { title: "Beam Drive Car Crash Test Simulator", cat: "Retro", img: "./images/BeamDriveCarCrashTestSimulator.jpg", url: "https://playgama.com/export/game/beam-drive-car-crash-test-simulator?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
@@ -615,16 +613,20 @@
             { title: "Fast and Wild in Sky", cat: "Retro", img: "./images/FastandWildinSky.jpg", url: "https://playgama.com/export/game/fast-and-wild-in-sky?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
             { title: "Santa Stunt Racer Christmas Delivery", cat: "Retro", img: "./images/SantaStuntRacerChristmasDelivery.jpg", url: "https://playgama.com/export/game/santa-stunt-racer-christmas-delivery?clid=p_ec78d867-133b-4dc1-8857-5c91b0fbe44d" },
             { title: "Granny", cat: "Retro", img: "./images/Granny.jpg", url: "https://www.madkidgames.com/full/granny" },
-            { title: "GTA Car Stunt Mega Ramp", cat: "Retro", img: "./images/GTACarStuntMegaRamp.jpg", url: "https://www.madkidgames.com/full/gta-car-stunt-mega-ramp" },
-            
+            { title: "GTA Car Stunt Mega Ramp", cat: "Retro", img: "./images/GTACarStuntMegaRamp.jpg", url: "https://www.madkidgames.com/full/gta-car-stunt-mega-ramp" }
         ];
 
-        // --- AUTOMATIC IMAGE PRELOADER FOR LOCAL STORAGE/CACHE ---
+        // --- AUTOMATIC IMAGE PRELOADER ---
         function preloadImages() {
             gamesDatabase.forEach((game) => {
                 const img = new Image();
                 img.src = game.img;
             });
+        }
+
+        // --- HELPER FUNCTION TO GENERATE CLEAN SLUGS FOR URL ---
+        function getGameSlug(title) {
+            return encodeURIComponent(title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
         }
 
         let currentActiveList = [...gamesDatabase];
@@ -650,9 +652,15 @@
             }, { passive: true });
         })();
 
-        function playGame(game) {
+        function playGame(game, setHash = true) {
             currentlyPlayingGame = game; 
             
+            // Set URL Hash so Page Refresh opens the exact same game
+            if (setHash) {
+                const slug = getGameSlug(game.title);
+                window.location.hash = `play-${slug}`;
+            }
+
             const gameFrame = document.getElementById('gameFrame');
             const gameBox = document.getElementById('gameBox');
             const topAd = document.getElementById('topAdSlot');
@@ -690,8 +698,6 @@
             currentActiveList = relatedGames;
             isModeActive = true;
             renderGames(relatedGames, true); 
-            
-            history.pushState({ gameOpen: true }, "");
             
             // --- SMOOTH SCROLL ENHANCEMENT ---
             setTimeout(() => {
@@ -858,24 +864,21 @@
             }
         }
 
-        function filterCat(category) {
-            if (adCountdownInterval) clearInterval(adCountdownInterval);
+        function goHome() {
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+            closeGameBox();
+            filterCat('All');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            buttons.forEach(btn => {
-                if(btn.innerText.trim().toLowerCase() === category.trim().toLowerCase() || (category === 'All' && btn.innerText.includes('All'))) {
-                    btn.classList.add('active');
-                }
-            });
+        function closeGameBox() {
+            if (adCountdownInterval) clearInterval(adCountdownInterval);
 
             const gameBox = document.getElementById('gameBox');
             const dynamicTitle = document.getElementById('moreGamesTitle');
             const topAd = document.getElementById('topAdSlot');
             const gameFrame = document.getElementById('gameFrame');
             const preGameAdScreen = document.getElementById('preGameAdScreen');
-            
             const leftAd = document.getElementById('leftAdBox');
             const rightAd = document.getElementById('rightAdBox');
             
@@ -888,7 +891,24 @@
             if (rightAd) rightAd.style.display = 'none';
 
             isModeActive = false;
-            currentlyPlayingGame = null; 
+            currentlyPlayingGame = null;
+        }
+
+        function filterCat(category) {
+            if (!currentlyPlayingGame) {
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            }
+            closeGameBox();
+
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            buttons.forEach(btn => {
+                if(btn.innerText.trim().toLowerCase() === category.trim().toLowerCase() || (category === 'All' && btn.innerText.includes('All'))) {
+                    btn.classList.add('active');
+                }
+            });
+
             if(category === 'All') {
                 currentActiveList = [...gamesDatabase];
             } else {
@@ -897,9 +917,26 @@
             renderGames(currentActiveList, false);
         }
 
+        // --- CHECK URL HASH FOR REFRESH AUTO-PLAY ---
+        function checkUrlAndPlay() {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#play-')) {
+                const slug = hash.replace('#play-', '');
+                const matchedGame = gamesDatabase.find(g => getGameSlug(g.title) === slug);
+                if (matchedGame) {
+                    playGame(matchedGame, false);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             preloadImages();
-            renderGames(currentActiveList, isModeActive);
+            const loadedFromHash = checkUrlAndPlay();
+            if (!loadedFromHash) {
+                renderGames(currentActiveList, isModeActive);
+            }
         });
 
         /* --- ANTI-SCROLL JUMP WINDOW LOCK --- */
@@ -912,27 +949,9 @@
         });
 
         window.onpopstate = function(event) {
-            if (adCountdownInterval) clearInterval(adCountdownInterval);
-
-            const gameBox = document.getElementById('gameBox');
-            const dynamicTitle = document.getElementById('moreGamesTitle');
-            const topAd = document.getElementById('topAdSlot');
-            const gameFrame = document.getElementById('gameFrame');
-            const leftAd = document.getElementById('leftAdBox');
-            const rightAd = document.getElementById('rightAdBox');
-            const preGameAdScreen = document.getElementById('preGameAdScreen');
-            
-            if (gameBox && gameBox.style.display === 'block') {
-                gameBox.style.display = 'none';
-                if (dynamicTitle) dynamicTitle.style.display = 'none';
-                if (topAd) topAd.style.display = 'none';
-                if (gameFrame) gameFrame.src = ""; 
-                if (preGameAdScreen) preGameAdScreen.style.display = 'none';
-                if (leftAd) leftAd.style.display = 'none';
-                if (rightAd) rightAd.style.display = 'none';
-                
-                isModeActive = false;
-                currentlyPlayingGame = null;
+            const loadedFromHash = checkUrlAndPlay();
+            if (!loadedFromHash) {
+                closeGameBox();
                 currentActiveList = [...gamesDatabase];
                 renderGames(currentActiveList, false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
