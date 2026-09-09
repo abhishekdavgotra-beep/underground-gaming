@@ -596,6 +596,14 @@
             
         ];
 
+        // --- AUTOMATIC IMAGE PRELOADER FOR LOCAL STORAGE/CACHE ---
+        function preloadImages() {
+            gamesDatabase.forEach((game) => {
+                const img = new Image();
+                img.src = game.img;
+            });
+        }
+
         let currentActiveList = [...gamesDatabase];
         let isModeActive = false;
         let currentlyPlayingGame = null; 
@@ -849,6 +857,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            preloadImages();
             renderGames(currentActiveList, isModeActive);
         });
 
